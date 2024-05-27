@@ -38,15 +38,16 @@ class ProjectController extends AbstractController
     //         'project' => $project
     //     ]);
     // }
+    
+    //utiliser le bundle slugify pour un slug en URL
+    // #[Route('/project/{projectName}', name: 'app_project', requirements:['projectName' => '[a-z0-9-]+'])]
+    // public function projectShow(Project $project, Request $request): Response
+    // { 
+    //     dd($request->attributes->get('projectName'));
 
-    #[Route('/project/{projectName}', name: 'app_project', requirements:['projectName' => '[a-z0-9-]+'])]
-    public function projectShow(Project $project, Request $request): Response
-    { 
-        dd($request->attributes->get('projectName'));
-
-        return $this->render('project/index.html.twig', [
-            'project' => $project
-        ]);
-    }
+    //     return $this->render('project/index.html.twig', [
+    //         'project' => $project
+    //     ]);
+    // }
 
 }
