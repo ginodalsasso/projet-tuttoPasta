@@ -19,6 +19,9 @@ class ProjectImg
     #[ORM\Column(length: 255)]
     private ?string $alt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    private ?Project $project = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class ProjectImg
     public function setAlt(string $alt): static
     {
         $this->alt = $alt;
+
+        return $this;
+    }
+
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(?Project $project): static
+    {
+        $this->project = $project;
 
         return $this;
     }
