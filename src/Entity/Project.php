@@ -32,15 +32,16 @@ class Project
     private Collection $images;
 
     /**
-     * @var Collection<int, category>
+     * @var Collection<int, Category>
      */
-    #[ORM\ManyToMany(targetEntity: category::class, inversedBy: 'projects')]
-    private Collection $project;
+    #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'projects')]
+    private Collection $categories;
+    
 
     public function __construct()
     {
         $this->images = new ArrayCollection();
-        $this->project = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -115,26 +116,31 @@ class Project
     }
 
     /**
-     * @return Collection<int, category>
+     * @return Collection<int, Category>
      */
-    public function getProject(): Collection
+    public function getCategories(): Collection
     {
-        return $this->project;
+        return $this->categories;
     }
 
-    public function addProject(category $project): static
+    public function addCategory(Category $category): static
     {
-        if (!$this->project->contains($project)) {
-            $this->project->add($project);
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->addProject($this);
         }
 
         return $this;
     }
 
-    public function removeProject(category $project): static
+    public function removeCategory(Category $category): static
     {
-        $this->project->removeElement($project);
+        if ($this->categories->removeElement($category)) {
+            $category->removeProject($this);
+        }
 
         return $this;
     }
+
+
 }

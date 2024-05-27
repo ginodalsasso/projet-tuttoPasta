@@ -23,15 +23,23 @@ class Category
     private ?string $categoryContent = null;
 
     /**
-     * @var Collection<int, Project>
+     * @var Collection<int, project>
      */
-    #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'project')]
+    #[ORM\ManyToMany(targetEntity: project::class, inversedBy: 'categories')]
     private Collection $projects;
+
+    /**
+     * @var Collection<int, article>
+     */
+    #[ORM\ManyToMany(targetEntity: article::class, inversedBy: 'categories')]
+    private Collection $articles;
 
     public function __construct()
     {
         $this->projects = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -63,29 +71,51 @@ class Category
     }
 
     /**
-     * @return Collection<int, Project>
+     * @return Collection<int, project>
      */
     public function getProjects(): Collection
     {
         return $this->projects;
     }
 
-    public function addProject(Project $project): static
+    public function addProject(project $project): static
     {
         if (!$this->projects->contains($project)) {
             $this->projects->add($project);
-            $project->addProject($this);
         }
 
         return $this;
     }
 
-    public function removeProject(Project $project): static
+    public function removeProject(project $project): static
     {
-        if ($this->projects->removeElement($project)) {
-            $project->removeProject($this);
+        $this->projects->removeElement($project);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, article>
+     */
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    public function addArticle(article $article): static
+    {
+        if (!$this->articles->contains($article)) {
+            $this->articles->add($article);
         }
 
         return $this;
     }
+
+    public function removeArticle(article $article): static
+    {
+        $this->articles->removeElement($article);
+
+        return $this;
+    }
+
 }
