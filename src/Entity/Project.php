@@ -26,9 +26,9 @@ class Project
     private ?\DateTimeInterface $projectDate = null;
 
     /**
-     * @var Collection<int, projectImg>
+     * @var Collection<int, ProjectImg>
      */
-    #[ORM\OneToMany(targetEntity: projectImg::class, mappedBy: 'project')]
+    #[ORM\OneToMany(targetEntity: ProjectImg::class, mappedBy: 'project')]
     private Collection $images;
 
     /**
@@ -86,14 +86,14 @@ class Project
     }
 
     /**
-     * @return Collection<int, projectImg>
+     * @return Collection<int, ProjectImg>
      */
     public function getImages(): Collection
     {
         return $this->images;
     }
 
-    public function addImage(projectImg $image): static
+    public function addImage(ProjectImg $image): static
     {
         if (!$this->images->contains($image)) {
             $this->images->add($image);
@@ -103,7 +103,7 @@ class Project
         return $this;
     }
 
-    public function removeImage(projectImg $image): static
+    public function removeImage(ProjectImg $image): static
     {
         if ($this->images->removeElement($image)) {
             // set the owning side to null (unless already changed)

@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <h1>Liste des projets</h1>
+    {% for project in projects %}
+        {{project.projectName}} <br>
+        {{project.projectContent}}
+    {% endfor %}
+
+
+    <h1>Liste des images</h1>
+    {% for projectImg in projectImgs %}
+        {{projectImg.image}}
+    {% endfor %}
+
+
+{% endblock %}

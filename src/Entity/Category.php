@@ -25,13 +25,13 @@ class Category
     /**
      * @var Collection<int, project>
      */
-    #[ORM\ManyToMany(targetEntity: project::class, inversedBy: 'categories')]
+    #[ORM\ManyToMany(targetEntity: Project::class, inversedBy: 'categories')]
     private Collection $projects;
 
     /**
      * @var Collection<int, article>
      */
-    #[ORM\ManyToMany(targetEntity: article::class, inversedBy: 'categories')]
+    #[ORM\ManyToMany(targetEntity: Article::class, inversedBy: 'categories')]
     private Collection $articles;
 
     public function __construct()
