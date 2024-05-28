@@ -13,8 +13,12 @@
     </head>
 
     <body>
+        <nav>
+            <a href="{{ path('app_home') }}"> Home </a>
+            <a href="{{ path('app_projectList') }}"> Projets </a>
+            <a href="{{ path('app_blog') }}"> Blog </a>
+        </nav>
         {% block body %}
-        
         {% endblock %}
         <script src="{{ asset('js/script.js')}}"></script>
     </body>

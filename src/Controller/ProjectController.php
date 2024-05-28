@@ -32,14 +32,14 @@ class ProjectController extends AbstractController
             throw new NotFoundHttpException('No projects or project images found');        
         }
 
-        return $this->render('projectList/index.html.twig', [
+        return $this->render('projects/index.html.twig', [
             'projects' => $projects,
             'projectImgs' => $projectImgs,
         ]);
     }
 
     // ---------------------------------Vue détail projets--------------------------------- //
-    #[Route('projects/{slug}', name: 'app_project', requirements: ['slug' => '[a-z0-9\-]*'])]
+    #[Route('/{slug}', name: 'app_project', requirements: ['slug' => '[a-z0-9\-]*'])]
     public function projectShow(Project $project, string $slug): Response
     { 
         // Vérifie si le slug de l'objet project correspond au slug de l'URL
@@ -47,7 +47,7 @@ class ProjectController extends AbstractController
             throw new NotFoundHttpException('Project not found');        
         }
 
-        return $this->render('project/index.html.twig', [
+        return $this->render('projects/project.html.twig', [
             'project' => $project
         ]);
     }

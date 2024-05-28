@@ -5,6 +5,7 @@
 {% block body %}
     <h1>Liste des projets</h1>
     {% for article in articles %}
+    <a href="{{ path('app_article', { 'slug': article.slug }) }}"> lien</a>
     {{article.articleTitle}} <br>
     {% for category in article.categories %}
         <p>{{category.categoryName}}</p>
