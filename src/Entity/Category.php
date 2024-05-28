@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Cocur\Slugify\Slugify;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -40,6 +41,11 @@ class Category
         $this->articles = new ArrayCollection();
     }
 
+    // Slugifie mon titre pour une URL propre et pour le SEO
+    public function  getSlug(): string
+    {
+        return (new Slugify())->slugify($this->categoryName);
+    }
 
     public function getId(): ?int
     {

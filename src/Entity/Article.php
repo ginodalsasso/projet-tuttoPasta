@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -37,6 +38,12 @@ class Article
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+    }
+
+    // Slugifie mon titre pour une URL propre et pour le SEO
+    public function  getSlug(): string
+    {
+        return (new Slugify())->slugify($this->articleTitle);
     }
 
     public function getId(): ?int
