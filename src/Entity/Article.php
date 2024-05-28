@@ -35,15 +35,12 @@ class Article
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'articles')]
     private Collection $categories;
 
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
-    }
-
-    // Slugifie mon titre pour une URL propre et pour le SEO
-    public function  getSlug(): string
-    {
-        return (new Slugify())->slugify($this->articleTitle);
     }
 
     public function getId(): ?int
@@ -87,6 +84,11 @@ class Article
         return $this;
     }
 
+    public function getDate()
+    {
+        return $this->articleDate->format("d-m-Y");
+    }
+
     public function getArticleImage(): ?string
     {
         return $this->articleImage;
@@ -122,6 +124,18 @@ class Article
         if ($this->categories->removeElement($category)) {
             $category->removeArticle($this);
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }

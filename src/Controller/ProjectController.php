@@ -21,7 +21,7 @@ class ProjectController extends AbstractController
 
 //______________________________________________________________AFFICHAGE______________________________________________________________
     // ---------------------------------Vue liste projets--------------------------------- //
-    #[Route('/project-list', name: 'app_projectList')]
+    #[Route('/projects', name: 'app_projectList')]
     public function listProjectsShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository): Response
     {
         $projects = $projectRepository->findAll();
@@ -39,7 +39,7 @@ class ProjectController extends AbstractController
     }
 
     // ---------------------------------Vue détail projets--------------------------------- //
-    #[Route('project-list/{slug}', name: 'app_project', requirements: ['slug' => '[a-z0-9\-]*'])]
+    #[Route('projects/{slug}', name: 'app_project', requirements: ['slug' => '[a-z0-9\-]*'])]
     public function projectShow(Project $project, string $slug): Response
     { 
         // Vérifie si le slug de l'objet project correspond au slug de l'URL

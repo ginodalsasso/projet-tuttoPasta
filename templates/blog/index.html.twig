@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Blog TuttoPasta{% endblock %}
+
+{% block body %}
+    <h1>Liste des projets</h1>
+    {% for article in articles %}
+    {{article.articleTitle}} <br>
+    {% for category in article.categories %}
+        <p>{{category.categoryName}}</p>
+    {% endfor %}
+        <p>{{article.date}}</p>
+    {% endfor %}
+{% endblock %}
