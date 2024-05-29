@@ -55,9 +55,10 @@ class BlogController extends AbstractController
         ]);
     }
 
-    // ---------------------------------Ajout d'un commentaire article--------------------------------- //
-    #[Route('blog/{slug}/comment', name: 'app_article_comment', methods: ['POST'], requirements: ['slug' => '[a-z0-9\-]*'])]
-    public function addComment(string $slug, Request $request, ArticleRepository $articleRepository, EntityManagerInterface $entityManager): Response
+    // ---------------------------------Ajout/Edition d'un commentaire article--------------------------------- //
+    #[Route('blog/{slug}/comment', name: 'app_article_addComment', methods: ['POST'], requirements: ['slug' => '[a-z0-9\-]*'])]
+    #[Route('blog/{slug}/comment/{id}/edit', name: 'app_article_editComment', requirements: ['id' => '\d+'])]
+    public function add_editComment(string $slug, Request $request, Comment $comment = null, ArticleRepository $articleRepository, EntityManagerInterface $entityManager): Response
     {
         $article = $articleRepository->findOneBy(['slug' => $slug]);
 
@@ -65,7 +66,10 @@ class BlogController extends AbstractController
             throw new NotFoundHttpException('Article not found');
         }
 
-        $comment = new Comment();
+        if(!$comment){
+            $comment = new Comment();
+        }
+        
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
@@ -77,12 +81,37 @@ class BlogController extends AbstractController
 
             return $this->redirectToRoute('app_article', ['slug' => $slug]);
         }
-
+        
         return $this->render('blog/article.html.twig', [
             'article' => $article,
             'form' => $form->createView(),
         ]);
     }
+    
+    // ---------------------------------Suppression d'un commentaire article--------------------------------- //
+    #[Route('blog/{slug}/comment/{id}/delete', name: 'app_article_deleteComment', requirements: ['id' => '\d+'])]
+    public function deleteComment(string $slug, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager): Response
+    {
+        $article = $articleRepository->findOneBy(['slug' => $slug]);
+
+        if (!$article) {
+            throw new NotFoundHttpException('Article not found');
+        }
+
+        // Recherche le commentaire à supprimer
+        $comment = $entityManager->getRepository(Comment::class)->find($id);
+
+        if (!$comment) {
+            throw new NotFoundHttpException('Comment not found');
+        }
+
+        // Supprimez le commentaire
+        $entityManager->remove($comment);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_article', ['slug' => $slug]);
+    }
+
 }
 
 

@@ -11,12 +11,23 @@
         <p>{{category.categoryName}}</p>
     {% endfor %}
     <p>{{article.date}}</p>
-    {# {% for comment in article.comments %}
+
+    {% for comment in article.comments %}
         <p>{{comment.commentContent}}</p>
         <p>{{comment.date}}</p>
-    {% endfor %} #}
-    {{ form_start(form, {'action': path('app_article_comment', {'slug': article.slug}), 'method': 'POST'}) }}
-        {{ form_widget(form) }}
+        
+        <a href=" {{ path('app_article_editComment', {'id':comment.id, 'slug': article.slug}) }} ">Edit</a>
+        {# cette methode permet de ne pas transiter les information de suppression via l'url #}
+        <form action="{{ path('app_article_deleteComment', {'id':comment.id, 'slug': article.slug}) }}" method:"post">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit">Suprimer</button>
+        </form>
+    {% endfor %}
+
+    {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST'}) }}
+        {{ form_widget(form) }} 
+        {{ form_errors(form.commentContent) }}
+        {{ form_errors(form) }}
         <button type="submit">Envoyer</button>
     {{ form_end(form) }}
 

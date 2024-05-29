@@ -17,10 +17,12 @@ class CommentType extends AbstractType
     {
         $builder
             ->add('commentContent', TextareaType::class,[
+                'label' => false,
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Votre message',
-                ]]);
+                    ]
+            ]);    
     }
 
     public function configureOptions(OptionsResolver $resolver): void

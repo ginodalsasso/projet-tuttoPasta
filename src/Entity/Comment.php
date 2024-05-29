@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CommentRepository;
+use Symfony\Component\Validator\Constraints as Assert; //use Assert pour les contraintes formulaire
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
@@ -15,6 +16,13 @@ class Comment
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    //use Assert pour les contraintes formulaire
+    #[Assert\NotBlank(message: 'Le commentaire ne peut pas être vide')]
+    #[Assert\Length(
+        min: 5,
+        max: 5000,
+        minMessage: 'Le commentaire doit contenir au moins 5 caractères !',
+        maxMessage: 'Le commentaire doit contenir au maximum 5000 caractères !')]
     private ?string $commentContent = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
