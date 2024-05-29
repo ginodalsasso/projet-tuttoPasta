@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert; //use Assert pour les contraintes formulaire
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -19,6 +21,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\Email]
+    #[Assert\Regex('[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+')]
+    #[Assert\NotBlank]
     private ?string $email = null;
 
     /**
@@ -31,12 +36,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\Regex('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/')]
+    #[Assert\NotBlank]
+    // #[Assert\Length(min: 5)]
     private ?string $password = null;
 
     #[ORM\Column]
     private bool $isVerified = false;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Regex('/^[a-z0-9_-]{3,15}$/')]    
+    #[Assert\NotBlank]
     private ?string $pseudo = null;
 
     public function getId(): ?int

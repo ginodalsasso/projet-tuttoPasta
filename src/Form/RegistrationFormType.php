@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationFormType extends AbstractType
 {
@@ -26,15 +27,23 @@ class RegistrationFormType extends AbstractType
                     new NotBlank([
                         'message' => 'Veuillez entrer un Pseudo',
                     ]),
+                    new Regex([
+                        'pattern' => '/^[a-z0-9_-.]{3,15}$/',
+                        'message' => 'Le nom d\'utilisateur doit contenir entre 3 et 15 caractères et ne peut contenir que des lettres minuscules, des chiffres, des tirets (-) et des underscores (_) ou des points.'
+                    ]),
                 ],
             ])
             ->add('email', EmailType::class,[
                 'constraints' => [
                     new Email([
-                        'message' => "L'email {{ value }} n'est pas valide.",
+                        'message' => "L\'adresse email doit être au format valide. Exemple : exemple@domaine.com.",
                     ]),
                     new NotBlank([
                         'message' => 'Veuillez entrer un email',
+                    ]),
+                    new Regex([
+                        'pattern' => ' [^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+ ',
+                        'message' => 'L\'adresse email doit être au format valide. Exemple : exemple@domaine.com'
                     ]),
                 ],
             ])
@@ -58,12 +67,10 @@ class RegistrationFormType extends AbstractType
                     new NotBlank([
                         'message' => 'Veuillez entrer un mot de passe',
                     ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit contenir minimum {{ limit }} caractères',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
+                    // new Regex([
+                        // 'pattern' => '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{13,}$/', !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        // 'message' => 'Votre mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial et faire au moins 12 caractères.',
+                    // ]),
                 ],
             ])
         ;
