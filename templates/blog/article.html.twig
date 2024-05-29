@@ -26,7 +26,6 @@
 
     {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST'}) }}
         {{ form_widget(form) }} 
-        {{ form_errors(form.commentContent) }}
         {{ form_errors(form) }}
         <button type="submit">Envoyer</button>
     {{ form_end(form) }}

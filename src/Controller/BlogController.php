@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BlogController extends AbstractController
 {
 //______________________________________________________________AFFICHAGE______________________________________________________________
+
     // ---------------------------------Vue liste articles--------------------------------- //
     #[Route('/blog', name: 'app_blog')]
     public function listArticlesShow(ArticleRepository $articleRepository): Response
