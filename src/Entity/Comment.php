@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\CommentsRepository;
+use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CommentsRepository::class)]
-class Comments
+#[ORM\Entity(repositoryClass: CommentRepository::class)]
+class Comment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,6 +22,13 @@ class Comments
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?Article $article = null;
+
+    public function __construct()
+    {
+        //initialise la date et l'heure du commentaire lors de la création de l'objet
+        $timezone = new \DateTimeZone('Europe/Paris');
+        $this->commentDate = new \DateTime('now', $timezone);
+    }
 
     public function getId(): ?int
     {
@@ -54,7 +61,7 @@ class Comments
 
     public function getDate()
     {
-        return $this->commentDate->format("d-m-Y");
+        return $this->commentDate->format("d/m/Y à H:i");
     }
 
     public function getArticle(): ?Article

@@ -41,7 +41,7 @@ class Article
     /**
      * @var Collection<int, comments>
      */
-    #[ORM\OneToMany(targetEntity: comments::class, mappedBy: 'article')]
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article')]
     private Collection $comments;
 
     public function __construct()
@@ -93,7 +93,7 @@ class Article
 
     public function getDate()
     {
-        return $this->articleDate->format("d-m-Y");
+        return $this->articleDate->format("d/m/Y");
     }
 
     public function getArticleImage(): ?string
@@ -148,14 +148,14 @@ class Article
     }
 
     /**
-     * @return Collection<int, comments>
+     * @return Collection<int, comment>
      */
     public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    public function addComment(comments $comment): static
+    public function addComment(Comment $comment): static
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
@@ -165,7 +165,7 @@ class Article
         return $this;
     }
 
-    public function removeComment(comments $comment): static
+    public function removeComment(Comment $comment): static
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)

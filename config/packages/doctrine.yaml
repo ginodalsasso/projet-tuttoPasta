@@ -34,7 +34,9 @@ when@test:
 when@prod:
     doctrine:
         orm:
-            auto_generate_proxy_classes: false
+            auto_generate_proxy_classes: true
+            naming_strategy: doctrine.orm.naming_strategy.underscore
+            auto_mapping: true
             proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
             query_cache_driver:
                 type: pool

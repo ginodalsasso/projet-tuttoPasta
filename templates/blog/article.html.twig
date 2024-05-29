@@ -10,6 +10,14 @@
     {% for category in article.categories %}
         <p>{{category.categoryName}}</p>
     {% endfor %}
-        <p>{{article.date}}</p>
+    <p>{{article.date}}</p>
+    {# {% for comment in article.comments %}
+        <p>{{comment.commentContent}}</p>
+        <p>{{comment.date}}</p>
+    {% endfor %} #}
+    {{ form_start(form, {'action': path('app_article_comment', {'slug': article.slug}), 'method': 'POST'}) }}
+        {{ form_widget(form) }}
+        <button type="submit">Envoyer</button>
+    {{ form_end(form) }}
 
 {% endblock %}
