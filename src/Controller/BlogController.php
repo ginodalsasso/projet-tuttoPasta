@@ -22,14 +22,15 @@ class BlogController extends AbstractController
 
     // ---------------------------------Vue liste articles--------------------------------- //
     #[Route('/blog', name: 'app_blog')]
-    public function listArticlesShow(Request $request, ArticleRepository $articleRepository): Response
+    public function listArticlesShow(ArticleRepository $articleRepository): Response
     {
     
     $articles = $articleRepository->findAll();
     
     // Vérifie si les articles existent
     if (!$articles) {
-        throw new NotFoundHttpException('No articles found');        
+        $this->addFlash('info', 'Article non trouvé');
+        return $this->redirectToRoute('app_blog');
     }
 
         return $this->render('blog/index.html.twig', [
@@ -112,8 +113,8 @@ class BlogController extends AbstractController
         // Récupère l'article associé au slug
         $article = $articleRepository->findOneBy(['slug' => $slug]);
         if (!$article) {
-            return $this->redirectToRoute('app_article', ['slug' => $slug]);
-            $this->addFlash('error', 'Article non trouvé');
+            return $this->redirectToRoute('app_blog');
+            $this->addFlash('info', 'Article non trouvé');
         }
         // Récupère l'utilisateur actuel
         $user = $security->getUser();
@@ -121,8 +122,8 @@ class BlogController extends AbstractController
         // Recherche le commentaire à supprimer
         $comment = $entityManager->getRepository(Comment::class)->find($id);
         if (!$comment) {
-            return $this->redirectToRoute('app_article', ['slug' => $slug]);
-            $this->addFlash('error', 'Commentaire non trouvé');
+            return $this->redirectToRoute('app_blog');
+            $this->addFlash('info', 'Commentaire non trouvé');
         }
         // Vérifie si l'utilisateur est l'auteur du commentaire ou s'il a le rôle admin
         if (($comment->getUser() === $user) || $this->isGranted('ROLE_ADMIN')) {

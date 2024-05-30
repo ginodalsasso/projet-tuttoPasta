@@ -40,11 +40,17 @@ class ProjectController extends AbstractController
 
     // ---------------------------------Vue détail projets--------------------------------- //
     #[Route('/projects/{slug}', name: 'app_project', requirements: ['slug' => '[a-z0-9\-]*'])]
-    public function projectShow(Project $project, string $slug): Response
+    public function projectShow(?Project $project, string $slug): Response
     { 
+        if (!$project) {
+            $this->addFlash('info', 'Projet non trouvé');
+            return $this->redirectToRoute('app_home');
+        }
+
         // Vérifie si le slug de l'objet project correspond au slug de l'URL
         if ($project->getSlug() !== $slug) {
-            throw new NotFoundHttpException('Project not found');        
+            $this->addFlash('info', 'Page non trouvée');    
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('projects/project.html.twig', [
