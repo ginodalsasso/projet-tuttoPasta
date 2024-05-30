@@ -35,10 +35,17 @@ class Category
     #[ORM\ManyToMany(targetEntity: Article::class, inversedBy: 'categories')]
     private Collection $articles;
 
+    /**
+     * @var Collection<int, Service>
+     */
+    #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'category')]
+    private Collection $services;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
         $this->articles = new ArrayCollection();
+        $this->services = new ArrayCollection();
     }
 
     // Slugifie mon titre pour une URL propre et pour le SEO
@@ -120,6 +127,36 @@ class Category
     public function removeArticle(article $article): static
     {
         $this->articles->removeElement($article);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Service>
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(Service $service): static
+    {
+        if (!$this->services->contains($service)) {
+            $this->services->add($service);
+            $service->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(Service $service): static
+    {
+        if ($this->services->removeElement($service)) {
+            // set the owning side to null (unless already changed)
+            if ($service->getCategory() === $this) {
+                $service->setCategory(null);
+            }
+        }
 
         return $this;
     }
