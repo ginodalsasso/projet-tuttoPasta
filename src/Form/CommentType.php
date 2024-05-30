@@ -43,3 +43,4 @@ class CommentType extends AbstractType
         ]);
     }
 }
+
