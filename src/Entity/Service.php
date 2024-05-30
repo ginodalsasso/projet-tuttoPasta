@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ServiceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,7 +26,18 @@ class Service
     private ?float $servicePrice = null;
 
     #[ORM\ManyToOne(inversedBy: 'services')]
-    private ?category $category = null;
+    private ?Category $category = null;
+
+    /**
+     * @var Collection<int, appointment>
+     */
+    #[ORM\ManyToMany(targetEntity: Appointment::class, inversedBy: 'services')]
+    private Collection $appointments;
+
+    public function __construct()
+    {
+        $this->appointments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -67,14 +80,38 @@ class Service
         return $this;
     }
 
-    public function getCategory(): ?category
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategory(?category $category): static
+    public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, appointment>
+     */
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
+    }
+
+    public function addAppointment(appointment $appointment): static
+    {
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments->add($appointment);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(appointment $appointment): static
+    {
+        $this->appointments->removeElement($appointment);
 
         return $this;
     }
