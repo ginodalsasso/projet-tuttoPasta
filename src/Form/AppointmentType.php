@@ -18,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 class AppointmentType extends AbstractType
 {
@@ -54,6 +55,9 @@ class AppointmentType extends AbstractType
             ])
             ->add('startDate', DateTimeType::class, [
                 'widget' => 'single_text',
+                'constraints' => [
+                    new GreaterThanOrEqual (  ['value'=>"today",'message'=>"Veuillez séléctionner une date dans le présent ou le futur."] )
+                 ]
             ])
             ->add('endDate', DateTimeType::class, [
                 'widget' => 'single_text',

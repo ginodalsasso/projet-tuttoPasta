@@ -2,15 +2,19 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AppointmentRepository;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
 #[UniqueEntity(fields:["startDate", "endDate"], message:"Ce créneau horraire est déjà pris.")]
+#[UniqueConstraint(name: "unique_appointment", columns: ["start_date", "end_date"])]
 
 class Appointment
 {
@@ -29,6 +33,7 @@ class Appointment
     private ?string $message = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\Callback([Appointment::class, "notWeekend"])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -150,5 +155,17 @@ class Appointment
         }
 
         return $this;
+    }
+
+    public static function notWeekend($startDate)
+    {
+        // Définit les jours de weekend, c'est-à-dire dimanche (0) et samedi (6).
+        $weekendDays = [0, 6];
+
+        // Vérifie si $startDate est une instance de DateTimeInterface et si elle est un jour de weekend.
+        if ($startDate instanceof DateTimeInterface && in_array($startDate->format('w'), $weekendDays)) {
+            throw new \InvalidArgumentException('Les RDV ne peuvent pas être pris durant le weekend.');
+        }
+        return true;
     }
 }
