@@ -115,4 +115,8 @@ class Service
 
         return $this;
     }
+    public function __toString()
+    {
+        return $this -> serviceName;
+    }
 }

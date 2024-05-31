@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\AppointmentRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AppointmentRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
+#[UniqueEntity(fields:["startDate", "endDate"], message:"Ce créneau horraire est déjà pris.")]
+
 class Appointment
 {
     #[ORM\Id]
@@ -37,7 +40,7 @@ class Appointment
     /**
      * @var Collection<int, Service>
      */
-    #[ORM\ManyToMany(targetEntity: Service::class, mappedBy: 'appointments')]
+    #[ORM\ManyToMany(targetEntity: Service::class, mappedBy: 'appointments', cascade: ["persist"])]
     private Collection $services;
 
     public function __construct()

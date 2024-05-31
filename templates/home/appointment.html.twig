@@ -4,6 +4,37 @@
 
 {% block body %}
 
-    {{form(form)}}
+    {# {{form(form)}} #}
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.message) }}
+        {{ form_row(form.startDate) }}
+        {{ form_row(form.endDate) }}
+        {{ form_row(form.services) }}
+
+        {# {{dump(form.services)}} #}
+        {# <div id="services" data-prototype="{{ form_widget(form.services.vars.prototype)|e('html_attr') }}">
+            {{ form_widget(form.services) }}
+        </div> #}
+
+        {{ form_row(form.save) }}
+    {{ form_end(form) }}
+{% endblock body %}
+
+    {% block javascripts %}
+        
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var collectionHolder = document.querySelector('#services');
+                var prototype = collectionHolder.dataset.prototype;
+                var index = collectionHolder.dataset.index * 1 || collectionHolder.querySelectorAll('input').length;
+                var newForm = prototype.replace(/__name__/g, index);
+                collectionHolder.dataset.index = index + 1;
+                var newFormDiv = document.createElement('div');
+                newFormDiv.innerHTML = newForm;
+                collectionHolder.appendChild(newFormDiv);
+            });
+    </script>
 
 {% endblock %}

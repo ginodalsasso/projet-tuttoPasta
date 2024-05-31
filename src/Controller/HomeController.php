@@ -8,12 +8,15 @@ use App\Form\AppointmentType;
 use App\Repository\ProjectRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\ProjectImgRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
+// ---------------------------------Vue Home--------------------------------- //
     #[Route('/home', name: 'app_home')]
     public function homeShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, ServiceRepository $serviceRepository): Response
     {
@@ -28,15 +31,62 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/home/appointment', name: 'app_appointment')]
-    public function appointmentShow(): Response
-    {
-        $appointment = new Appointment();
+// ---------------------------------Vue RDV et ajout de RDV--------------------------------- //
+// #[Route('/home/appointment', name: 'app_appointment')]
+// public function addAppointment(Request $request, EntityManagerInterface $entityManager): Response
+// {
+//     $appointment = new Appointment(); 
+//     $form = $this->createForm(AppointmentType::class, $appointment);
+//     $form->handleRequest($request);
 
-        $form = $this->createForm(AppointmentType::class, $appointment);
+//     // Traite le formulaire s'il est soumis et valide
+//     if ($form->isSubmitted() && $form->isValid()) {
+//         // Récupère les services sélectionnés dans le formulaire
+//         $selectedServices = $form->get('services')->getData();
 
-        return $this->render('home/appointment.html.twig', [
-            'form' => $form->createView(),
-        ]);
+//         // Associe chaque service sélectionné à l'entité Appointment
+//         foreach ($selectedServices as $service) {
+//             $appointment->addService($service);
+//         }
+        
+//         $entityManager->persist($appointment);
+//         $entityManager->flush();
+
+//         $this->addFlash('success', 'Vous venez de prendre RDV');
+//         return $this->redirectToRoute('app_home');
+//     }
+
+//     return $this->render('home/appointment.html.twig', [
+//         'form' => $form->createView(),
+//     ]);
+// }
+
+
+#[Route('/home/appointment', name: 'app_appointment')]
+public function addAppointment(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $appointment = new Appointment();
+    $form = $this->createForm(AppointmentType::class, $appointment);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Associer les services sélectionnés à l'entité Appointment
+        // foreach ($appointment->getServices() as $service) {
+        //     $appointment->addService($service);
+        // }
+
+        // Persister et flusher l'entité Appointment
+        $entityManager->persist($appointment);
+        $entityManager->flush();
+
+        // Rediriger ou afficher un message de succès
+        $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès.');
+        return $this->redirectToRoute('app_home');
     }
+
+    return $this->render('home/appointment.html.twig', [
+        'form' => $form->createView(),
+    ]);
+}
+
 }
