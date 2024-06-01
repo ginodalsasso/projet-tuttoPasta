@@ -34,9 +34,29 @@ class Appointment
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\Callback([Appointment::class, "notWeekend"])]
+    #[Assert\When(
+        expression: 'this.getEndDate() != null',
+        constraints: [
+            new Assert\LessThan(
+                propertyPath: 'endDate',
+                message: 'La date de fin doit se situer après la date de début !'
+            )
+        ]
+    )]
+    #[Assert\NotBlank(message: 'Veuillez sélectionner une date de début')]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\When(
+        expression: 'this.getStartDate() != null',
+        constraints: [
+            new Assert\GreaterThan(
+                propertyPath: 'startDate',
+                message: 'La date de début se situer avant à la date de fin !'
+            )
+        ]
+    )]
+    #[Assert\NotBlank(message: 'Veuillez sélectionner une date de fin')]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(nullable: true)]

@@ -31,7 +31,7 @@ class Service
     /**
      * @var Collection<int, appointment>
      */
-    #[ORM\ManyToMany(targetEntity: Appointment::class, inversedBy: 'services')]
+    #[ORM\ManyToMany(targetEntity: Appointment::class, inversedBy: 'services', cascade: ["persist"])]
     private Collection $appointments;
 
     public function __construct()

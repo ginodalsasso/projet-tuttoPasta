@@ -64,13 +64,11 @@ class AppointmentType extends AbstractType
             ])
             ->add('services', EntityType::class, [
                 'class' => Service::class,
-                // 'choice_label' => 'serviceName',
+                'choice_label' => 'serviceName',
                 'multiple' => true,
-                'expanded' => true
-            ])
-            // ->add('serviceId', HiddenType::class, [
-            //     'mapped' => false
-            // ])
+                'expanded' => true, // Set to true to display checkboxes
+                'label' => 'Services',
+                ])
             // ->add('services', CollectionType::class, [
             //     'entry_type' => ServiceType::class,
             //     'allow_add' => true,

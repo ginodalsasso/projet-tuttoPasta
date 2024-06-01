@@ -2,13 +2,14 @@
 
 namespace App\Form;
 
-use App\Entity\Appointment;
-use App\Entity\Category;
 use App\Entity\Service;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Category;
+use App\Entity\Appointment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class ServiceType extends AbstractType
 {
@@ -17,9 +18,14 @@ class ServiceType extends AbstractType
         $builder
             ->add('serviceName', EntityType::class, [
                 'class' => Service::class,
-                // 'choice_label' => 'serviceName',
+                'choice_label' => 'serviceName',
                 'multiple' => true,
                 'expanded' => true
+            ])
+            ->add('appointments', EntityType::class, [
+                'class' => Appointment::class,
+                'choice_label' => 'id',
+                'multiple' => true,
             ])
         ;
     }

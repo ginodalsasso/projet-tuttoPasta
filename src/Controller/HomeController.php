@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Service;
+use App\Form\ServiceType;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
 use App\Repository\ProjectRepository;
@@ -67,16 +68,16 @@ public function addAppointment(Request $request, EntityManagerInterface $entityM
 {
     $appointment = new Appointment();
     $form = $this->createForm(AppointmentType::class, $appointment);
+
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        // Associer les services sélectionnés à l'entité Appointment
-        // foreach ($appointment->getServices() as $service) {
-        //     $appointment->addService($service);
-        // }
 
-        // Persister et flusher l'entité Appointment
+        $appointment = $form->getData();
+        // Persister l'appointment
         $entityManager->persist($appointment);
+        // dd($appointment);
+        
         $entityManager->flush();
 
         // Rediriger ou afficher un message de succès
@@ -88,5 +89,29 @@ public function addAppointment(Request $request, EntityManagerInterface $entityM
         'form' => $form->createView(),
     ]);
 }
+// #[Route('/home/services', name: 'app_services')]
+// public function addService(Request $request, EntityManagerInterface $entityManager): Response
+// {
+//     $services = new Service();
+//     $form = $this->createForm(ServiceType::class, $services);
+
+//     $form->handleRequest($request);
+
+//     if ($form->isSubmitted() && $form->isValid()) {
+        
+//         $services = $form->getData();
+//         // Persister l'appointment
+//         $entityManager->persist($services);
+//         $entityManager->flush();
+
+//         // Rediriger ou afficher un message de succès
+//         $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès.');
+//         return $this->redirectToRoute('app_home');
+//     }
+
+//     return $this->render('home/services.html.twig', [
+//         'form' => $form->createView(),
+//     ]);
+// }
 
 }
