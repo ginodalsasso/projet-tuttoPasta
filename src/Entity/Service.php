@@ -31,7 +31,7 @@ class Service
     /**
      * @var Collection<int, appointment>
      */
-    #[ORM\ManyToMany(targetEntity: Appointment::class, inversedBy: 'services', cascade: ["persist"])]
+    #[ORM\ManyToMany(targetEntity: Appointment::class, inversedBy: 'services')]
     private Collection $appointments;
 
     public function __construct()
@@ -100,16 +100,17 @@ class Service
         return $this->appointments;
     }
 
-    public function addAppointment(appointment $appointment): static
+    public function addAppointment(Appointment $appointment): static
     {
         if (!$this->appointments->contains($appointment)) {
             $this->appointments->add($appointment);
+            $appointment->addService($this);
         }
 
         return $this;
     }
 
-    public function removeAppointment(appointment $appointment): static
+    public function removeAppointment(Appointment $appointment): static
     {
         $this->appointments->removeElement($appointment);
 

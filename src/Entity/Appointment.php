@@ -33,6 +33,7 @@ class Appointment
     private ?string $message = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    //Callback permet de créer une contrainte personalisée
     #[Assert\Callback([Appointment::class, "notWeekend"])]
     #[Assert\When(
         expression: 'this.getEndDate() != null',
@@ -47,16 +48,6 @@ class Appointment
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\When(
-        expression: 'this.getStartDate() != null',
-        constraints: [
-            new Assert\GreaterThan(
-                propertyPath: 'startDate',
-                message: 'La date de début se situer avant à la date de fin !'
-            )
-        ]
-    )]
-    #[Assert\NotBlank(message: 'Veuillez sélectionner une date de fin')]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(nullable: true)]

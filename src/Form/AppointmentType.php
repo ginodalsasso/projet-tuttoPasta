@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Service;
 use App\Entity\Appointment;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -11,7 +13,9 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -53,22 +57,16 @@ class AppointmentType extends AbstractType
                     ]),
                 ]
             ])
-            ->add('startDate', DateTimeType::class, [
-                'widget' => 'single_text',
-                'constraints' => [
-                    new GreaterThanOrEqual (  ['value'=>"today",'message'=>"Veuillez séléctionner une date dans le présent ou le futur."] )
-                 ]
-            ])
-            ->add('endDate', DateTimeType::class, [
+            ->add('startDate', DateType::class, [
+                'label' => 'Booking date',
                 'widget' => 'single_text',
             ])
-            ->add('services', EntityType::class, [
-                'class' => Service::class,
-                'choice_label' => 'serviceName',
-                'multiple' => true,
-                'expanded' => true, // Set to true to display checkboxes
-                'label' => 'Services',
-                ])
+            // ->add('services', EntityType::class, [
+            //     'class' => Service::class,
+            //     'choice_label' => 'serviceName', 
+            //     'multiple' => true,
+            //     'expanded' => true, // true pour checkboxes
+            // ])
             // ->add('services', CollectionType::class, [
             //     'entry_type' => ServiceType::class,
             //     'allow_add' => true,
@@ -81,6 +79,8 @@ class AppointmentType extends AbstractType
             ])        
         ;
     }
+
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {
