@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use DateTimeInterface;
 use App\Entity\Service;
 use App\Entity\Appointment;
 use Symfony\Component\Form\FormEvent;
@@ -11,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -23,6 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class AppointmentType extends AbstractType
 {
@@ -60,6 +63,16 @@ class AppointmentType extends AbstractType
             ->add('startDate', DateType::class, [
                 'label' => 'Booking date',
                 'widget' => 'single_text',
+                'constraints'=>[
+                    new GreaterThanOrEqual([
+                        'value' => 'today',
+                        'message' => 'Veuillez séléctionner une date dans le présent !',
+                    ]),
+                ],
+                'attr' => [
+                'id' => 'flatpickr',
+                ],
+
             ])
             // ->add('services', EntityType::class, [
             //     'class' => Service::class,

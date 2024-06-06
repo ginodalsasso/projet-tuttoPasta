@@ -7,9 +7,6 @@
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('css/style.css')}}">
         {% endblock %}
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
     </head>
 
     <body>
@@ -17,6 +14,7 @@
             <a href="{{ path('app_home') }}"> Home </a>
             <a href="{{ path('app_projectList') }}"> Projets </a>
             <a href="{{ path('app_blog') }}"> Blog </a>
+            <a href="{{ path('app_appointment') }}"> Prendre RDV </a>
 
             {% if app.user %}
                 <a href="{{ path('app_logout') }}"> Se déconnecter </a>
@@ -28,6 +26,10 @@
         </nav>
         {% block body %}
         {% endblock %}
-        <script src="{{ asset('js/script.js')}}"></script>
+
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+            <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+            <script src="{{ asset('js/script.js')}}"></script>
     </body>
 </html>
