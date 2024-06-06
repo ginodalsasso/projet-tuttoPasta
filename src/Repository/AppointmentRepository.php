@@ -16,7 +16,7 @@ class AppointmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Appointment::class);
     }
 
-    public function findAvailableRDV($startDate)
+    public function availabilities($startDate)
     {
         // Initialisation des temps de début et de fin de la journée de travail
         $startTime = clone $startDate;
@@ -26,7 +26,7 @@ class AppointmentRepository extends ServiceEntityRepository
         $endTime->setTime(17, 0, 0);
 
         // Requête de recherche des créneaux réservés
-        $bookedDates = $this->createQueryBuilder('a')
+        $booking = $this->createQueryBuilder('a')
             ->select('a.startDate')
             ->andWhere('a.startDate >= :start')
             ->andWhere('a.endDate <= :end')
@@ -34,10 +34,11 @@ class AppointmentRepository extends ServiceEntityRepository
             ->setParameter('end', $endTime)
             ->getQuery()
             ->getResult();
-        // Formatage des créneaux réservés
-        $finalBookedSlots = [];
-        foreach($bookedDates as $bookedDate) {
-            $finalBookedSlots[] = $bookedDate["startDate"]->format('Y-m-d H:i:s');
+
+        // Conversion des créneaux réservés en chaînes de caractères formatées
+        $bookedSlots = [];
+        foreach($booking as $booked) {
+            $bookedSlots[] = $booked["startDate"]->format('Y-m-d H:i:s');
         }
         // Génération des créneaux disponibles
         $interval = new \DateInterval('PT1H');
@@ -46,12 +47,12 @@ class AppointmentRepository extends ServiceEntityRepository
         for ($time = clone $startTime; $time < $endTime; $time->add($interval)) {
             $slot = $time->format('Y-m-d H:i:s');
             
-            if (!in_array($slot, $finalBookedSlots)) {
+            if (!in_array($slot, $bookedSlots)) {
                 $slots[] = $slot;
             }
         }
         // Retour des résultats
-        return [$slots, $finalBookedSlots];
+        return [$slots, $bookedSlots];
     }
 
     //    /**

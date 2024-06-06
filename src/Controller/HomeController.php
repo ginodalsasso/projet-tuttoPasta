@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Service;
-use App\Form\ServiceType;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
 use App\Repository\ProjectRepository;
@@ -48,12 +46,12 @@ public function addAppointment(Request $request, EntityManagerInterface $entityM
         $selectedSlot = $request->request->get('selectedSlot');
 
         if ($selectedSlot) {
-            $finalStartDate = new \DateTime($selectedSlot);
-            $finalEndDate = clone $finalStartDate;
-            $finalEndDate->modify('+1 hour');
+            $startDate = new \DateTime($selectedSlot);
+            $endDate = clone $startDate;
+            $endDate->modify('+1 hour');
 
-            $appointment->setStartDate($finalStartDate);
-            $appointment->setEndDate($finalEndDate);
+            $appointment->setStartDate($startDate);
+            $appointment->setEndDate($endDate);
 
             // Persister l'appointment
             $entityManager->persist($appointment);
@@ -72,21 +70,18 @@ public function addAppointment(Request $request, EntityManagerInterface $entityM
     ]);
 }
 
-#[Route('/get_available_slots', name:'get_available_slots', methods:['POST'])]
+#[Route('/available_rdv', name:'available_rdv', methods:['POST'])]
 public function getAvailableTimes(Request $request, AppointmentRepository $appointmentRepository): JsonResponse
 {
     $startDate = new \DateTime($request->request->get('startDate'));
 
     // Appel de la méthode pour obtenir les créneaux disponibles
-    $availableSlots = $appointmentRepository->findAvailableRDV($startDate);
+    $availabilities = $appointmentRepository->availabilities($startDate);
 
     return new JsonResponse([
-        'availableSlots' => $availableSlots,
+        'availabilities' => $availabilities,
     ]);
 }
-// #[Route('/home/services', name: 'app_services')]
-// public function addService(Request $request, EntityManagerInterface $entityManager): Response
-// {
 //     $services = new Service();
 //     $form = $this->createForm(ServiceType::class, $services);
 
