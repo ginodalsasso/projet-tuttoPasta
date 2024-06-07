@@ -1,38 +1,51 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}Tutto Pasta - Rendez-Vous{%
+endblock %} {% block body %} {# {{ form(form) }} #}
+{{ form_start(form) }}
+{{ form_row(form.name) }}
+{{ form_errors(form.name) }}
+{{ form_row(form.email) }}
+{{ form_errors(form.email) }}
+{{ form_row(form.message) }}
+{{ form_errors(form.message) }}
+<div id="error_msg"></div>
+{{ form_row(form.startDate, {'attr': {'id': 'dateInput'}}) }}
 
-{% block title %}Tutto Pasta - Rendez-Vous{% endblock %}
+<div id="available-rdv"></div>
+<input type="hidden" id="selectedSlot" name="selectedSlot" value="" />
 
-{% block body %}
+{# {{ form_row(form.services) }} #} {# {{ dump(form.services) }} #} {#
+<div
+  id="services"
+  data-prototype="{{ form_widget(form.services.vars.prototype)|e('html_attr') }}"
+>
+  {{ form_widget(form.services) }}
+</div>
+#}
 
-    {# {{form(form)}} #}
-    {{ form_start(form) }}
-        {{ form_row(form.name) }}
-        {{ form_errors(form.name) }}
-        {{ form_row(form.email) }}
-        {{ form_errors(form.email) }}
-        {{ form_row(form.message) }}
-        {{ form_errors(form.message) }}
-        {{ form_row(form.startDate)}}
-        <div id="available-rdv"></div>
-        <input type="hidden" id="selectedSlot" name="selectedSlot" value="">
+{{ form_row(form.save) }}
+{{ form_end(form) }}
 
-        {# {{ form_row(form.services) }} #}
-        {# {{dump(form.services)}} #}
-        {# <div id="services" data-prototype="{{ form_widget(form.services.vars.prototype)|e('html_attr') }}">
-            {{ form_widget(form.services) }}
-        </div> #}
+{#
+<div id="flatpickr"></div>
+#} {% endblock body %} {% block javascripts %}
+
+<script>
+  /*flatpickr("#flatpickr", {
+            "disable": [
+                function(date) {
+                    return (date.getDay() === 0 || date.getDay() === 6);
         
-        {{ form_row(form.save) }}
-        {{ form_end(form) }}
-        
-        <div id="datepicker"></div>
-{% endblock body %}
+                }
+            ],
+            "locale": {
+                "firstDayOfWeek": 1 // start week on Monday
+            },
+            altInput: true,
+            inline: true,
+            altFormat: "d-m-Y",
+        });*/
 
-{% block javascripts %}
-        
-    <script>
-
-            /* document.addEventListener('DOMContentLoaded', function() {
+  /* document.addEventListener('DOMContentLoaded', function() {
                 var collectionHolder = document.querySelector('#services');
                     var prototype = collectionHolder.dataset.prototype;
                     var index = collectionHolder.dataset.index * 1 || collectionHolder.querySelectorAll('input').length;
@@ -42,99 +55,89 @@
                     newFormDiv.innerHTML = newForm;
                     collectionHolder.appendChild(newFormDiv);
                 })*/
-        // Sélection des éléments et initialisation des variables
-        document.addEventListener('DOMContentLoaded', function() {
-            const startDate = document.querySelector('#appointment_startDate');
-            const availableRdv = document.getElementById('available-rdv');
-            const selectedSlot = document.getElementById('selectedSlot');
 
-            // détecter les changements de la date de début
-            startDate.addEventListener('change', function() {
-                // Récupère la date sélectionnée
-                const selectedDate = startDate.value;
+  // Sélection des éléments et initialisation des variables
+  $(document).ready(function () {
+    const $startDate = $("#appointment_startDate");
+    const $availableRdv = $("#available-rdv");
+    const $selectedSlot = $("#selectedSlot");
+    const $errorMsg = $("#error_msg");
 
-                // Envoie une requête POST pour obtenir les créneaux horaires disponibles pour la date sélectionnée
-                fetch("{{ path('available_rdv') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded', // Spécifie le type de contenu des données envoyées
-                    },
-                    body: new URLSearchParams({
-                        startDate: selectedDate // Envoie la date sélectionnée comme donnée du formulaire
-                    }),
-                })
-                .then(response => response.json()) // Convertit la réponse en JSON
-                .then(data => {
-                    // Vérifie si les créneaux horaires disponibles sont un tableau
-                    if (Array.isArray(data.availabilities)) {
-                        // Réinitialise le conteneur des créneaux horaires disponibles
-                        availableRdv.innerHTML = '';
+    // détecte les changements de la date de début
+    $startDate.on("change", function () {
+      // Récupère la date sélectionnée
+      const selectedDate = $startDate.val();
+      const selectedDay = new Date(selectedDate).getUTCDay();
 
-                        // Récupère tous les créneaux horaires disponibles et réservés
-                        const allSlots = data.availabilities[0];
-                        const bookedSlots = data.availabilities[1];
-                        
+      // Vérifie si le jour sélectionné est un jour de weekend
+      if (selectedDay === 0 || selectedDay === 6) {
+        $errorMsg.text("Veuillez sélectionner un jour de semaine.");
+        $startDate.val(""); // Réinitialise la date sélectionnée
+        $availableRdv.empty(); // Vide les créneaux horaires disponibles
+        return;
+      } else {
+        $errorMsg.text(""); // Vide le message d'erreur si une date valide est sélectionnée
+      }
 
-                        // Parcourt tous les créneaux horaires disponibles
-                        allSlots.forEach(slot => {
-                            // Crée un élément label pour le créneau horaire
-                            const label = document.createElement('label');
-                            // Crée un élément input pour le créneau horaire
-                            const input = document.createElement('input');
-                            input.type = 'radio';
-                            input.name = 'selectedSlotRadio';
-                            input.value = slot;
-                            input.className = 'slot-radio';
+      // Envoie une requête POST pour obtenir les créneaux horaires disponibles pour la date sélectionnée
+      $.ajax({
+        url: "{{ path('available_rdv') }}",
+        method: "POST",
+        contentType: "application/x-www-form-urlencoded", // Spécifie le type de contenu des données envoyées
+        data: {
+          startDate: selectedDate, // Envoie la date sélectionnée comme donnée du formulaire
+        },
+        success: function (data) {
+          // Vérifie si les créneaux horaires disponibles sont un tableau
+          if (Array.isArray(data.availabilities)) {
+            // Réinitialise le conteneur des créneaux horaires disponibles
+            $availableRdv.empty();
 
-                            // Désactive le créneau horaire si celui-ci est déjà réservé
-                            if (bookedSlots.includes(slot)) {
-                                input.disabled = true;
-                                label.classList.add('disabled-slot');
-                                label.style.opacity = 0.3;
-                            }
+            // Récupère tous les créneaux horaires disponibles et réservés
+            const allSlots = data.availabilities[0];
+            const bookedSlots = data.availabilities[1];
 
-                            // Ajoute l'input radio et le texte du créneau horaire au label
-                            label.appendChild(input);
-                            label.appendChild(document.createTextNode(formatTime(slot)));
-                            // Ajoute le label au conteneur des créneaux horaires disponibles
-                            availableRdv.appendChild(label);
+            // Parcourt tous les créneaux horaires disponibles
+            $.each(allSlots, function (index, slot) {
+              // Crée un élément label pour le créneau horaire
+              const $label = $("<label>");
+              // Crée un élément input pour le créneau horaire
+              const $input = $("<input>", {
+                type: "radio",
+                name: "selectedSlotRadio",
+                value: slot,
+                class: "radioSlots",
+              });
 
-                            // Ajoute un écouteur d'événement pour mettre à jour la valeur du champ caché lorsque l'utilisateur sélectionne un créneau horaire
-                            input.addEventListener('change', function() {
-                                selectedSlot.value = slot;
-                            });
-                        });
-                    } else {
-                        // Affiche une erreur dans la console si le format des données est invalide
-                        console.error('Format de données invalide !');
-                    }
-                })
+              // Ajoute l'input radio et le texte du créneau horaire au label
+              $label
+                .append($input)
+                .append(document.createTextNode(formatTime(slot)));
+              // Ajoute le label au conteneur des créneaux horaires disponibles
+              $availableRdv.append($label);
+
+              // Ajoute un écouteur d'événement pour mettre à jour la valeur du champ caché lorsque l'utilisateur sélectionne un créneau horaire
+              $input.on("change", function () {
+                $selectedSlot.val(slot);
+              });
             });
+          } else {
+            // Affiche une erreur dans la console si le format des données est invalide
+            console.error("Format de données invalide !");
+          }
+        },
+      });
+    });
 
-            // Fonction pour formater l'heure d'un créneau horaire en fonction de la locale 'fr-FR'
-            function formatTime(dateTimeString) {
-                const dateTime = new Date(dateTimeString);
-                return dateTime.toLocaleTimeString('fr-FR', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const datePicker = document.getElementById('datePicker');
-        
-            datePicker.addEventListener('input', function () {
-                const selectedDate = new Date(this.value);
-                const day = selectedDate.getUTCDay();
-        
-                // 0 = Sunday, 6 = Saturday
-                if (day === 0 || day === 6) {
-                    alert("Weekends are not allowed. Please choose a weekday.");
-                    this.value = ''; // Clear the input
-                }
-            });
-        });
+    // Fonction pour formater l'heure d'un créneau horaire en fonction de la locale 'fr-FR'
+    function formatTime(dateTimeString) {
+      const dateTime = new Date(dateTimeString);
+      return dateTime.toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+  });
 </script>
 
 {% endblock %}
