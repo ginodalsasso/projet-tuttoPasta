@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
 #[UniqueEntity(fields:["startDate", "endDate"], message:"Ce créneau horraire est déjà pris.")]
-#[UniqueConstraint(name: "unique_appointment", columns: ["start_date", "end_date"])]
+#[ORM\UniqueConstraint(name: "unique_appointment", columns: ["start_date", "end_date"])]
 
 class Appointment
 {
@@ -59,9 +59,16 @@ class Appointment
     #[ORM\ManyToMany(targetEntity: Service::class, mappedBy: 'appointments', cascade: ["persist"])]
     private Collection $services;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
+
+        //initialise la date et l'heure du RDV lors de la création de l'objet
+        $timezone = new \DateTimeZone('Europe/Paris');
+        $this->createdAt = new \DateTime('now', $timezone);
     }
 
     public function getId(): ?int
@@ -129,6 +136,19 @@ class Appointment
         return $this;
     }
 
+    
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
     public function getStatus(): ?array
     {
         return $this->status;
@@ -179,4 +199,5 @@ class Appointment
         }
         return true;
     }
+
 }

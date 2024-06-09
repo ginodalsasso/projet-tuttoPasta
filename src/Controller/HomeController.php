@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
+use App\Repository\DayOffRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\ProjectImgRepository;
@@ -34,12 +35,19 @@ class HomeController extends AbstractController
 
 // ---------------------------------Vue RDV et ajout de RDV--------------------------------- //
 #[Route('/home/appointment', name: 'app_appointment')]
-public function addAppointment(Request $request, EntityManagerInterface $entityManager, AppointmentRepository $appointmentRepository): Response
+public function addAppointment(Request $request, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, AppointmentRepository $appointmentRepository): Response
 {
     $appointment = new Appointment();
     $form = $this->createForm(AppointmentType::class, $appointment);
 
     $form->handleRequest($request);
+
+    // Récupérer les jours de congé depuis le repository
+    $dayOffs = $dayOffRepository->findAll();
+    $dayOffDates = [];
+    foreach ($dayOffs as $dayOff) {
+        $dayOffDates[] = $dayOff->getDayOff()->format('Y-m-d');
+    }
 
     if ($form->isSubmitted() && $form->isValid()) {
         $appointment = $form->getData();
@@ -50,16 +58,21 @@ public function addAppointment(Request $request, EntityManagerInterface $entityM
             $endDate = clone $startDate;
             $endDate->modify('+1 hour');
 
-            $appointment->setStartDate($startDate);
-            $appointment->setEndDate($endDate);
+            // Vérifier si la date sélectionnée est un jour de congé
+            if (in_array($startDate->format('Y-m-d'), $dayOffDates)) {
+                $this->addFlash('error', 'Vous ne pouvez pas prendre RDV durant nos congés.');
+            } else {
+                $appointment->setStartDate($startDate);
+                $appointment->setEndDate($endDate);
 
-            // Persister l'appointment
-            $entityManager->persist($appointment);
-            $entityManager->flush();
+                // Persister l'appointment
+                $entityManager->persist($appointment);
+                $entityManager->flush();
 
-            // Rediriger ou afficher un message de succès
-            $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès.');
-            return $this->redirectToRoute('app_home');
+                // Rediriger ou afficher un message de succès
+                $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès.');
+                return $this->redirectToRoute('app_home');
+            }
         } else {
             $this->addFlash('error', 'Veuillez sélectionner un créneau horaire.');
         }
@@ -71,17 +84,45 @@ public function addAppointment(Request $request, EntityManagerInterface $entityM
 }
 
 #[Route('/available_rdv', name:'available_rdv', methods:['POST'])]
-public function getAvailableTimes(Request $request, AppointmentRepository $appointmentRepository): JsonResponse
+public function getAvailableTimes(Request $request, AppointmentRepository $appointmentRepository, DayOffRepository $dayOffRepository): JsonResponse
 {
     $startDate = new \DateTime($request->request->get('startDate'));
 
     // Appel de la méthode pour obtenir les créneaux disponibles
-    $availabilities = $appointmentRepository->availabilities($startDate);
+    $availabilities = $appointmentRepository->findAllRDV($startDate);
+    
+    // Récupère tous les jours de congé
+    $dayoffs = $dayOffRepository->findAllDayoffs();
 
+    // Convertir les objets Date en chaînes de caractères pour le JS de ma vue
+    $dayoffDates = [];
+
+    foreach ($dayoffs as $dayoff) {
+        $dayoffDates[] = $dayoff->format('Y-m-d');
+    }
     return new JsonResponse([
         'availabilities' => $availabilities,
+        'dayoffDates' => $dayoffDates,
     ]);
 }
+
+
+// #[Route('/dayoffs', name:'dayoffs')]
+// public function index(DayOffRepository $dayOffRepository): Response
+// {
+//     // Récupère tous les jours de congé
+//     $dayoffs = $dayOffRepository->findAllDayoffs();
+//     die($dayoffs);
+
+//     // Convertir les objets Date en chaînes de caractères pour JavaScript
+//     $dayoffDates = array_map(function($dayoff) {
+//         return $dayoff->format('Y-m-d');
+//     }, $dayoffs);
+
+//     return $this->render('home/appointment.html.twig', [
+//         'dayoffDates' => $dayoffDates,
+//     ]);
+// }
 //     $services = new Service();
 //     $form = $this->createForm(ServiceType::class, $services);
 

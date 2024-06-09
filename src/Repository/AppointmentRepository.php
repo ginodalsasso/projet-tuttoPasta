@@ -16,7 +16,7 @@ class AppointmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Appointment::class);
     }
 
-    public function availabilities($startDate)
+    public function findAllRDV($startDate)
     {
         // Initialisation des temps de début et de fin de la journée de travail
         $startTime = clone $startDate;

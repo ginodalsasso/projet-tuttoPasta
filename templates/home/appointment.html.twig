@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %} {% block title %}Tutto Pasta - Rendez-Vous{%
+{% extends 'base.html.twig' %} {% block title %} Tutto Pasta - Rendez-Vous {%
 endblock %} {% block body %} {# {{ form(form) }} #}
 {{ form_start(form) }}
 {{ form_row(form.name) }}
@@ -9,9 +9,9 @@ endblock %} {% block body %} {# {{ form(form) }} #}
 {{ form_errors(form.message) }}
 <div id="error_msg"></div>
 {{ form_row(form.startDate, {'attr': {'id': 'dateInput'}}) }}
-
 <div id="available-rdv"></div>
 <input type="hidden" id="selectedSlot" name="selectedSlot" value="" />
+{{ form_row(form.services) }}
 
 {# {{ form_row(form.services) }} #} {# {{ dump(form.services) }} #} {#
 <div
@@ -25,36 +25,20 @@ endblock %} {% block body %} {# {{ form(form) }} #}
 {{ form_row(form.save) }}
 {{ form_end(form) }}
 
-{#
-<div id="flatpickr"></div>
-#} {% endblock body %} {% block javascripts %}
+{% endblock body %} 
 
+{% block javascripts %}
 <script>
-  /*flatpickr("#flatpickr", {
-            "disable": [
-                function(date) {
-                    return (date.getDay() === 0 || date.getDay() === 6);
-        
-                }
-            ],
-            "locale": {
-                "firstDayOfWeek": 1 // start week on Monday
-            },
-            altInput: true,
-            inline: true,
-            altFormat: "d-m-Y",
-        });*/
-
-  /* document.addEventListener('DOMContentLoaded', function() {
-                var collectionHolder = document.querySelector('#services');
-                    var prototype = collectionHolder.dataset.prototype;
-                    var index = collectionHolder.dataset.index * 1 || collectionHolder.querySelectorAll('input').length;
-                    var newForm = prototype.replace(/__name__/g, index);
-                    collectionHolder.dataset.index = index + 1;
-                    var newFormDiv = document.createElement('div');
-                    newFormDiv.innerHTML = newForm;
-                    collectionHolder.appendChild(newFormDiv);
-                })*/
+      /* document.addEventListener('DOMContentLoaded', function() {
+                    var collectionHolder = document.querySelector('#services');
+                        var prototype = collectionHolder.dataset.prototype;
+                        var index = collectionHolder.dataset.index * 1 || collectionHolder.querySelectorAll('input').length;
+                        var newForm = prototype.replace(/__name__/g, index);
+                        collectionHolder.dataset.index = index + 1;
+                        var newFormDiv = document.createElement('div');
+                        newFormDiv.innerHTML = newForm;
+                        collectionHolder.appendChild(newFormDiv);
+                    })*/
 
   // Sélection des éléments et initialisation des variables
   $(document).ready(function () {
@@ -62,6 +46,7 @@ endblock %} {% block body %} {# {{ form(form) }} #}
     const $availableRdv = $("#available-rdv");
     const $selectedSlot = $("#selectedSlot");
     const $errorMsg = $("#error_msg");
+    let dayoffDates = [];
 
     // détecte les changements de la date de début
     $startDate.on("change", function () {
@@ -70,8 +55,12 @@ endblock %} {% block body %} {# {{ form(form) }} #}
       const selectedDay = new Date(selectedDate).getUTCDay();
 
       // Vérifie si le jour sélectionné est un jour de weekend
-      if (selectedDay === 0 || selectedDay === 6) {
-        $errorMsg.text("Veuillez sélectionner un jour de semaine.");
+      if (selectedDay === 0 || selectedDay === 6 || dayoffDates.includes(selectedDate)) {
+        if (dayoffDates.includes(selectedDate)) {
+            $errorMsg.text("La date sélectionnée tombe sur un jour de congé. Veuillez choisir une autre date.");
+          } else {
+            $errorMsg.text("Veuillez sélectionner un jour de semaine.");
+          }
         $startDate.val(""); // Réinitialise la date sélectionnée
         $availableRdv.empty(); // Vide les créneaux horaires disponibles
         return;
@@ -82,12 +71,15 @@ endblock %} {% block body %} {# {{ form(form) }} #}
       // Envoie une requête POST pour obtenir les créneaux horaires disponibles pour la date sélectionnée
       $.ajax({
         url: "{{ path('available_rdv') }}",
-        method: "POST",
         contentType: "application/x-www-form-urlencoded", // Spécifie le type de contenu des données envoyées
+
+        method: "POST",
         data: {
           startDate: selectedDate, // Envoie la date sélectionnée comme donnée du formulaire
         },
         success: function (data) {
+          // Stocke les dates de congés
+          dayoffDates = data.dayoffDates;
           // Vérifie si les créneaux horaires disponibles sont un tableau
           if (Array.isArray(data.availabilities)) {
             // Réinitialise le conteneur des créneaux horaires disponibles
@@ -95,7 +87,6 @@ endblock %} {% block body %} {# {{ form(form) }} #}
 
             // Récupère tous les créneaux horaires disponibles et réservés
             const allSlots = data.availabilities[0];
-            const bookedSlots = data.availabilities[1];
 
             // Parcourt tous les créneaux horaires disponibles
             $.each(allSlots, function (index, slot) {
@@ -138,6 +129,6 @@ endblock %} {% block body %} {# {{ form(form) }} #}
       });
     }
   });
-</script>
 
+</script>
 {% endblock %}

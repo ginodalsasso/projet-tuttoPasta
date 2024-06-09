@@ -29,7 +29,7 @@ class Service
     private ?Category $category = null;
 
     /**
-     * @var Collection<int, appointment>
+     * @var Collection<int, Appointment>
      */
     #[ORM\ManyToMany(targetEntity: Appointment::class, inversedBy: 'services')]
     private Collection $appointments;
