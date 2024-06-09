@@ -5,7 +5,8 @@
         <title>{% block title %}{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('css/style.css')}}"> 
+            <link rel="stylesheet" href="{{ asset('css/style.css')}}">
+            <link rel="stylesheet" href="https://use.typekit.net/tkf7imz.css">
         
         {% endblock %}
             <script src="{{ asset('/js/jquery-3.7.1.min.js')}}"></script>
@@ -13,23 +14,61 @@
     </head>
 
     <body>
-        <nav>
-            <a href="{{ path('app_home') }}"> Home </a>
-            <a href="{{ path('app_projectList') }}"> Projets </a>
-            <a href="{{ path('app_blog') }}"> Blog </a>
-            <a href="{{ path('app_appointment') }}"> Prendre RDV </a>
+        <header id="header_content">
+            <img src="{{ asset('/img/logo.svg')}}" alt="Logo TuttoPasta">
+            <nav>
+                <ul id="nav_container">
+                    <li><a href="{{ path('app_home') }}"> Home </a></li>
+                    <li><a href="{{ path('app_projectList') }}"> Projets </a></li>
+                    <li><a href="{{ path('app_blog') }}"> Blog </a></li>
+                    {% if app.user %}
+                        <li><a href="{{ path('app_logout') }}"> Se déconnecter </a></li>
+                    {% else %}
+                        <li><a href="{{ path('app_login') }}"> Se connecter </a></li>
+                        <li><a href="{{ path('app_register') }}"> S'enregistrer </a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <a class="full_button_black" href="{{ path('app_appointment') }}"> Prendre RDV </a>
+        </header>
 
-            {% if app.user %}
-                <a href="{{ path('app_logout') }}"> Se déconnecter </a>
-            {% else %}
-                <a href="{{ path('app_login') }}"> Se connecter </a>
-                <a href="{{ path('app_register') }}"> S'enregistrer </a>
-            {% endif %}
 
-        </nav>
+
+
+
+
+
+
+
+
         {% block body %}
-        {% endblock %}
 
+        {% endblock %}
+            <footer>
+                <div class="footer_collab">
+                    <h1>Prêt à collaborer</br>avec TuttoPasta ?</h1>
+                    <a class="full_button_white" href="{{ path('app_appointment') }}"> Je veux prendre RDV </a>
+                </div>
+
+                <hr>
+                <div class="footer_social">                    
+                    <nav>
+                        <ul>
+                            <li><a href="#">Linkedin</a></li>
+                            <li><a href="#">Behance</a></li>
+                            <li><a href="#">Instagram</a></li>
+                        </ul>
+                    </nav>
+                    <ul>
+                        <li><p>Identité Visuelle</p></li>
+                        <li><p>Sites Internet</p></li>
+                        <li><p>Prestations</p></li>
+                    </ul>
+                </div>
+
+                <p class="copyright">&copy; 2024 TUTTO PASTA</p>
+                <p class="copyright">dev: Gino Dalsasso</p>
+            </footer>
         {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
 
