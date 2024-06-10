@@ -54,20 +54,29 @@
                 <div class="footer_social">                    
                     <nav>
                         <ul>
-                            <li><a href="#">Linkedin</a></li>
-                            <li><a href="#">Behance</a></li>
-                            <li><a href="#">Instagram</a></li>
+                            <li><img src="{{ asset('/img/blue_smile.svg')}}" alt="blue smiley"><a href="#">Linkedin</a></li>
+                            <li><img src="{{ asset('/img/green_smile.svg')}}" alt="green smiley"><a href="#">Behance</a></li>
+                            <li><img src="{{ asset('/img/pink_smile.svg')}}" alt="pink smiley"><a href="#">Instagram</a></li>
                         </ul>
-                    </nav>
+                    </nav>                      
                     <ul>
+                        <li><p class="stickers_white">Services</p></li>
                         <li><p>Identité Visuelle</p></li>
                         <li><p>Sites Internet</p></li>
                         <li><p>Prestations</p></li>
                     </ul>
                 </div>
-
-                <p class="copyright">&copy; 2024 TUTTO PASTA</p>
-                <p class="copyright">dev: Gino Dalsasso</p>
+                <div id="footer_nav">                    
+                    <div class="copyright">
+                        <p>&copy; 2024 TUTTO PASTA</p>
+                        <p>dev: Gino Dalsasso</p>
+                    </div>
+                    <div class="footer_rgpd">
+                        <a href="#">Mentions légales -</a>
+                        <a href="#">Politique de confidentialité -</a> 
+                        <a href="#">CGU</a>
+                    </div>
+                </div>
             </footer>
         {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}

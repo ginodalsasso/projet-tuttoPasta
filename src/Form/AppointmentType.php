@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use DateTimeInterface;
 use App\Entity\Service;
 use App\Entity\Appointment;
 use Symfony\Component\Form\AbstractType;
@@ -43,7 +44,7 @@ class AppointmentType extends AbstractType
             ->add('message', TextareaType::class, [
                 'constraints'=>[
                     new NotBlank([
-                        'message' => 'Veuillez entrer un email',
+                        'message' => 'Veuillez entrer un message',
                     ]),
                     new Length([
                         'min' => 5,
