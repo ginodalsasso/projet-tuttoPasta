@@ -63,6 +63,8 @@ a{
     background-color: var(--black-color);
     font-weight: bold;
     text-transform: uppercase;
+    border: none;
+    cursor: pointer;
 }
 
 .full_button_white {
@@ -80,8 +82,70 @@ a{
     background-color: var(--bg-colour);
 }
 
-/*=============== FOOTER ===============*/
+/*=============== APPOINTMENT ===============*/
+#appointment_container{
+    display: flex;
+    align-items: center;
+    flex-direction:column;
+    gap: 20px;
+}
 
+/* #appointment_table_left, .appointment_table_right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  } */
+
+#appointment_container label{
+    display: block;
+    margin-bottom: 10px;
+}
+#appointment_container input[type=text],
+#appointment_container input[type=email], 
+#appointment_container input[type=date], 
+#appointment_container textarea{
+    width: 400px;
+    height: 40px;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 1px;
+    border-radius: 0;
+    border: 2px solid #000000;
+}
+#appointment_container textarea{
+    height: 100px;
+    resize: vertical;
+}
+
+.radioSlots{
+    display: none;
+}
+
+#available-rdv{
+    width: 400px;
+    text-align: center;
+}
+
+#available-rdv label{
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 5px;
+    border: 1px solid #000000;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#available-rdv label:hover {
+    background-color: var(--black-color);
+    color: var(--bg-colour);
+}
+
+#available-rdv label.checked + label {
+    background-color: var(--black-color);
+    color: var(--bg-colour);
+}
+
+/*=============== FOOTER ===============*/
 footer {
     background-color: var(--black-color);
 }

@@ -1,40 +1,42 @@
-{% extends 'base.html.twig' %} {% block title %} Tutto Pasta - Rendez-Vous {%
-endblock %} {% block body %} {# {{ form(form) }} #}
-{{ form_start(form) }}
-{{ form_row(form.name) }}
-{{ form_errors(form.name) }}
-{{ form_row(form.email) }}
-{{ form_errors(form.email) }}
-{{ form_row(form.message) }}
-{{ form_errors(form.message) }}
-<div id="error_msg"></div>
-{{ form_row(form.startDate, {'attr': {'id': 'dateInput'}}) }}
-<div id="available-rdv"></div>
-<input type="hidden" id="selectedSlot" name="selectedSlot" value="" />
-{{ form_row(form.services) }}
+{% extends 'base.html.twig' %} 
+
+{% block title %} Tutto Pasta - Rendez-Vous 
+{%endblock %} 
+
+{% block body %} 
+
+<div id="appointment_container">
+  {# {{ form_start(form) }} #}
+  <input type="hidden" id="selectedSlot" name="selectedSlot" value="" />
+
+    {{ form_row(form.name) }}
+    {{ form_errors(form.name) }}
+    {{ form_row(form.email) }}
+    {{ form_errors(form.email) }}
+    {{ form_row(form.message) }}
+    {{ form_errors(form.message) }}
+    {{ form_row(form.startDate, {'attr': {'id': 'dateInput'}}) }}
+    <div id="available-rdv"></div>
+  <div id="error_msg"></div>
+  
+{{ form_row(form.save, {'attr': {'class': 'full_button_black'}}) }}
+</div>
+  {# {{ form_end(form) }} #}
+{# {{ form_row(form.services) }} #}
 
 {# {{ form_row(form.services) }} #} {# {{ dump(form.services) }} #} {#
 <div
   id="services"
   data-prototype="{{ form_widget(form.services.vars.prototype)|e('html_attr') }}"
 >
-  {{ form_widget(form.services) }}
 </div>
 #}
 
-{{ form_row(form.save) }}
-{{ form_end(form) }}
 
-{% endblock body %} 
+{% endblock body %}   
 
 {% block javascripts %}
 <script>
-  $(document).ready(function() {
-    // you may need to change this code if you are not using Bootstrap Datepicker
-    $('.js-datepicker').datepicker({
-        format: 'yyyy-mm-dd'
-    });
-});
       /* document.addEventListener('DOMContentLoaded', function() {
                     var collectionHolder = document.querySelector('#services');
                         var prototype = collectionHolder.dataset.prototype;
@@ -112,7 +114,7 @@ endblock %} {% block body %} {# {{ form(form) }} #}
                 .append(document.createTextNode(formatTime(slot)));
               // Ajoute le label au conteneur des créneaux horaires disponibles
               $availableRdv.append($label);
-
+              
               // Ajoute un écouteur d'événement pour mettre à jour la valeur du champ caché lorsque l'utilisateur sélectionne un créneau horaire
               $input.on("change", function () {
                 $selectedSlot.val(slot);

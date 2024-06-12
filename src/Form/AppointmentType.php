@@ -26,6 +26,9 @@ class AppointmentType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => "Votre nom",
+                'attr' => [
+                    'autocomplete' => 'off'
+                ],
                 'constraints'=>[
                     new NotBlank([
                         'message' => 'Veuillez entrer un nom',
@@ -35,6 +38,9 @@ class AppointmentType extends AbstractType
             ])
             ->add('email', EmailType::class,[
                 'label' => "Votre e-mail",
+                'attr' => [
+                    'autocomplete' => 'off'
+                ],
                 'constraints' => [
                     new Email([
                         'message' => "L\'adresse email doit être au format valide. Exemple : exemple@domaine.com.",
@@ -45,6 +51,9 @@ class AppointmentType extends AbstractType
                 ]])
             ->add('message', TextareaType::class, [
                 'label' => "Notes supplémentaires",
+                'attr' => [
+                    'autocomplete' => 'off'
+                ],
                 'constraints'=>[
                     new NotBlank([
                         'message' => 'Veuillez entrer un message',
@@ -58,11 +67,6 @@ class AppointmentType extends AbstractType
             ->add('startDate', DateType::class, [
                 'label' => false,
                 'widget' => 'single_text',
-                // prevents rendering it as type="date", to avoid HTML5 date pickers
-                'html5' => false,
-
-                // adds a class that can be selected in JavaScript
-                'attr' => ['class' => 'js-datepicker'],
                 'constraints'=>[
                     new GreaterThanOrEqual([
                         'value' => 'today',
@@ -71,12 +75,12 @@ class AppointmentType extends AbstractType
                 ],
 
             ])
-            ->add('services', EntityType::class, [
-                'class' => Service::class,
-                'choice_label' => 'serviceName', 
-                'multiple' => true,
-                'expanded' => true, // true pour checkboxes
-            ])
+            // ->add('services', EntityType::class, [
+            //     'class' => Service::class,
+            //     'choice_label' => 'serviceName', 
+            //     'multiple' => true,
+            //     'expanded' => true, // true pour checkboxes
+            // ])
             // ->add('services', CollectionType::class, [
             //     'entry_type' => ServiceType::class,
             //     'allow_add' => true,
