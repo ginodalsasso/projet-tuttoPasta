@@ -27,7 +27,8 @@ class AppointmentType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => "Votre nom",
                 'attr' => [
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'off',
+                    'class' => 'data'
                 ],
                 'constraints'=>[
                     new NotBlank([
@@ -39,11 +40,12 @@ class AppointmentType extends AbstractType
             ->add('email', EmailType::class,[
                 'label' => "Votre e-mail",
                 'attr' => [
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'off',
+                    'class' => 'data'
                 ],
                 'constraints' => [
                     new Email([
-                        'message' => "L\'adresse email doit être au format valide. Exemple : exemple@domaine.com.",
+                        'message' => "L'adresse email doit être au format valide.",
                     ]),
                     new NotBlank([
                         'message' => 'Veuillez entrer un email',
@@ -52,7 +54,8 @@ class AppointmentType extends AbstractType
             ->add('message', TextareaType::class, [
                 'label' => "Notes supplémentaires",
                 'attr' => [
-                    'autocomplete' => 'off'
+                    'autocomplete' => 'off',
+                    "class" => "data"
                 ],
                 'constraints'=>[
                     new NotBlank([
