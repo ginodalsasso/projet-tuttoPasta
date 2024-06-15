@@ -70,6 +70,9 @@ class AppointmentType extends AbstractType
             ->add('startDate', DateType::class, [
                 'label' => false,
                 'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'data'
+                ],
                 'constraints'=>[
                     new GreaterThanOrEqual([
                         'value' => 'today',
