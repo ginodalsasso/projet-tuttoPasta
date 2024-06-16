@@ -82,7 +82,45 @@ a{
     background-color: var(--bg-colour);
 }
 
+/*=============== TITLES ===============*/
+.h1_title{
+    text-align: center;
+    font-size: var(--h1-fontsize);
+    font-weight: normal;
+    margin: 200px;
+}
+
 /*=============== APPOINTMENT ===============*/
+#form_display {
+    background-color: rgb(249, 211, 211);/*var(--bg-colour)*/
+    position: relative;
+    z-index: 1;
+    padding: 10px;
+    margin-bottom: 460px;
+}
+
+.background_top, 
+.background_bottom_left, 
+.background_bottom_right{
+    position: absolute;
+    z-index: -1;
+}
+.background_top{
+    top: 25vh;
+    left: 0;
+    height: auto;
+}
+
+.background_bottom_left{
+    top: 1300px;
+    left: -170px;
+}
+
+.background_bottom_right{
+    top: 1250px;
+    right: -170px;
+}
+
 .error_msg{
     color: var(--red-color);
     font-size: 14px;
