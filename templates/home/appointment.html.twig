@@ -20,17 +20,20 @@
             {{ form_row(form.message) }}
             <div class="error_msg" id="message_error"></div>
         </div>
+        <div class="form-group" id="availableServices">
+            {{ form_row(form.services) }}
+        </div> 
+        <input type="hidden" id="selectedService" name="selectedService" value="">
         <div class="form-group">
             {{ form_row(form.startDate, {'attr': {'id': 'dateInput'}}) }}
             <div class="error_msg" id="date_error"></div>
             <div id="available-rdv"></div>
         </div>
-
         {{ form_row(form.save, {'attr': {'class': 'full_button_black'}}) }}
     </div>
 {{ form_end(form) }}
 
-{# {{ form_row(form.services) }} #} {# {{ form_row(form.services) }} #} {#
+{# {{ form_row(form.services) }} #} {#
 {{ dump(form.services) }} #} {#
 <div
   id="services"
@@ -39,8 +42,9 @@
 #} 
 <script>
     var ajaxUrl = "{{ path('available_rdv') }}";
-  </script>
-{% endblock body %} {% block javascripts %}
-<script src="{{ asset('/js/appointment.js')}}"></script>
+</script>
+{% endblock body %} 
 
+{% block javascripts %}
+<script src="{{ asset('/js/appointment.js')}}"></script>
 {% endblock %}

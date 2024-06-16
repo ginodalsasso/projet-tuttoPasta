@@ -101,16 +101,16 @@ a{
     margin: 100px;
 }
 
-
 #appointment_container label{
     display: block;
     margin-bottom: 10px;
 }
+
 #appointment_container input[type=text],
 #appointment_container input[type=email], 
 #appointment_container input[type=date], 
 #appointment_container textarea{
-    width: 400px;
+    width: 500px;
     height: 40px;
     padding: 10px;
     font-size: 16px;
@@ -118,17 +118,18 @@ a{
     border-radius: 0;
     border: 2px solid #000000;
 }
+
 #appointment_container textarea{
     height: 100px;
     resize: vertical;
 }
 
 #available-rdv{
-    width: 400px;
+    width: 500px;
     text-align: center;
 }
 
-#available-rdv label{
+#available-rdv label, #appointment_services label {
     display: inline-block;
     padding: 10px 20px;
     margin-right: 5px;
@@ -137,18 +138,23 @@ a{
     transition: background-color 0.3s ease;
 }
 
-#available-rdv label:hover {
+#available-rdv label:hover, #appointment_services label:hover {
     background-color: var(--black-color);
     color: var(--bg-colour);
 }
 
-.radioSlots{
-    display:none;
+.radioSlots, input[type="checkbox"]  {
+    display: none;
 }
 
 .showRadioClass {
     background-color: var(--black-color);
     color: var(--bg-colour);
+}
+
+#appointment_services {
+    display: flex;
+    width: 500px;
 }
 
 /*=============== FOOTER ===============*/

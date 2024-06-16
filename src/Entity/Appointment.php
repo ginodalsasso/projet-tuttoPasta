@@ -56,7 +56,7 @@ class Appointment
     /**
      * @var Collection<int, Service>
      */
-    #[ORM\ManyToMany(targetEntity: Service::class, mappedBy: 'appointments', cascade: ["persist"])]
+    #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'appointments', cascade: ["persist"])]
     private Collection $services;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
