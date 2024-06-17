@@ -42,7 +42,7 @@ a{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 38px 100px
+    margin: 38px 100px 0 100px;
 }
 #nav_container {
     display: flex;
@@ -57,6 +57,7 @@ a{
     text-transform: uppercase;
 }
 
+/*=============== BUTTONS ===============*/
 .full_button_black {
     padding: 20px 30px;
     color: var(--bg-colour);
@@ -82,6 +83,19 @@ a{
     background-color: var(--bg-colour);
 }
 
+/*=============== HEADER ===============*/
+.sub_header_tittle_container{
+    position: relative;
+    height: 70vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+}
+
+.background_top{
+    position: absolute;
+}
+
 /*=============== TITLES ===============*/
 .h1_title{
     text-align: center;
@@ -92,19 +106,12 @@ a{
 
 /*=============== APPOINTMENT ===============*/
 #form_display {
-    background-color: rgb(249, 211, 211);/*var(--bg-colour)*/
+    background-color: var(--bg-colour);
     position: relative;
     z-index: 1;
     padding: 10px;
-    margin-bottom: 460px;
 }
 
-/* .background_top, 
-.background_bottom_left, 
-.background_bottom_right{
-    position: absolute;
-    z-index: -1;
-} */
 .background_top{
     top: 25vh;
     left: 0;
