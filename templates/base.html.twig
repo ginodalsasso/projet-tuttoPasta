@@ -7,10 +7,9 @@
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('css/style.css')}}">
             <link rel="stylesheet" href="https://use.typekit.net/tkf7imz.css">
-        
         {% endblock %}
         <script src="{{ asset('/js/jquery-3.7.1.min.js')}}"></script>
-            <script src="{{ asset('/js/script.js')}}"></script>
+        <script src="{{ asset('/js/script.js')}}"></script>
     </head>
 
     <body>
@@ -32,10 +31,17 @@
             </nav>
             <a class="full_button_black" href="{{ path('app_appointment') }}"> Prendre RDV </a>
             </header>
-            <div class="sub_header_tittle_container">
+           
+            {# <div class="sub_header_tittle_container">
+                {# {% if app.request.get('_route') == 'app_home' %}
+                    <h1></h1>
+                {% else %}
+                    <h1>{{ title|upper }}</h1>
+                {% endif %} 
                 <img class="background_top" src="{{ asset('/img/Background-top.svg') }} " alt="background tuttoPasta" loading="lazy">
-            </div>
+            </div> #}
         {% block body %}
+
         
 
 

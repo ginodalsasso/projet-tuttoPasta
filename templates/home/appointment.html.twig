@@ -1,40 +1,38 @@
 {% extends 'base.html.twig' %} 
 
-{% block title %} Tutto Pasta - Rendez-Vous {%endblock %} 
+{% block title %} Tutto Pasta - Rendez-Vous {% endblock %} 
 
 {% block body %}
-<h1 class="h1_title">Prendre rendez-vous</h1>
-
-<div id="form_display">
-    {{ form_start(form) }}
-        <div id="appointment_container">
-            <input type="hidden" id="selectedSlot" name="selectedSlot" value="" />
-    
-            <div class="form-group">
-                {{ form_row(form.name) }}
-                <div class="error_msg" id="name_error"></div>
+    <div id="form_display">
+        {{ form_start(form) }}
+            <div id="appointment_container">
+                <input type="hidden" id="selectedSlot" name="selectedSlot" value="" />
+        
+                <div class="form-group">
+                    {{ form_row(form.name) }}
+                    <div class="error_msg" id="name_error"></div>
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.email) }}
+                    <div class="error_msg" id="email_error"></div>
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.message) }}
+                    <div class="error_msg" id="message_error"></div>
+                </div>
+                <div class="form-group" id="availableServices">
+                    {{ form_row(form.services) }}
+                </div> 
+                <input type="hidden" id="selectedService" name="selectedService" value="">
+                <div class="form-group">
+                    {{ form_row(form.startDate, {'attr': {'id': 'dateInput'}}) }}
+                    <div class="error_msg" id="date_error"></div>
+                    <div id="available-rdv"></div>
+                </div>
+                {{ form_row(form.save, {'attr': {'class': 'full_button_black'}}) }}
             </div>
-            <div class="form-group">
-                {{ form_row(form.email) }}
-                <div class="error_msg" id="email_error"></div>
-            </div>
-            <div class="form-group">
-                {{ form_row(form.message) }}
-                <div class="error_msg" id="message_error"></div>
-            </div>
-            <div class="form-group" id="availableServices">
-                {{ form_row(form.services) }}
-            </div> 
-            <input type="hidden" id="selectedService" name="selectedService" value="">
-            <div class="form-group">
-                {{ form_row(form.startDate, {'attr': {'id': 'dateInput'}}) }}
-                <div class="error_msg" id="date_error"></div>
-                <div id="available-rdv"></div>
-            </div>
-            {{ form_row(form.save, {'attr': {'class': 'full_button_black'}}) }}
-        </div>
-    {{ form_end(form) }}
-</div>
+        {{ form_end(form) }}
+    </div>
 
 {# {{ form_row(form.services) }} #} {#
 {{ dump(form.services) }} #} {#

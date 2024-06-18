@@ -106,7 +106,7 @@ a{
 
 /*=============== APPOINTMENT ===============*/
 #form_display {
-    background-color: var(--bg-colour);
+    background-color: white;
     position: relative;
     z-index: 1;
     padding: 10px;
