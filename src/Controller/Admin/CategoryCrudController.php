@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 
 #[IsGranted('ROLE_ADMIN')]
 class CategoryCrudController extends AbstractCrudController
@@ -17,14 +18,16 @@ class CategoryCrudController extends AbstractCrudController
         return Category::class;
     }
 
-    /*
+    
     public function configureFields(string $pageName): iterable
     {
         return [
             IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            TextField::new('categoryName'),
+            TextEditorField::new('categoryContent'),
+            CollectionField::new('projects'),
+            CollectionField::new('articles'),
+            CollectionField::new('services'),
         ];
     }
-    */
 }

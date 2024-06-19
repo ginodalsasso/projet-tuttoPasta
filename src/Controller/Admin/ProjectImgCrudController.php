@@ -24,10 +24,9 @@ class ProjectImgCrudController extends AbstractCrudController
     {
         return [
             IdField::new('id'),
-            CollectionField::new('project'),
+            TextField::new('project'),
             ImageField::new('image')->setUploadDir('public/img/'),
             TextField::new('alt'),
         ];
     }
-    
 }

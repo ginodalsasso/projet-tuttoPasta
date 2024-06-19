@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Comment;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -17,14 +18,14 @@ class CommentCrudController extends AbstractCrudController
         return Comment::class;
     }
 
-    /*
     public function configureFields(string $pageName): iterable
     {
         return [
             IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            TextEditorField::new('commentContent'),
+            DateTimeField::new('commentDate'),
+            TextField::new('article'),
+            TextField::new('user')
         ];
     }
-    */
 }

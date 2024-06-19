@@ -17,14 +17,14 @@ class AdministrationCrudController extends AbstractCrudController
         return Administration::class;
     }
 
-    /*
+    
     public function configureFields(string $pageName): iterable
     {
         return [
             IdField::new('id'),
             TextField::new('title'),
-            TextEditorField::new('description'),
+            TextEditorField::new('textContent'),
         ];
     }
-    */
+    
 }
