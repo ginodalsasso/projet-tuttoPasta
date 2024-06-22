@@ -33,12 +33,11 @@ body {
 }
 
 /*=============== NAVBAR ===============*/
-
 a{
     text-decoration : none;
 }
 
-#header_content{
+#header_content {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -77,14 +76,14 @@ a{
     text-transform: uppercase;
 }
 
-.stickers_white{
+.stickers_white {
     padding: 2px 10px;
     color: var(--black-color);
     background-color: var(--bg-colour);
 }
 
 /*=============== HEADER ===============*/
-.sub_header_tittle_container{
+.sub_header_tittle_container {
     position: relative;
     height: 70vh;
     overflow: hidden;
@@ -92,20 +91,26 @@ a{
     justify-content: space-between;
 }
 
-.background_top{
+.background_top {
     position: absolute;
 }
 
 /*=============== TITLES ===============*/
-.h1_title{
+.h1_title {
     text-align: center;
     font-size: var(--h1-fontsize);
     font-weight: normal;
     margin: 200px;
 }
 
+/*=============== REGISTRATION ===============*/
+.agreeTerms {
+    display: block !important;
+}
+
+
 /*=============== APPOINTMENT ===============*/
-#form_display {
+.form_display {
     background-color: white;
     position: relative;
     z-index: 1;
@@ -127,7 +132,7 @@ a{
     border: 2px solid red !important;
 }
 
-#appointment_container{
+.form_container{
     display: flex;
     align-items: center;
     flex-direction:column;
@@ -135,15 +140,16 @@ a{
     margin: 100px;
 }
 
-#appointment_container label{
+.form_container label{
     display: block;
     margin-bottom: 10px;
 }
 
-#appointment_container input[type=text],
-#appointment_container input[type=email], 
-#appointment_container input[type=date], 
-#appointment_container textarea{
+.form_container input[type=text],
+.form_container input[type=password],
+.form_container input[type=email], 
+.form_container input[type=date], 
+.form_container textarea {
     width: 500px;
     height: 40px;
     padding: 10px;
@@ -153,17 +159,18 @@ a{
     border: 2px solid #000000;
 }
 
-#appointment_container textarea{
+.form_container textarea {
     height: 100px;
     resize: vertical;
 }
 
-#available-rdv{
+#available-rdv {
     width: 500px;
     text-align: center;
 }
 
-#available-rdv label, #appointment_services label {
+#available-rdv label, 
+#appointment_services label {
     display: inline-block;
     padding: 10px 20px;
     margin-right: 5px;
@@ -172,7 +179,8 @@ a{
     transition: background-color 0.3s ease;
 }
 
-#available-rdv label:hover, #appointment_services label:hover {
+#available-rdv label:hover, 
+#appointment_services label:hover {
     background-color: var(--black-color);
     color: var(--bg-colour);
 }
@@ -197,21 +205,21 @@ footer {
 }
 
 
-.background_bottom_left{
+.background_bottom_left {
     position: absolute;
     left: -160px;
     top: -100px;
 }
 
 
-.background_bottom_right{
+.background_bottom_right {
     position: absolute;
     right: -130px;
      top: -150px;
 
 }
 
-.background-bottom{
+.background-bottom {
     background-color: var(--bg-colour);
     height: 400px;
     overflow: hidden;
@@ -221,7 +229,7 @@ footer {
     align-items: center;
 }
 
-.background-bottom h2{
+.background-bottom h2 {
     text-align: center;
     font-size: var(--h1-fontsize);
     font-weight: normal;
@@ -237,18 +245,20 @@ footer {
     color: var(--bg-colour);
 }
 
-.footer_collab, .footer_social, .copy, #footer_nav{
+.footer_collab, 
+.footer_social, 
+.copy, #footer_nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.footer_collab{
+.footer_collab {
     margin: 0 100px 100px 100px;
     padding-top: 100px;
 }
 
-hr{
+hr {
     margin: 0 100px;
     margin-bottom: 50px;
 }
@@ -274,9 +284,10 @@ hr{
     margin-right: 10px;
 }
 
-#footer_nav{
+#footer_nav {
     padding: 50px 100px;
 }
-#footer_nav p, #footer_nav a {
+#footer_nav p, 
+#footer_nav a {
     font-size: 14px;
 }

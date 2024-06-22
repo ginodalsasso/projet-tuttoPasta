@@ -14,17 +14,16 @@
 
     <body>
         <header id="header_content">
-            <img src="{{ asset('/img/logo.svg')}}" alt="Logo TuttoPasta">
+            <a href="{{ path('app_home') }}"><img src="{{ asset('/img/logo.svg')}}" alt="Logo TuttoPasta"></a>
             <nav>
                 <ul id="nav_container">
-                    <li><a href="{{ path('app_home') }}"> Home </a></li>
                     <li><a href="{{ path('app_projectList') }}"> Projets </a></li>
                     <li><a href="{{ path('app_blog') }}"> Blog </a></li>
                     {% if app.user %}
-                        <li><a href="{{ path('app_logout') }}"> Se déconnecter </a></li>
+                        <li><a href="{{ path('app_logout') }}"> Déconnexion </a></li>
                     {% else %}
-                        <li><a href="{{ path('app_login') }}"> Se connecter </a></li>
-                        <li><a href="{{ path('app_register') }}"> S'enregistrer </a></li>
+                        <li><a href="{{ path('app_login') }}"> Connexion </a></li>
+                        <li><a href="{{ path('app_register') }}"> Inscription </a></li>
                     {% endif %}
                 </ul>
 

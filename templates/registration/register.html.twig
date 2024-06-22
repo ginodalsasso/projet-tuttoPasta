@@ -7,20 +7,31 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
-
     {{ form_errors(registrationForm) }}
 
     {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_errors(registrationForm.plainPassword) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-        {# {{ form_row(registrationForm.errors) }} #}
+    
+        <div class="form_container">
+            <div class="form-group">
+                {{ form_row(registrationForm.username) }}
+                <div class="error_msg" id="pseudo_error"></div>
+            </div>
+            <div class="form-group">
+                {{ form_row(registrationForm.email) }}
+                <div class="error_msg" id="email_error"></div>
+            </div>
+            {{ form_row(registrationForm.plainPassword, {
+                label: 'Password'
+            }) }}
+            {{ form_errors(registrationForm.plainPassword) }}
 
-        <button type="submit" class="btn">Register</button>
+            {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'agreeTerms'}}) }}
+            {# {{ form_row(registrationForm.errors) }} #}
+        
+            <button type="submit" id="register_save" class="full_button_black">S'inscrire</button>
+        </div>
     {{ form_end(registrationForm) }}
+{% endblock %}
+{% block javascripts %}
+<script src="{{ asset('/js/register.js')}}"></script>
 {% endblock %}
