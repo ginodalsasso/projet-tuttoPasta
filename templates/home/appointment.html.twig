@@ -34,13 +34,6 @@
         {{ form_end(form) }}
     </div>
 
-{# {{ form_row(form.services) }} #} {#
-{{ dump(form.services) }} #} {#
-<div
-  id="services"
-  data-prototype="{{ form_widget(form.services.vars.prototype)|e('html_attr') }}"
-></div>
-#} 
 <script>
     var ajaxUrl = "{{ path('available_rdv') }}";
 </script>

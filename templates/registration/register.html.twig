@@ -23,6 +23,8 @@
             {{ form_row(registrationForm.plainPassword, {
                 label: 'Password'
             }) }}
+            <div class="error_msg" id="password_error"></div>
+
             {{ form_errors(registrationForm.plainPassword) }}
 
             {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'agreeTerms'}}) }}
