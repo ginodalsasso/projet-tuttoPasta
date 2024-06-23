@@ -22,3 +22,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Security\AccessDeniedHandler:
+        arguments:
+            $urlGenerator: '@router'
+            
+    acme_security.access_denied_handler:
+        alias: App\Security\AccessDeniedHandler
