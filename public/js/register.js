@@ -10,22 +10,26 @@ $(document).ready(function () {
         return passwordReg.test(password);
     }
 
+    function validateUsername(username) {
+        const usernameReg = /^[a-zA-Z][a-zA-Z0-9_-]{2,49}$/;
+        return usernameReg.test(username);
+    }
+
     $("#register_save").on("click", function (event) {
         $(".error_msg").text("");
         $(".data").removeClass("input_invalid");
-
         let isValid = true;
 
         $(".data").each(function () {
-            if ($(this).val() === "") {
+            if ($(this).val().trim() === "") {
                 $(this).addClass("input_invalid");
                 isValid = false;
             }
         });
 
         const name = $("#registration_form_username").val().trim();
-        if (name === "" || name.length < 2 || name.length > 50) {
-            $("#pseudo_error").text("Le pseudo est invalide et doit contenir entre 2 et 50 caractères");
+        if (!validateUsername(name)) {
+            $("#pseudo_error").text("Le pseudo est invalide. Il doit commencer par une lettre, contenir entre 3 et 50 caractères, et ne peut inclure que des lettres, des chiffres, des tirets et des underscores.");
             $("#registration_form_username").addClass("input_invalid");
             isValid = false;
         }
@@ -75,6 +79,8 @@ $(document).ready(function () {
 
         if (isValid) {
             $("#register_save").submit();
+        } else {
+            event.preventDefault();
         }
     });
 });

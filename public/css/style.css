@@ -104,7 +104,7 @@ a{
 }
 
 /*=============== REGISTRATION ===============*/
-.agreeTerms {
+.agree_terms {
     display: block !important;
 }
 
@@ -157,6 +157,12 @@ a{
     margin-bottom: 1px;
     border-radius: 0;
     border: 2px solid #000000;
+}
+
+.agreeTerms_display div{
+    display: flex;;
+    align-items: baseline;
+    flex-direction: row-reverse;
 }
 
 .form_container textarea {

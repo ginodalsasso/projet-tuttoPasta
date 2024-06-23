@@ -29,6 +29,7 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'class' => 'data'
                 ],
+
             ])
             ->add('email', EmailType::class,[
                 'attr' => [
@@ -39,7 +40,7 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Accepter les termes et conditions',
                 'mapped' => false,
                 'attr' => [
-                    'class' => 'data'
+                    'class' => 'data agree_terms'
                 ],
                 'constraints' => [
                     new IsTrue([
@@ -50,7 +51,6 @@ class RegistrationFormType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'mapped' => false,
                 'type' => PasswordType::class,
-                'invalid_message' => 'Erreur de saisie des mots de passes',
                 'attr' => [
                     'autocomplete' => 'new-password',
                     'class' => 'form-group data'
@@ -58,7 +58,7 @@ class RegistrationFormType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a password',
-                    ]),
+                    ]),                    
                     new Length([
                         'min' => 12,
                         'max' => 4096,

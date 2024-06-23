@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
@@ -47,9 +48,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'user')]
     private Collection $comments;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $accountDate = null;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+
+        //initialise la date et l'heure de la création de compte user lors de la création de l'objet
+        $timezone = new \DateTimeZone('Europe/Paris');
+        $this->accountDate = new \DateTime('now', $timezone);
     }
 
     public function getId(): ?int
@@ -151,6 +159,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getAccountDate(): ?\DateTimeInterface
+    {
+        return $this->accountDate;
+    }
+    
+    public function setAccountDate(\DateTimeInterface $accountDate): static
+    {
+        $this->accountDate = $accountDate;
+        
+        return $this;
+    }
+
+
     /**
      * @return Collection<int, Comment>
      */
@@ -180,6 +201,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    
 
     public function __toString()
     {
