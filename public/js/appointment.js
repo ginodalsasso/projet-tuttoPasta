@@ -123,14 +123,14 @@ $(document).ready(function () {
             }
         });
 
-        const name = $("#appointment_name").val();
+        const name = $("#appointment_name").val().trim();
         if (name === "" || name.length < 2 || name.length > 50) {
             $("#name_error").text("Le nom est invalide et doit contenir entre 2 et 50 caractères");
             $("#appointment_name").addClass("input_invalid");
             isValid = false;
         }
 
-        const email = $("#appointment_email").val();
+        const email = $("#appointment_email").val().trim();
         if (email === "" || !validateEmail(email)) {
             $("#email_error").text("L'email est invalide !");
             $("#appointment_email").addClass("input_invalid");

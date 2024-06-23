@@ -23,22 +23,22 @@ $(document).ready(function () {
             }
         });
 
-        const name = $("#registration_form_username").val().trim();
+        const name = $("#registration_form_username").val();
         if (name === "" || name.length < 2 || name.length > 50) {
             $("#pseudo_error").text("Le pseudo est invalide et doit contenir entre 2 et 50 caractères");
             $("#registration_form_username").addClass("input_invalid");
             isValid = false;
         }
 
-        const email = $("#registration_form_email").val().trim();
+        const email = $("#registration_form_email").val();
         if (email === "" || !validateEmail(email)) {
             $("#email_error").text("L'email est invalide !");
             $("#registration_form_email").addClass("input_invalid");
             isValid = false;
         }
 
-        const password1 = $("#registration_form_plainPassword_first").val().trim();
-        const password2 = $("#registration_form_plainPassword_second").val().trim();
+        const password1 = $("#registration_form_plainPassword_first").val();
+        const password2 = $("#registration_form_plainPassword_second").val();
 
         if (password1 === "" || password2 === "") {
             $("#password_error").text("Les deux champs de mot de passe doivent être remplis !");
@@ -74,7 +74,7 @@ $(document).ready(function () {
         }
 
         if (isValid) {
-            $("#register_save").submit();
+            $("#appointment_form").submit();
         }
     });
 });
