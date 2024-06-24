@@ -10,6 +10,7 @@
         {% endblock %}
         <script src="{{ asset('/js/jquery-3.7.1.min.js')}}"></script>
         <script src="{{ asset('/js/script.js')}}"></script>
+
     </head>
 
     <body>
@@ -45,46 +46,46 @@
 
 
         {% endblock %}
-            <footer>
-                <div class="background-bottom">
-                    <h2>TuttoPasta, le 3e  œil qui rend <br>
-                        ton entreprise remarquable. </h2>
-                    <img class="background_bottom_left" src="{{ asset('/img/background-bottom-left.svg') }} " alt="background tuttoPasta" loading="lazy">
-                    <img class="background_bottom_right" src="{{ asset('/img/background-bottom-right.svg') }} " alt="background tuttoPasta" loading="lazy">
-                </div>
-                <div class="footer_collab">
-                    <h1>Prêt à collaborer</br>avec TuttoPasta ?</h1>
-                    <a class="full_button_white" href="{{ path('app_appointment') }}"> Je veux prendre RDV </a>
-                </div>
+        <footer>
+            <div class="background-bottom">
+                <h2>TuttoPasta, le 3e  œil qui rend <br>
+                    ton entreprise remarquable. </h2>
+                <img class="background_bottom_left" src="{{ asset('/img/background-bottom-left.svg') }} " alt="background tuttoPasta" loading="lazy">
+                <img class="background_bottom_right" src="{{ asset('/img/background-bottom-right.svg') }} " alt="background tuttoPasta" loading="lazy">
+            </div>
+            <div class="footer_collab">
+                <h1>Prêt à collaborer</br>avec TuttoPasta ?</h1>
+                <a class="full_button_white" href="{{ path('app_appointment') }}"> Je veux prendre RDV </a>
+            </div>
 
-                <hr>
-                <div class="footer_social">                    
-                    <nav>
-                        <ul>
-                            <li><img src="{{ asset('/img/blue_smile.svg')}}" alt="blue smiley"><a href="#">Linkedin</a></li>
-                            <li><img src="{{ asset('/img/green_smile.svg')}}" alt="green smiley"><a href="#">Behance</a></li>
-                            <li><img src="{{ asset('/img/pink_smile.svg')}}" alt="pink smiley"><a href="#">Instagram</a></li>
-                        </ul>
-                    </nav>                      
+            <hr>
+            <div class="footer_social">                    
+                <nav>
                     <ul>
-                        <li><p class="stickers_white">Services</p></li>
-                        <li><p>Identité Visuelle</p></li>
-                        <li><p>Sites Internet</p></li>
-                        <li><p>Prestations</p></li>
+                        <li><img src="{{ asset('/img/blue_smile.svg')}}" alt="blue smiley"><a href="#">Linkedin</a></li>
+                        <li><img src="{{ asset('/img/green_smile.svg')}}" alt="green smiley"><a href="#">Behance</a></li>
+                        <li><img src="{{ asset('/img/pink_smile.svg')}}" alt="pink smiley"><a href="#">Instagram</a></li>
                     </ul>
+                </nav>                      
+                <ul>
+                    <li><p class="stickers_white">Services</p></li>
+                    <li><p>Identité Visuelle</p></li>
+                    <li><p>Sites Internet</p></li>
+                    <li><p>Prestations</p></li>
+                </ul>
+            </div>
+            <div id="footer_nav">                    
+                <div class="copyright">
+                    <p>&copy; 2024 TUTTO PASTA</p>
+                    <p>dev: Gino Dalsasso</p>
                 </div>
-                <div id="footer_nav">                    
-                    <div class="copyright">
-                        <p>&copy; 2024 TUTTO PASTA</p>
-                        <p>dev: Gino Dalsasso</p>
-                    </div>
-                    <div class="footer_rgpd">
-                        <a href="#">Mentions légales -</a>
-                        <a href="#">Politique de confidentialité -</a> 
-                        <a href="#">CGU</a>
-                    </div>
+                <div class="footer_rgpd">
+                    <a href="#">Mentions légales -</a>
+                    <a href="#">Politique de confidentialité -</a> 
+                    <a href="#">CGU</a>
                 </div>
-            </footer>
+            </div>
+        </footer>        
         {% block javascripts %}
 
         {% endblock %}

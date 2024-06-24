@@ -105,11 +105,6 @@ $(document).ready(function () {
     }
 
     // Messages d'erreurs UI
-    function validateEmail(email) {
-        const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-        return emailReg.test(email);
-    }
-
     $("#appointment_save").on("click", function (event) {
         $(".error_msg").text("");
         $(".data").removeClass("input_invalid");
