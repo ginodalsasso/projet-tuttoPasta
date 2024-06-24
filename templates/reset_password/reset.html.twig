@@ -8,8 +8,12 @@
         <div class="form_container">
             <div class="form-group">
                 {{ form_row(resetForm.plainPassword) }}
+                <div class="error_msg" id="password_error"></div>
             </div>
-            <button class="full_button_black">Changer mon mot de passe</button>
+            <button id="pass_confirm" class="full_button_black">Changer mon mot de passe</button>
         </div>
     {{ form_end(resetForm) }}
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('/js/login.js')}}"></script>
 {% endblock %}

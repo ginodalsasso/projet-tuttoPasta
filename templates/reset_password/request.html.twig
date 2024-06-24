@@ -11,9 +11,14 @@
         <div class="form_container">
             <div class="form-group">
                     {{ form_row(requestForm.email) }}
+                    <div class="error_msg" id="email_error"></div>
             </div>
 
-            <button class="full_button_black">Envoyer</button>
+            <button id="validate_email" class="full_button_black">Envoyer</button>
         </div>
     {{ form_end(requestForm) }}
 {% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('/js/login.js')}}"></script>
+{% endblock %}
+
