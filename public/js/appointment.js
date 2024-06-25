@@ -1,70 +1,49 @@
 // Sélection des éléments et initialisation des variables
-$(document).ready(function () {
+// $(document).ready(function () {
     const $startDate = $("#appointment_startDate");
     const $availableRdv = $("#available-rdv");
     const $selectedSlot = $("#selectedSlot");
-
-    const $errorMsg = $("#date_error");
     
+    const $errorMsg = $("#date_error");
     
     let dayoffDates = [];
     let selectedLabel = null;
-
-    // Fonction pour gérer la sélection des créneaux horaires
-    function handleSlotSelection() {
-        $availableRdv.on("change", "input[type='radio']", function () {
-            const $input = $(this);
-            const $label = $input.closest('label');
-            const slot = $input.val();
-
-            if ($input.is(":checked")) {
-                if (selectedLabel) {
-                    $(selectedLabel).removeClass("showRadioClass");
-                }
-                $label.addClass("showRadioClass");
-                selectedLabel = $label;
-                $selectedSlot.val(slot);
+    let fp;
+    
+    // Fonction pour récupérer les dayOffDates et initialiser Flatpickr
+    function initFlatpickr() {
+        $.ajax({
+            url: ajaxUrl,
+            contentType: "application/x-www-form-urlencoded",
+            method: "POST",
+            data: {
+                action: "getDayOffDates",
+            },
+            success: function (data) {
+                dayoffDates = data.dayoffDates;
+    
+                fp = flatpickr("#appointment_startDate", {
+                    locale: "fr",
+                    dateFormat: "Y-m-d",
+                    minDate: "today",
+                    disable: [
+                        function(date) {
+                            // Désactiver les weekends
+                            return (date.getDay() === 0 || date.getDay() === 6);
+                        },
+                        ...dayoffDates
+                    ]
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Erreur lors de la récupération des dates de congé :", textStatus, errorThrown);
             }
         });
     }
-
-    // Fonction pour gérer la sélection des services
-    function handleServiceSelection() {
-
-        $("#appointment_services").on("change","input[type='checkbox']", function (e) {
-            const $input = $(this);
-            const $label = $input.next('label');
-            const slot = $input.val();
-
-            if ($input.is(":checked")) {
-                $label.addClass("showRadioClass");
-                $("#selectedService").val(slot);
-            }
-        });
-    }
-
-    // Initialiser les sélections de créneaux horaires et de services
-    handleSlotSelection();
-    handleServiceSelection();
-
+    
     // Détecte les changements de la date de début
     $startDate.on("change", function () {
         const selectedDate = $startDate.val();
-        const selectedDay = new Date(selectedDate).getUTCDay();
-
-        if (selectedDay === 0 || selectedDay === 6 || dayoffDates.includes(selectedDate)) {
-            if (dayoffDates.includes(selectedDate)) {
-                $errorMsg.text("La date sélectionnée tombe sur un jour de congé. Veuillez choisir une autre date.");
-            } else {
-                $errorMsg.text("Veuillez sélectionner un jour de semaine.");
-            }
-            $startDate.val("");
-            $availableRdv.empty();
-            return;
-        } else {
-            $errorMsg.text("");
-        }
-
         $.ajax({
             url: ajaxUrl,
             contentType: "application/x-www-form-urlencoded",
@@ -73,7 +52,6 @@ $(document).ready(function () {
                 startDate: selectedDate,
             },
             success: function (data) {
-                dayoffDates = data.dayoffDates;
                 if (Array.isArray(data.availabilities)) {
                     $availableRdv.empty();
                     const allSlots = data.availabilities[0];
@@ -94,7 +72,39 @@ $(document).ready(function () {
             },
         });
     });
-
+    
+    // Fonction pour gérer la sélection des créneaux horaires
+    function handleSlotSelection() {
+        $availableRdv.on("change", "input[type='radio']", function () {
+            const $input = $(this);
+            const $label = $input.closest('label');
+            const slot = $input.val();
+    
+            if ($input.is(":checked")) {
+                if (selectedLabel) {
+                    $(selectedLabel).removeClass("showRadioClass");
+                }
+                $label.addClass("showRadioClass");
+                selectedLabel = $label;
+                $selectedSlot.val(slot);
+            }
+        });
+    }
+    
+    // Fonction pour gérer la sélection des services
+    function handleServiceSelection() {
+        $("#appointment_services").on("change","input[type='checkbox']", function (e) {
+            const $input = $(this);
+            const $label = $input.next('label');
+            const slot = $input.val();
+    
+            if ($input.is(":checked")) {
+                $label.addClass("showRadioClass");
+                $("#selectedService").val(slot);
+            }
+        });
+    }
+    
     // Fonction pour formater l'heure d'un créneau horaire en fonction de la locale 'fr-FR'
     function formatTime(dateTimeString) {
         const dateTime = new Date(dateTimeString);
@@ -103,6 +113,12 @@ $(document).ready(function () {
             minute: "2-digit",
         });
     }
+
+// Appeler la fonction pour initialiser Flatpickr dès que la page est prête
+$(document).ready(function () {
+    initFlatpickr();
+    handleSlotSelection();
+    handleServiceSelection();
 
     // Messages d'erreurs UI
     $("#appointment_save").on("click", function (event) {

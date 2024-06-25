@@ -44,7 +44,7 @@ class AppointmentType extends AbstractType
                 'label' => "Rendez-vous",
                 'widget' => 'single_text',
                 'attr' => [
-                    'class' => 'data'
+                    'class' => 'data flatpickr'
                 ],
                 'constraints'=>[
                     new GreaterThanOrEqual([
