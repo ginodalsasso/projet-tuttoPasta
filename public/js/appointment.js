@@ -3,7 +3,6 @@
     const $startDate = $("#appointment_startDate");
     const $availableRdv = $("#available-rdv");
     const $selectedSlot = $("#selectedSlot");
-    
     const $errorMsg = $("#date_error");
     
     let dayoffDates = [];
@@ -36,42 +35,45 @@
                 });
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.error("Erreur lors de la récupération des dates de congé :", textStatus, errorThrown);
+                console.error("Erreur lors de la récupération des dates de congé :", jqXHR, textStatus, errorThrown);
             }
         });
     }
-    
+
     // Détecte les changements de la date de début
-    $startDate.on("change", function () {
-        const selectedDate = $startDate.val();
-        $.ajax({
-            url: ajaxUrl,
-            contentType: "application/x-www-form-urlencoded",
-            method: "POST",
-            data: {
-                startDate: selectedDate,
-            },
-            success: function (data) {
-                if (Array.isArray(data.availabilities)) {
-                    $availableRdv.empty();
-                    const allSlots = data.availabilities[0];
-                    $.each(allSlots, function (index, slot) {
-                        const $label = $("<label>");
-                        const $input = $("<input>", {
-                            type: "radio",
-                            name: "selectedSlotRadio",
-                            value: slot,
-                            class: "radioSlots",
+    function getSelectedDate() {
+
+        $startDate.on("change", function () {
+            const selectedDate = $startDate.val();
+            $.ajax({
+                url: ajaxUrl,
+                contentType: "application/x-www-form-urlencoded",
+                method: "POST",
+                data: {
+                    startDate: selectedDate,
+                },
+                success: function (data) {
+                    if (Array.isArray(data.availabilities)) {
+                        $availableRdv.empty();
+                        const allSlots = data.availabilities[0];
+                        $.each(allSlots, function (index, slot) {
+                            const $label = $("<label>");
+                            const $input = $("<input>", {
+                                type: "radio",
+                                name: "selectedSlotRadio",
+                                value: slot,
+                                class: "radioSlots",
+                            });
+                            $label.append($input).append(document.createTextNode(formatTime(slot)));
+                            $availableRdv.append($label);
                         });
-                        $label.append($input).append(document.createTextNode(formatTime(slot)));
-                        $availableRdv.append($label);
-                    });
-                } else {
-                    console.error("Format de données invalide !");
-                }
-            },
+                    } else {
+                        console.error("Format de données invalide !");
+                    }
+                },
+            });
         });
-    });
+    }
     
     // Fonction pour gérer la sélection des créneaux horaires
     function handleSlotSelection() {
@@ -117,6 +119,7 @@
 // Appeler la fonction pour initialiser Flatpickr dès que la page est prête
 $(document).ready(function () {
     initFlatpickr();
+    getSelectedDate();
     handleSlotSelection();
     handleServiceSelection();
 
