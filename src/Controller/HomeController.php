@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -126,14 +127,47 @@ class HomeController extends AbstractController
     }
 
     // Méthode de récupération des rendez vous
+    // #[Route('/available_rdv', name:'available_rdv', methods:['POST'])]
+    // public function getAvailableTimes(Request $request, AppointmentRepository $appointmentRepository, DayOffRepository $dayOffRepository): JsonResponse
+    // {
+    //     $startDate = new \DateTime($request->request->get('startDate'));
+
+    //     // Appel de la méthode pour obtenir les créneaux disponibles
+    //     $availabilities = $appointmentRepository->findAllRDV($startDate);
+        
+    //     // Récupère tous les jours de congé
+    //     $dayoffs = $dayOffRepository->findAllDayoffs();
+
+    //     // Convertir les objets Date en chaînes de caractères pour le JS de ma vue
+    //     $dayoffDates = [];
+
+    //     foreach ($dayoffs as $dayoff) {
+    //         $dayoffDates[] = $dayoff->format('Y-m-d');
+    //     }
+    //     return new JsonResponse([
+    //         'availabilities' => $availabilities,
+    //         'dayoffDates' => $dayoffDates,
+    //     ]);
+    // }
+
+    // Créneaux disponibles
     #[Route('/available_rdv', name:'available_rdv', methods:['POST'])]
-    public function getAvailableTimes(Request $request, AppointmentRepository $appointmentRepository, DayOffRepository $dayOffRepository): JsonResponse
+    public function getAvailableTimes(Request $request, AppointmentRepository $appointmentRepository): JsonResponse
     {
         $startDate = new \DateTime($request->request->get('startDate'));
 
         // Appel de la méthode pour obtenir les créneaux disponibles
         $availabilities = $appointmentRepository->findAllRDV($startDate);
         
+        return new JsonResponse([
+            'availabilities' => $availabilities,
+        ]);
+    }
+
+    // Jours non travaillés
+     #[Route('/get_dayoff_dates', name:'get_dayoff_dates', methods:['POST'])]
+    public function getDayOffDates(DayOffRepository $dayOffRepository): JsonResponse
+    {
         // Récupère tous les jours de congé
         $dayoffs = $dayOffRepository->findAllDayoffs();
 
@@ -143,9 +177,10 @@ class HomeController extends AbstractController
         foreach ($dayoffs as $dayoff) {
             $dayoffDates[] = $dayoff->format('Y-m-d');
         }
+
         return new JsonResponse([
-            'availabilities' => $availabilities,
             'dayoffDates' => $dayoffDates,
         ]);
     }
+
 }
