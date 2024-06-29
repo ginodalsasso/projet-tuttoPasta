@@ -10,6 +10,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -60,45 +61,90 @@ class BlogController extends AbstractController
     }
 
     // ---------------------------------Ajout/Edition d'un commentaire article--------------------------------- //
+    // #[IsGranted('ROLE_ADMIN')] 
+    // #[IsGranted('ROLE_USER')]
+    // #[Route('blog/{slug}/comment', name: 'app_article_addComment', methods: ['POST'], requirements: ['slug' => '[a-z0-9\-]*'])]
+    // #[Route('blog/{slug}/comment/{id}/edit', name: 'app_article_editComment', requirements: ['id' => '\d+'])]
+    // public function add_editComment(string $slug, Request $request, Comment $comment = null, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): Response
+    // {
+    //     $user = $security->getUser();
+    //     // Vérifie si l'utilisateur est l'auteur du commentaire ou s'il a le rôle admin
+    //     if ((!$comment->getUser() === $user) || !$this->isGranted('ROLE_ADMIN')) {
+    //         $this->addFlash('error', 'Veuillez vous connecter ou vous assurer d\'avoir les droits !');
+    //     }
+    //     // Récupère l'article associé au slug
+    //     $article = $articleRepository->findOneBy(['slug' => $slug]);
+    //     if (!$article) {
+    //         $this->addFlash('info', 'Article non trouvé');
+    //         return $this->redirectToRoute('app_blog');
+    //     }
+    //     // Crée un nouveau commentaire s'il n'existe pas
+    //     if(!$comment){
+    //         $comment = new Comment();
+    //     }
+    //     // Crée un formulaire pour le commentaire
+    //     $form = $this->createForm(CommentType::class, $comment);
+    //     $form->handleRequest($request);
+    //     // Traite le formulaire s'il est soumis et valide
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         // Associer l'utilisateur actuel au commentaire
+    //         $comment->setUser($user);
+    //         $comment->setArticle($article);
+    //         $entityManager->persist($comment);
+    //         $entityManager->flush();
+
+    //         return $this->redirectToRoute('app_article', ['slug' => $slug]);
+    //     }
+        
+    //     return $this->render('blog/article.html.twig', [
+    //         'article' => $article,
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
     #[IsGranted('ROLE_ADMIN')] 
     #[IsGranted('ROLE_USER')]
-    #[Route('blog/{slug}/comment', name: 'app_article_addComment', methods: ['POST'], requirements: ['slug' => '[a-z0-9\-]*'])]
-    #[Route('blog/{slug}/comment/{id}/edit', name: 'app_article_editComment', requirements: ['id' => '\d+'])]
-    public function add_editComment(string $slug, Request $request, Comment $comment = null, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): Response
+    #[Route('blog/{slug}/comment', name: 'app_article_addComment', methods: ['POST'])]
+    #[Route('blog/{slug}/comment/{id}/edit', name: 'app_article_editComment', methods: ['POST'])]
+    public function add_editComment(string $slug, Request $request, ?Comment $comment = null, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): JsonResponse
     {
+
         $user = $security->getUser();
-        // Vérifie si l'utilisateur est l'auteur du commentaire ou s'il a le rôle admin
-        if ((!$comment->getUser() === $user) || !$this->isGranted('ROLE_ADMIN')) {
-            $this->addFlash('error', 'Veuillez vous connecter ou vous assurer d\'avoir les droits !');
-        }
-        // Récupère l'article associé au slug
+
         $article = $articleRepository->findOneBy(['slug' => $slug]);
         if (!$article) {
-            $this->addFlash('info', 'Article non trouvé');
-            return $this->redirectToRoute('app_blog');
+            return new JsonResponse(['error' => 'Article not found'], Response::HTTP_NOT_FOUND);
         }
-        // Crée un nouveau commentaire s'il n'existe pas
-        if(!$comment){
+    
+        if (!$comment) {
             $comment = new Comment();
         }
-        // Crée un formulaire pour le commentaire
+    
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
-        // Traite le formulaire s'il est soumis et valide
+    
         if ($form->isSubmitted() && $form->isValid()) {
             // Associer l'utilisateur actuel au commentaire
             $comment->setUser($user);
             $comment->setArticle($article);
             $entityManager->persist($comment);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_article', ['slug' => $slug]);
+    
+            return new JsonResponse([
+                'success' => true,
+                'comment' => [
+                    'id' => $comment->getId(),
+                    'commentContent' => $comment->getCommentContent(),
+                    'date' => $comment->getCommentDate()->format('Y-m-d H:i:s')
+                ]
+            ]);
         }
-        
-        return $this->render('blog/article.html.twig', [
-            'article' => $article,
-            'form' => $form->createView(),
-        ]);
+    
+        $errors = [];
+        foreach ($form->getErrors(true) as $error) {
+            $errors[] = $error->getMessage();
+        }
+    
+        return new JsonResponse(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
     
     // ---------------------------------Suppression d'un commentaire article--------------------------------- //

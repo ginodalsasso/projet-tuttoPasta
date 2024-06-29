@@ -4,34 +4,41 @@
 
 {% block body %}
 
-    <h1>Article</h1>
-    {{article.articleTitle}} <br>
-    {{article.articleContent}} <br>
-    {% for category in article.categories %}
-        <p>{{category.categoryName}}</p>
-    {% endfor %}
-    <p>{{article.date}}</p>
+<h1>Article</h1>
+{{ article.articleTitle }} <br>
+{{ article.articleContent }} <br>
+{% for category in article.categories %}
+    <p>{{ category.categoryName }}</p>
+{% endfor %}
+<p>{{ article.date }}</p>
 
+<div id="commentsSection">
     {% for comment in article.comments %}
-        <p>{{comment.user.username}}</p>
-        <p>{{comment.commentContent}}</p>
-        <p>{{comment.date}}</p>
-        {% if is_granted('ROLE_ADMIN') or comment.user == app.user %}
-            <a href=" {{ path('app_article_editComment', {'id':comment.id, 'slug': article.slug}) }} ">Edit</a>
-            {# cette methode permet de ne pas transiter les information de suppression via l'url #}
-            <form id="comment_form" action="{{ path('app_article_deleteComment', {'id':comment.id, 'slug': article.slug}) }}" method:"post">
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit">Suprimer</button>
-            </form>
-        {% endif %}
+        <div class="comment" id="comment-{{ comment.id }}">
+            <p>{{ comment.user.username }}</p>
+            <div class="comment-content">
+                <p>{{ comment.commentContent }}</p>
+            </div>
+            <p>{{ comment.date }}</p>
+            {% if is_granted('ROLE_ADMIN') or comment.user == app.user %}
+                <a href="#" class="edit-comment" data-id="{{ comment.id }}">Modifier</a>
+                {# Cette méthode permet de ne pas transmettre les informations de suppression via l'URL #}
+                <form id="delete-comment-form-{{ comment.id }}" action="{{ path('app_article_deleteComment', {'id':comment.id, 'slug': article.slug}) }}" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit">Supprimer</button>
+                </form>
+            {% endif %}
+        </div> 
     {% endfor %}
-    {% if app.user %}    
-        {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST'}) }}
-            {{ form_row(form.commentContent) }} 
-            {{ form_errors(form) }}
-            <button id="saved_comment" type="submit">Envoyer</button>
-        {{ form_end(form) }}
-    {% endif %}
+</div>
+
+{% if app.user %}
+{{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'commentForm'}}) }}
+        {{ form_row(form.commentContent) }} 
+        {{ form_errors(form) }}
+        <button id="saved_comment" type="submit">Envoyer</button>
+    {{ form_end(form) }}
+{% endif %}
 
 {% endblock %}
 
