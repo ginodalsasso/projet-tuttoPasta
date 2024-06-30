@@ -146,7 +146,7 @@ function addNewComment(comment) {
             <a href="#" class="edit_comment" data-id="${comment.id}">Modifier</a>
         </div>
     `;
-    $('#comments_section').append(newCommentHtml); // Ajoute le nouveau commentaire à la fin de la section des commentaires
+    $('#comments_section').prepend(newCommentHtml); // Ajoute le nouveau commentaire à la fin de la section des commentaires
 }
 
 // Mise à jour html de l'édition d'un commentaire

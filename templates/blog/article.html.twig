@@ -13,20 +13,21 @@
 <p>{{ article.date }}</p>
 
 <div id="comments_section">
-    {% for comment in article.comments %}
+    {% set sortedComments = article.comments|sort((a, b) => b.commentDate.timestamp - a.commentDate.timestamp) %}
+    {% for comment in sortedComments %}
         <div class="comment" id="comment-{{ comment.id }}" data-slug="{{ article.slug }}">
             <p>{{ comment.user.username }}</p>
             <div class="comment_content">
                 <p>{{ comment.commentContent }}</p>
             </div>
-            <p>{{ comment.date }}</p>
+            <p>{{ comment.commentDate|date }}</p>
 
             {# Suppression si utilisateur = auteur ou admin #}
             {% if is_granted('ROLE_ADMIN') or comment.user == app.user %}
                 <a href="#" class="edit_comment" data-id="{{ comment.id }}">Modifier</a>
                 <a href="#" class="delete_comment" data-id="{{ comment.id }}">Supprimer</a>
             {% endif %}
-        </div> 
+        </div>
     {% endfor %}
 </div>
 
