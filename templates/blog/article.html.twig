@@ -24,11 +24,7 @@
             {# Suppression si utilisateur = auteur ou admin #}
             {% if is_granted('ROLE_ADMIN') or comment.user == app.user %}
                 <a href="#" class="edit_comment" data-id="{{ comment.id }}">Modifier</a>
-                {# Cette méthode permet de ne pas transmettre les informations de suppression via l'URL #}
-                <form id="delete_comment_form-{{ comment.id }}" action="{{ path('app_article_deleteComment', {'id':comment.id, 'slug': article.slug}) }}" method="post">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit">Supprimer</button>
-                </form>
+                <a href="#" class="delete_comment" data-id="{{ comment.id }}">Supprimer</a>
             {% endif %}
         </div> 
     {% endfor %}

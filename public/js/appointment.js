@@ -1,5 +1,5 @@
 // Sélection des éléments et initialisation des variables
-var token = $('meta[name="csrf-token"]').attr('content');
+var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
 const $startDate = $("#appointment_startDate");
 const $availableRdv = $("#available-rdv");
@@ -66,7 +66,7 @@ function initFlatpickr() {
         method: 'POST',
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': token
+            'X-CSRF-TOKEN': csrfToken
         },
         success: function(data) {
             $("#appointment_startDate").flatpickr({
@@ -100,7 +100,7 @@ function getSelectedDate() {
             method: "POST",
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': token
+                'X-CSRF-TOKEN': csrfToken
             },
             data: {
                 startDate: selectedDate,

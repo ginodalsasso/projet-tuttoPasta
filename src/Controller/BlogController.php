@@ -102,7 +102,7 @@ class BlogController extends AbstractController
                     'id' => $comment->getId(),
                     'username' => $user->getUsername(),
                     'commentContent' => $comment->getCommentContent(),
-                    'date' => $comment->getCommentDate()->format('d-m-Y H:i')
+                    'date' => $comment->getCommentDate()->format('d/m/Y à H:i')
                 ]
             ]);
         }
@@ -116,36 +116,71 @@ class BlogController extends AbstractController
     }
     
     // ---------------------------------Suppression d'un commentaire article--------------------------------- //
-    #[IsGranted('ROLE_ADMIN')] 
+    // #[IsGranted('ROLE_ADMIN')] 
+    // #[IsGranted('ROLE_USER')]
+    // #[Route('blog/{slug}/comment/{id}/delete', name: 'app_article_deleteComment', requirements: ['id' => '\d+'])]
+    // public function deleteComment(string $slug, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): Response
+    // {
+    //     // Récupère l'article associé au slug
+    //     $article = $articleRepository->findOneBy(['slug' => $slug]);
+    //     if (!$article) {
+    //         return $this->redirectToRoute('app_blog');
+    //         $this->addFlash('info', 'Article non trouvé');
+    //     }
+    //     // Récupère l'utilisateur actuel
+    //     $user = $security->getUser();
+
+    //     // Recherche le commentaire à supprimer
+    //     $comment = $entityManager->getRepository(Comment::class)->find($id);
+    //     if (!$comment) {
+    //         return $this->redirectToRoute('app_blog');
+    //         $this->addFlash('info', 'Commentaire non trouvé');
+    //     }
+    //     // Vérifie si l'utilisateur est l'auteur du commentaire ou s'il a le rôle admin
+    //     if (($comment->getUser() === $user) || $this->isGranted('ROLE_ADMIN')) {
+    //         // Supprimez le commentaire
+    //         $entityManager->remove($comment);
+    //         $entityManager->flush();
+    //     }else{
+    //         $this->addFlash('error', 'Veuillez vous connecter ou vous assurer d\'avoir les droits !');
+    //     }
+
+    //     return $this->redirectToRoute('app_article', ['slug' => $slug]);
+    // }
+
+    #[IsGranted('ROLE_ADMIN')]
     #[IsGranted('ROLE_USER')]
-    #[Route('blog/{slug}/comment/{id}/delete', name: 'app_article_deleteComment', requirements: ['id' => '\d+'])]
-    public function deleteComment(string $slug, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): Response
+    #[Route('/blog/{slug}/comment/{id}/delete', name: 'app_article_deleteComment', methods: ['DELETE'])]
+    public function deleteComment(string $slug, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): JsonResponse
     {
         // Récupère l'article associé au slug
         $article = $articleRepository->findOneBy(['slug' => $slug]);
         if (!$article) {
-            return $this->redirectToRoute('app_blog');
-            $this->addFlash('info', 'Article non trouvé');
+            return new JsonResponse(['success' => false, 'error' => 'Article not found'], Response::HTTP_NOT_FOUND);
         }
+
         // Récupère l'utilisateur actuel
         $user = $security->getUser();
 
         // Recherche le commentaire à supprimer
         $comment = $entityManager->getRepository(Comment::class)->find($id);
-        if (!$comment) {
-            return $this->redirectToRoute('app_blog');
-            $this->addFlash('info', 'Commentaire non trouvé');
-        }
-        // Vérifie si l'utilisateur est l'auteur du commentaire ou s'il a le rôle admin
-        if (($comment->getUser() === $user) || $this->isGranted('ROLE_ADMIN')) {
-            // Supprimez le commentaire
-            $entityManager->remove($comment);
-            $entityManager->flush();
-        }else{
+
+        // Vérifie si l'utilisateur est autorisé à supprimer le commentaire
+        if ($user && !($user === $comment->getUser() || $this->isGranted('ROLE_ADMIN'))) {
             $this->addFlash('error', 'Veuillez vous connecter ou vous assurer d\'avoir les droits !');
+            return $this->redirectToRoute('app_blog');
         }
 
-        return $this->redirectToRoute('app_article', ['slug' => $slug]);
+        if (!$comment) {
+            return new JsonResponse(['success' => false, 'error' => 'Commentaire non trouvé !'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Supprime le commentaire
+        $entityManager->remove($comment);
+        $entityManager->flush();
+
+        // Retourne une réponse indiquant le succès de la suppression
+        return new JsonResponse(['success' => true]);
     }
 
 }
