@@ -9,6 +9,56 @@ const $errorMsg = $("#date_error");
 let dayoffDates = [];
 let selectedLabel = null;
 
+//___________________________________DOCUMENT READY_______________________________________
+// Appeler la fonction pour initialiser Flatpickr dès que la page est prête
+$(document).ready(function () {
+    initFlatpickr();
+    getSelectedDate();
+    handleSlotSelection();
+    handleServiceSelection();
+
+    // Messages d'erreurs UI
+    $("#appointment_save").on("click", function (event) {
+        $(".error_msg").text("");
+        $(".data").removeClass("input_invalid");
+
+        let isValid = true;
+
+        $(".data").each(function () {
+            if ($(this).val() === "") {
+                $(this).addClass("input_invalid");
+                isValid = false;
+            }
+        });
+
+        const name = $("#appointment_name").val().trim();
+        if (name === "" || name.length < 2 || name.length > 50) {
+            $("#name_error").text("Le nom est invalide et doit contenir entre 2 et 50 caractères");
+            $("#appointment_name").addClass("input_invalid");
+            isValid = false;
+        }
+
+        const email = $("#appointment_email").val().trim();
+        if (email === "" || !validateEmail(email)) {
+            $("#email_error").text("L'email est invalide !");
+            $("#appointment_email").addClass("input_invalid");
+            isValid = false;
+        }
+
+        const message = $("#appointment_message").val();
+        if (message === "" || message.length < 5) {
+            $("#message_error").text("Le message est invalide et doit contenir au minimum 5 caractères");
+            $("#appointment_message").addClass("input_invalid");
+            isValid = false;
+        }
+
+        if (isValid) {
+            $("#appointment_form").submit();
+        }
+    });
+});
+
+//___________________________________FLATPICKR ET DAYOFFS_______________________________________
 // Fonction pour récupérer les dayOffDates et initialiser Flatpickr
 function initFlatpickr() {
     $.ajax({
@@ -38,7 +88,7 @@ function initFlatpickr() {
     });
 }
 
-
+//___________________________________INPUT HEURE RDV_______________________________________
 // Détecte les changements de la date de début
 function getSelectedDate() {
 
@@ -119,50 +169,3 @@ function formatTime(dateTimeString) {
     });
 }
 
-// Appeler la fonction pour initialiser Flatpickr dès que la page est prête
-$(document).ready(function () {
-    initFlatpickr();
-    getSelectedDate();
-    handleSlotSelection();
-    handleServiceSelection();
-
-    // Messages d'erreurs UI
-    $("#appointment_save").on("click", function (event) {
-        $(".error_msg").text("");
-        $(".data").removeClass("input_invalid");
-
-        let isValid = true;
-
-        $(".data").each(function () {
-            if ($(this).val() === "") {
-                $(this).addClass("input_invalid");
-                isValid = false;
-            }
-        });
-
-        const name = $("#appointment_name").val().trim();
-        if (name === "" || name.length < 2 || name.length > 50) {
-            $("#name_error").text("Le nom est invalide et doit contenir entre 2 et 50 caractères");
-            $("#appointment_name").addClass("input_invalid");
-            isValid = false;
-        }
-
-        const email = $("#appointment_email").val().trim();
-        if (email === "" || !validateEmail(email)) {
-            $("#email_error").text("L'email est invalide !");
-            $("#appointment_email").addClass("input_invalid");
-            isValid = false;
-        }
-
-        const message = $("#appointment_message").val();
-        if (message === "" || message.length < 5) {
-            $("#message_error").text("Le message est invalide et doit contenir au minimum 5 caractères");
-            $("#appointment_message").addClass("input_invalid");
-            isValid = false;
-        }
-
-        if (isValid) {
-            $("#appointment_form").submit();
-        }
-    });
-});
