@@ -1,10 +1,12 @@
 /*=============== VARIABLES CSS ===============*/
 
 @import url("https://use.typekit.net/tkf7imz.css");
+/* @import url('https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&display=swap'); */
+
 
 
 :root {
-    --bg-colour: #F5F5F5;
+    --white-color: #F5F5F5;
     --pink-color: #F088FF;
     --red-color: #F53358;
     --blue-color: #5757FF;
@@ -26,8 +28,8 @@
 }
 
 body {
-    background: var(--bg-colour);
-    color: var(--black-color);
+    background: var(--black-color);
+    color: var(--white-color);
     font-size: var(--font-size);
     font-family: var(--font-family)
 }
@@ -41,7 +43,7 @@ a{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 38px 100px 0 100px;
+    margin: 38px 100px 38px 100px;
 }
 #nav_container {
     display: flex;
@@ -51,7 +53,7 @@ a{
 
 #nav_container li a {
     margin: 0 2rem;
-    color: var(--black-color);
+    color: var(--white-color);
     font-weight: bold;
     text-transform: uppercase;
 }
@@ -59,7 +61,7 @@ a{
 /*=============== BUTTONS ===============*/
 .full_button_black {
     padding: 20px 30px;
-    color: var(--bg-colour);
+    color: var(--white-color);
     background-color: var(--black-color);
     font-weight: bold;
     text-transform: uppercase;
@@ -70,7 +72,7 @@ a{
 .full_button_white {
     padding: 20px 30px;
     color: var(--black-color);
-    background-color: var(--bg-colour);
+    background-color: var(--white-color);
     border: 1px solid var(--black-color);
     font-weight: bold;
     text-transform: uppercase;
@@ -79,7 +81,7 @@ a{
 .stickers_white {
     padding: 2px 10px;
     color: var(--black-color);
-    background-color: var(--bg-colour);
+    background-color: var(--white-color);
 }
 
 /*=============== HEADER ===============*/
@@ -111,7 +113,7 @@ a{
 
 /*=============== APPOINTMENT ===============*/
 .form_display {
-    background-color: white;
+    background-color: var(--white-color);
     position: relative;
     z-index: 1;
     padding: 10px;
@@ -143,6 +145,8 @@ a{
 .form_container label{
     display: block;
     margin-bottom: 10px;
+    
+    color: var(--black-color);
 }
 
 .form_container input[type=text],
@@ -188,7 +192,7 @@ a{
 #available-rdv label:hover, 
 #appointment_services label:hover {
     background-color: var(--black-color);
-    color: var(--bg-colour);
+    color: var(--white-color);
 }
 
 .radioSlots, input[type="checkbox"]  {
@@ -197,7 +201,7 @@ a{
 
 .showRadioClass {
     background-color: var(--black-color);
-    color: var(--bg-colour);
+    color: var(--white-color);
 }
 
 #appointment_services {
@@ -226,7 +230,7 @@ footer {
 }
 
 .background-bottom {
-    background-color: var(--bg-colour);
+    background-color: var(--white-color);
     height: 400px;
     overflow: hidden;
     position: relative;
@@ -239,6 +243,7 @@ footer {
     text-align: center;
     font-size: var(--h1-fontsize);
     font-weight: normal;
+    color: var(--black-color);
     position: relative;
     z-index: 1;
 }
@@ -248,7 +253,7 @@ footer {
 .footer_social li a, 
 .copyright, 
 #footer_nav a {
-    color: var(--bg-colour);
+    color: var(--white-color);
 }
 
 .footer_collab, 

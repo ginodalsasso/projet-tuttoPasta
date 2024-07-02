@@ -19,7 +19,7 @@
 
     <body>
         <header id="header_content">
-            <a href="{{ path('app_home') }}"><img src="{{ asset('/img/logo.svg')}}" alt="Logo TuttoPasta"></a>
+            <a href="{{ path('app_home') }}"><img class="logo_header" src="{{ asset('/img/logo_white.svg')}}" alt="Logo TuttoPasta"></a>
             <nav>
                 <ul id="nav_container">
                     <li><a href="{{ path('app_projectList') }}"> Projets </a></li>
@@ -33,7 +33,7 @@
                 </ul>
 
             </nav>
-            <a class="full_button_black" href="{{ path('app_appointment') }}"> Prendre RDV </a>
+            <a class="full_button_white" href="{{ path('app_appointment') }}"> Prendre RDV </a>
             </header>
         {% block body %}
 

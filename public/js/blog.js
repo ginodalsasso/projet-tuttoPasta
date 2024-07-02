@@ -144,6 +144,7 @@ function addNewComment(comment) {
             </div>
             <p>${comment.date}</p>
             <a href="#" class="edit_comment" data-id="${comment.id}">Modifier</a>
+            <a href="#" class="delete_comment" data-id="${comment.id}">Supprimer</a>
         </div>
     `;
     $('#comments_section').prepend(newCommentHtml); // Ajoute le nouveau commentaire à la fin de la section des commentaires
@@ -158,6 +159,8 @@ function updateExistingComment(commentId, comment) {
         </div>
         <p>${comment.date}</p>
         <a href="#" class="edit_comment" data-id="${comment.id}">Modifier</a>
+        <a href="#" class="delete_comment" data-id="${comment.id}">Supprimer</a>
+
     `;
     $(`#comment-${commentId}`).html(updatedCommentHtml); // Met à jour le contenu du commentaire dans la vue
 }
