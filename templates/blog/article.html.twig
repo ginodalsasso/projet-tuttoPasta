@@ -2,41 +2,45 @@
 
 {% block title %}{{article.articleTitle}}{% endblock %}
 
+{% block page_title %} {{ article.articleTitle }} {% endblock %}
+
 {% block body %}
-
-{{ article.articleTitle }} <br>
-{# {{ article.articleContent }} <br> #}
-{% for category in article.categories %}
-    <p>{{ category.categoryName }}</p>
-{% endfor %}
-<p>{{ article.date }}</p>
-
-<div id="comments_section">
-    {% set sortedComments = article.comments|sort((a, b) => b.commentDate.timestamp - a.commentDate.timestamp) %}
-    {% for comment in sortedComments %}
-        <div class="comment" id="comment-{{ comment.id }}" data-slug="{{ article.slug }}">
-            <p>{{ comment.user.username }}</p>
-            <div class="comment_content">
-                <p>{{ comment.commentContent }}</p>
-            </div>
-            <p>{{ comment.commentDate|date }}</p>
-
-            {# Suppression si utilisateur = auteur ou admin #}
-            {% if is_granted('ROLE_ADMIN') or comment.user == app.user %}
-                <a href="#" class="edit_comment" data-id="{{ comment.id }}">Modifier</a>
-                <a href="#" class="delete_comment" data-id="{{ comment.id }}">Supprimer</a>
-            {% endif %}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+    <section class="wrapper">
+        {{ article.articleTitle }} <br>
+        {# {{ article.articleContent }} <br> #}
+        {% for category in article.categories %}
+            <p>{{ category.categoryName }}</p>
+        {% endfor %}
+        <p>{{ article.date }}</p>
+    
+        <div id="comments_section">
+            {% set sortedComments = article.comments|sort((a, b) => b.commentDate.timestamp - a.commentDate.timestamp) %}
+            {% for comment in sortedComments %}
+                <div class="comment" id="comment-{{ comment.id }}" data-slug="{{ article.slug }}">
+                    <p>{{ comment.user.username }}</p>
+                    <div class="comment_content">
+                        <p>{{ comment.commentContent }}</p>
+                    </div>
+                    <p>{{ comment.commentDate|date }}</p>
+    
+                    {# Suppression si utilisateur = auteur ou admin #}
+                    {% if is_granted('ROLE_ADMIN') or comment.user == app.user %}
+                        <a href="#" class="edit_comment" data-id="{{ comment.id }}">Modifier</a>
+                        <a href="#" class="delete_comment" data-id="{{ comment.id }}">Supprimer</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
-</div>
-
-{% if app.user %}
-    {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
-        {{ form_row(form.commentContent) }} 
-        {{ form_errors(form) }}
-        <button id="saved_comment" type="submit">Envoyer</button>
-    {{ form_end(form) }}
-{% endif %}
+    
+        {% if app.user %}
+            {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
+                {{ form_row(form.commentContent) }} 
+                {{ form_errors(form) }}
+                <button id="saved_comment" type="submit">Envoyer</button>
+            {{ form_end(form) }}
+        {% endif %}
+    </section>
 
 {% endblock %}
 

@@ -2,12 +2,15 @@
 
 {% block title %}{{project.projectName}}{% endblock %}
 
-{% block body %}
+{% block page_title %} {{project.projectName}} {% endblock %}
 
-    <h1>Projet</h1>
-    {# Si j'ai besoin que d'un élément de la collection image:  #}
-    {# {{ dump(project.images.1) }} #}
-    {{project.projectName}} <br>
-    {{project.projectContent}}
+{% block body %}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+    <section class="wrapper">
+        {# Si j'ai besoin que d'un élément de la collection image:  #}
+        {# {{ dump(project.images.1) }} #}
+        {{project.projectName}} <br>
+        {{project.projectContent}}
+    </section>
 
 {% endblock %}

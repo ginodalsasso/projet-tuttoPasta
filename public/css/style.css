@@ -43,7 +43,7 @@ a{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 38px 100px 38px 100px;
+    margin: 38px 100px 0 100px;
 }
 #nav_container {
     display: flex;
@@ -86,15 +86,31 @@ a{
 
 /*=============== HEADER ===============*/
 .sub_header_tittle_container {
-    position: relative;
-    height: 70vh;
-    overflow: hidden;
+    /* position: relative; */
+    height: 50vh;
+    /* overflow: hidden; */
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    align-items: center;
+    justify-content: center;
 }
 
-.background_top {
+.sub_header_tittle_container h1{
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+    font-size: 60px;
+    font-weight: 100;
+    text-align: center;
+}
+
+/* .background_top {
     position: absolute;
+} */
+
+.wrapper{
+    color: var(--black-color);
+    background-color: var(--white-color);
+    padding: 50px 100px ;
 }
 
 /*=============== TITLES ===============*/

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token('') }}">
+        <title>{% block title %}{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset('/css/flatpickr.css')}}">
@@ -14,7 +15,6 @@
         <script src="{{ asset('/js/lib/flatpickr.js')}}"></script>
         <script src="{{ asset('/js/lib/flatpickr-fr.js')}}"></script>
         <script src="{{ asset('/js/script.js')}}"></script>
-
     </head>
 
     <body>
@@ -36,10 +36,12 @@
             <a class="full_button_white" href="{{ path('app_appointment') }}"> Prendre RDV </a>
             </header>
         {% block body %}
-
-        
-
-
+            <div class="sub_header_tittle_container">
+                <h1>{% block page_title %}{{ title }}{% endblock %}</h1>
+                {# <img class="background_top" src="{{ asset('/img/Background-top.svg') }} " alt="background tuttoPasta" loading="lazy"> #}
+            </div>
+            
+            
         {% endblock %}
         <footer>
             <div class="background-bottom">

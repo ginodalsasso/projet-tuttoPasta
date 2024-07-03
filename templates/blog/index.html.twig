@@ -2,16 +2,20 @@
 
 {% block title %}Blog TuttoPasta{% endblock %}
 
+{% block page_title %} Les actus de TuttoPasta {% endblock %}
+
 {% block body %}
-    <h1>Liste des projets</h1>
-    {% for article in articles %}
-    <a href="{{ path('app_article', { 'slug': article.slug }) }}"> lien</a>
-    {{article.articleTitle}} <br>
-    {% for category in article.categories %}
-        <p>{{category.categoryName}}</p>
-    {% endfor %}
-        <p>{{article.date}}</p>
-    {% endfor %}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+    <section class="wrapper">
+        {% for article in articles %}
+        <a href="{{ path('app_article', { 'slug': article.slug }) }}"> lien</a>
+        {{article.articleTitle}} <br>
+        {% for category in article.categories %}
+            <p>{{category.categoryName}}</p>
+        {% endfor %}
+            <p>{{article.date}}</p>
+        {% endfor %}
+    </section>
 {% endblock %}
 
 {% block javascripts %}

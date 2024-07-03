@@ -2,14 +2,18 @@
 
 {% block title %}Projets Tutto Pasta{% endblock %}
 
+{% block page_title %} Projets {% endblock %}
+
 {% block body %}
-    <h1>Liste des projets</h1>
-    {% for project in projects %}
-    <a href="{{ path('app_project', { 'slug': project.slug }) }}"> lien</a>
-                {% for projectImg in projectImgs %}
-            {{projectImg.image}}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+    <section class="wrapper">
+        {% for project in projects %}
+            <a href="{{ path('app_project', { 'slug': project.slug }) }}"> lien</a>
+            {% for projectImg in projectImgs %}
+                {{projectImg.image}}
+            {% endfor %}
+            {{project.projectName}} <br>
+            {{project.projectContent}}
         {% endfor %}
-        {{project.projectName}} <br>
-        {{project.projectContent}}
-    {% endfor %}
+    </section>
 {% endblock %}

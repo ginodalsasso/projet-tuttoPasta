@@ -2,36 +2,39 @@
 
 {% block title %}Register{% endblock %}
 
+{% block page_title %} Inscription {% endblock %}
+
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+    <section class="wrapper">
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
 
-    {{ form_errors(registrationForm) }}
+        {{ form_errors(registrationForm) }}
+        {{ form_start(registrationForm) }}
+            <div class="form_container">
+                <div class="form-group">
+                    {{ form_row(registrationForm.username) }}
+                    <div class="error_msg" id="pseudo_error"></div>
+                </div>
 
-    {{ form_start(registrationForm) }}
-    
-        <div class="form_container">
-            <div class="form-group">
-                {{ form_row(registrationForm.username) }}
-                <div class="error_msg" id="pseudo_error"></div>
+                <div class="form-group">
+                    {{ form_row(registrationForm.email) }}
+                    <div class="error_msg" id="email_error"></div>
+                </div>
+
+                {{ form_row(registrationForm.plainPassword, { label: 'Password' }) }}
+                <div class="error_msg" id="password_error"></div>
+
+                <div class="agreeTerms_display">
+                    {{ form_row(registrationForm.agreeTerms) }}
+                </div>
+            
+                <button type="submit" id="register_save" class="full_button_black">S'inscrire</button>
             </div>
-
-            <div class="form-group">
-                {{ form_row(registrationForm.email) }}
-                <div class="error_msg" id="email_error"></div>
-            </div>
-
-            {{ form_row(registrationForm.plainPassword, { label: 'Password' }) }}
-            <div class="error_msg" id="password_error"></div>
-
-            <div class="agreeTerms_display">
-                {{ form_row(registrationForm.agreeTerms) }}
-            </div>
-        
-            <button type="submit" id="register_save" class="full_button_black">S'inscrire</button>
-        </div>
-    {{ form_end(registrationForm) }}
+        {{ form_end(registrationForm) }}
+    </section>
 {% endblock %}
 
 {% block javascripts %}

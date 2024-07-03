@@ -2,13 +2,10 @@
 
 {% block title %}Tutto Pasta{% endblock %}
 
-{% block body %}
+{% block page_title %} Home {% endblock %}
 
-    <div class="sub_header_tittle_container">
-        <h1></h1>
-        <img class="background_top" src="{{ asset('/img/Background-top.svg') }} " alt="background tuttoPasta" loading="lazy">
-    </div>
-    <h1>Liste des projets</h1>
+{% block body %}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     {% for project in projects %}
         {{project.projectName}} <br>
         {{project.projectContent}}
