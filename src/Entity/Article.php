@@ -68,7 +68,7 @@ class Article
 
     public function getArticleContent(): ?string
     {
-        return $this->articleTitle;
+        return $this->articleContent;
     }
 
     public function setArticleContent(string $articleContent): static

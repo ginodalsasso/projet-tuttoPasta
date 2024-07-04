@@ -7,14 +7,15 @@
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <section class="wrapper">
-        {{ article.articleTitle }} <br>
-        {# {{ article.articleContent }} <br> #}
+        {{ article.articleContent }} <br>
         {% for category in article.categories %}
             <p>{{ category.categoryName }}</p>
         {% endfor %}
         <p>{{ article.date }}</p>
     
-        <div id="comments_section">
+
+
+        <section id="comments_section">
             {% set sortedComments = article.comments|sort((a, b) => b.commentDate.timestamp - a.commentDate.timestamp) %}
             {% for comment in sortedComments %}
                 <div class="comment" id="comment-{{ comment.id }}" data-slug="{{ article.slug }}">
@@ -31,7 +32,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
-        </div>
+            </section>
     
         {% if app.user %}
             {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
@@ -47,4 +48,4 @@
 
 {% block javascripts %}
     <script src="{{ asset('/js/blog.js')}}"></script>
-{% endblock %}
+    {% endblock %}
