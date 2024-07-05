@@ -7,7 +7,7 @@
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <section class="wrapper">
-        {{ article.articleContent }} <br>
+        {{ article.articleContent|raw }} <br>
         {% for category in article.categories %}
             <p>{{ category.categoryName }}</p>
         {% endfor %}

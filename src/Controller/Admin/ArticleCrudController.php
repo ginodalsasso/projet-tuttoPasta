@@ -29,7 +29,8 @@ class ArticleCrudController extends AbstractCrudController
             TextField::new('articleTitle'),
             // TextEditorField::new('articleTitle'),
             // TextareaField::new('articleContent')->renderAsHtml(),
-            // TextEditorField::new('articleContent'),
+            TextEditorField::new('articleContent')
+                ->setFormTypeOption('attr', ['class' => 'trix-content']),
             DateTimeField::new('articleDate'),
             TextField::new('slug'),
             // CollectionField::new('categories'),
