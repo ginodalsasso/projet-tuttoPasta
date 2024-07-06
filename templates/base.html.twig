@@ -24,6 +24,9 @@
             <a href="{{ path('app_home') }}"><img class="logo_header" src="{{ asset('/img/logo_white.svg')}}" alt="Logo TuttoPasta"></a>
             <nav>
                 <ul id="nav_container">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a href="{{ path('admin') }}"> Admin </a></li>
+                    {% endif %}
                     <li><a href="{{ path('app_projectList') }}"> Projets </a></li>
                     <li><a href="{{ path('app_blog') }}"> Blog </a></li>
                     {% if app.user %}
@@ -42,8 +45,6 @@
                 <h1>{% block page_title %}{{ title }}{% endblock %}</h1>
                 {# <img class="background_top" src="{{ asset('/img/Background-top.svg') }} " alt="background tuttoPasta" loading="lazy"> #}
             </div>
-            
-            
         {% endblock %}
         <footer>
             <div class="background-bottom">

@@ -12,6 +12,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 #[IsGranted('ROLE_ADMIN')]
@@ -27,15 +28,28 @@ class ArticleCrudController extends AbstractCrudController
     {
         return [
             TextField::new('articleTitle'),
-            // TextEditorField::new('articleTitle'),
-            // TextareaField::new('articleContent')->renderAsHtml(),
             TextEditorField::new('articleContent')
+                ->setTrixEditorConfig([
+                    'blockAttributes' => [
+                        'default' => ['tagName' => 'p'],
+                        'heading1' => ['tagName' => 'h2'],
+                        'code' => ['tagName' => 'h3']
+                    ],
+                ])
                 ->setFormTypeOption('attr', ['class' => 'trix-content']),
             DateTimeField::new('articleDate'),
             TextField::new('slug'),
-            // CollectionField::new('categories'),
-            CollectionField::new('comments'),
-            // CollectionField::new('categories')->useEntryCrudForm(CategoryCrudController::class)
+            AssociationField::new('categories')
+                ->setFormTypeOptions([
+                    'by_reference' => false,
+                    'multiple' => true,
+                ]),        // CollectionField::new('comments'),
+            AssociationField::new('comments')
+                ->setFormTypeOptions([
+                    'by_reference' => false,
+                    'multiple' => true,
+                ]),
         ];
     }
+    
 }
