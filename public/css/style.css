@@ -78,10 +78,43 @@ a{
     text-transform: uppercase;
 }
 
+.stickers_white,
+.stickers_black,
+.stickers_blue,
+.stickers_red,
+.stickers_green,
+.stickers_pink {
+    padding: 8px 10px;
+    font-weight: 600;
+}
+
+.stickers_black,
+.stickers_blue,
+.stickers_red,
+.stickers_green,
+.stickers_pink {
+    color: var(--white-color);
+}
+
 .stickers_white {
-    padding: 2px 10px;
-    color: var(--black-color);
     background-color: var(--white-color);
+    color: var(--black-color);
+}
+
+.stickers_pink {
+    background-color: var(--pink-color);
+}
+.stickers_red {
+    background-color: var(--red-color);
+}
+.stickers_blue {
+    background-color: var(--blue-color);
+}
+.stickers_green {
+    background-color: var(--green-color);
+}
+.stickers_black {
+    background-color: var(--black-color);
 }
 
 /*=============== HEADER ===============*/
@@ -101,6 +134,7 @@ a{
     font-size: 60px;
     font-weight: 100;
     text-align: center;
+    width: 70vw;;
 }
 
 /* .background_top {
@@ -110,7 +144,7 @@ a{
 .wrapper{
     color: var(--black-color);
     background-color: var(--white-color);
-    padding: 50px 100px ;
+    padding: 100px 100px ;
 }
 
 /*=============== TITLES ===============*/
@@ -119,13 +153,13 @@ a{
     font-size: var(--h1-fontsize);
     font-weight: normal;
     margin: 200px;
+    width: 70vw;
 }
 
 /*=============== REGISTRATION ===============*/
 .agree_terms {
     display: block !important;
 }
-
 
 /*=============== APPOINTMENT ===============*/
 .form_display {
@@ -223,6 +257,61 @@ a{
 #appointment_services {
     display: flex;
     width: 500px;
+}
+
+/*=============== ARTICLES ===============*/
+#article_date {
+    display: inline-block;
+    margin-bottom: 50px;   
+    color: grey; 
+}
+#article_date a{
+    text-decoration: underline;
+    color: var(--black-color) 
+}
+
+.article_content {
+    width: 50vw;
+    margin-right: auto;
+    margin-left: auto;
+    line-height: 1.5;;
+}
+
+#comment_title {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.comment,
+#comment_commentContent,
+.edit_comment_form textarea {
+    border: 1px solid var(--black-color);
+    padding: 20px;
+}
+
+#comment_form, .edit_comment_form  {
+    text-align: center;
+}
+
+.comment {
+    margin: 20px 0;
+}
+
+#comment_commentContent{
+    width: 50vw;
+    height: 15vh;
+    margin-bottom: 10px;
+    resize: none;
+}
+
+.cancel_edit,
+#update_comment {
+    cursor: pointer;
+}
+
+.edit_comment_form textarea {
+    width: 100%;
+    resize: none;
 }
 
 /*=============== FOOTER ===============*/

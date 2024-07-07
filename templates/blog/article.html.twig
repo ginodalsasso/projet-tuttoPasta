@@ -5,16 +5,16 @@
 {% block page_title %} {{ article.articleTitle }} {% endblock %}
 
 {% block body %}
-    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
-    <section class="wrapper">
+{{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+<section class="wrapper">
+    <article class="article_content">        
+        <span id="article_date">Rédigé par TuttoPasta, le {{ article.date }} | <a href="#comment_title">{{article.comments|length}} {% if article.comments|length <= 1 %}Commentaire{% else %}Commentaires{% endif %}</a></span>
         {{ article.articleContent|raw }} <br>
         {% for category in article.categories %}
             <p>{{ category.categoryName }}</p>
         {% endfor %}
-        <p>{{ article.date }}</p>
-    
-
-
+        <hr>
+        <span id="comment_title" class="stickers_pink">Commentaires:</span>
         <section id="comments_section">
             {% set sortedComments = article.comments|sort((a, b) => b.commentDate.timestamp - a.commentDate.timestamp) %}
             {% for comment in sortedComments %}
@@ -24,7 +24,7 @@
                         <p>{{ comment.commentContent }}</p>
                     </div>
                     <p>{{ comment.commentDate|date }}</p>
-    
+
                     {# Suppression si utilisateur = auteur ou admin #}
                     {% if is_granted('ROLE_ADMIN') or comment.user == app.user %}
                         <a href="#" class="edit_comment" data-id="{{ comment.id }}">Modifier</a>
@@ -32,16 +32,17 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            </section>
-    
+        </section>
         {% if app.user %}
+            <span>Laisser un commentaire</span>
             {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
                 {{ form_row(form.commentContent) }} 
                 {{ form_errors(form) }}
-                <button id="saved_comment" type="submit">Envoyer</button>
+                <button id="saved_comment" class="full_button_black" type="submit">Envoyer</button>
             {{ form_end(form) }}
         {% endif %}
-    </section>
+    </article>
+</section>
 
 {% endblock %}
 

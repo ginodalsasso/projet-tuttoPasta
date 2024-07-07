@@ -42,8 +42,8 @@ $(document).ready(function() {
             <form class="edit_comment_form" action="${editUrl}" method="POST" data-id="${commentId}">
                 <textarea name="comment[commentContent]">${commentContent}</textarea>
                 <input type="hidden" name="comment[_token]" value="${csrfToken}">
-                <button id="update_comment" type="submit">Mettre à jour</button>
-                <button type="button" class="cancel_edit">Annuler</button>
+                <button type="button" class="cancel_edit stickers_white">Annuler</button>
+                <button id="update_comment" class="stickers_black" type="submit">Mettre à jour</button>
             </form>
         `;
         $(this).closest('.comment').html(editForm); // Remplace le contenu du commentaire par le formulaire d'édition

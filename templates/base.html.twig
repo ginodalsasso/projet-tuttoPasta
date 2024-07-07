@@ -7,13 +7,13 @@
         <title>{% block title %}{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('build/trix.css') }}">
+            {# <link rel="stylesheet" href="{{ asset('build/trix.css') }}"> #}
             <link rel="stylesheet" href="{{ asset('/css/flatpickr.css')}}">
             <link rel="stylesheet" href="{{ asset('/css/style.css')}}">
             <link rel="stylesheet" href="https://use.typekit.net/tkf7imz.css">
         {% endblock %}
         <script src="{{ asset('/js/lib/jquery-3.7.1.min.js')}}"></script>
-        <script src="{{ asset('build/trix.js') }}"></script>
+        {# <script src="{{ asset('build/trix.js') }}"></script> #}
         <script src="{{ asset('/js/lib/flatpickr.js')}}"></script>
         <script src="{{ asset('/js/lib/flatpickr-fr.js')}}"></script>
         <script src="{{ asset('/js/script.js')}}"></script>
@@ -42,7 +42,7 @@
             </header>
         {% block body %}
             <div class="sub_header_tittle_container">
-                <h1>{% block page_title %}{{ title }}{% endblock %}</h1>
+                <h1 id="h1_page_title">{% block page_title %}{{ title }}{% endblock %}</h1>
                 {# <img class="background_top" src="{{ asset('/img/Background-top.svg') }} " alt="background tuttoPasta" loading="lazy"> #}
             </div>
         {% endblock %}
