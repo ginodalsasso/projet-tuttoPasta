@@ -314,7 +314,6 @@ a{
     text-align: end;
 }
 
-
 #comment_commentContent{
     width: 50vw;
     height: 15vh;
@@ -330,6 +329,12 @@ a{
 .edit_comment_form textarea {
     width: 100%;
     resize: none;
+}
+
+#comment_join_btn {
+        display: block;
+        margin: 0 auto;
+        width: fit-content;
 }
 
 /*=============== FOOTER ===============*/

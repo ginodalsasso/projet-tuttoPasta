@@ -11,7 +11,6 @@ $(document).ready(function() {
     // Gestion de la soumission du formulaire d'édition
     $(document).on('submit', '.edit_comment_form', function(e) {
         e.preventDefault();
-
         submitEditComment($(this), csrfToken);
     });
 
@@ -20,8 +19,8 @@ $(document).ready(function() {
         location.reload();
     });
 
-    // Gestion de la suppression de commentaire
-    $(document).on('click', '.delete_comment', function(e) {
+    // // Gestion de la suppression de commentaire
+    $('.delete_comment').on('click', function(e) {
         e.preventDefault();
         var commentId = $(this).data('id');
         var slug = $(this).closest('.comment').data('slug'); // Récupère le slug de l'article
@@ -190,5 +189,10 @@ function updateCommentCount(addComment) {
     }
 
     $commentTitle.data('count', commentCount);
-    // $commentTitle.text(commentCount + ' Commentaires:');
+    
+    if (commentCount <= 1) {
+        $commentTitle.text(commentCount + ' Commentaire:');
+    } else {
+        $commentTitle.text(commentCount + ' Commentaires:');
+    }
 }

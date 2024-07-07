@@ -6,6 +6,7 @@
 
 {% block body %}
 {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+
 <section class="wrapper">
     {#--------------------------------------- Section article ----------------------------------------#}
     <article class="article_content">        
@@ -25,6 +26,7 @@
                 Commentaires:
             {% endif %}
         </span>
+        {# Contenu du commentaire #}
         <section id="comments_section">
             {% set sortedComments = article.comments|sort((a, b) => b.commentDate.timestamp - a.commentDate.timestamp) %}
             {% for comment in sortedComments %}
@@ -47,7 +49,10 @@
                 </div>
             {% endfor %}
         </section>
-        {% if app.user %}
+        {# Ajout d'un commentaire #}
+        {% if not app.user %}   
+            <a id="comment_join_btn" class="full_button_black" href="{{ path('app_register') }}">Inscrit toi et joins la conversation</a>
+        {% else %}
             <span>Laisser un commentaire</span>
             {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
                 {{ form_row(form.commentContent) }} 
@@ -57,9 +62,7 @@
         {% endif %}
     </article>
 </section>
-
 {% endblock %}
-
 
 {% block javascripts %}
     <script src="{{ asset('/js/blog.js')}}"></script>
