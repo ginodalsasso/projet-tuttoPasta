@@ -279,7 +279,7 @@ a{
 
 #comment_title {
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .comment,
@@ -294,8 +294,26 @@ a{
 }
 
 .comment {
-    margin: 20px 0;
+    margin: 10px 0 20px 0;
 }
+
+.comment_head{
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment_head p::first-letter {
+    text-transform: uppercase;
+}
+
+.comment_head p:first-child {
+    font-weight: 600;
+}
+
+.comment_actions {
+    text-align: end;
+}
+
 
 #comment_commentContent{
     width: 50vw;

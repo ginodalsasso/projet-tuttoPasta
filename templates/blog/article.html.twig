@@ -7,6 +7,7 @@
 {% block body %}
 {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
 <section class="wrapper">
+    {#--------------------------------------- Section article ----------------------------------------#}
     <article class="article_content">        
         <span id="article_date">Rédigé par TuttoPasta, le {{ article.date }} | <a href="#comment_title">{{article.comments|length}} {% if article.comments|length <= 1 %}Commentaire{% else %}Commentaires{% endif %}</a></span>
         {{ article.articleContent|raw }} <br>
@@ -14,21 +15,34 @@
             <p>{{ category.categoryName }}</p>
         {% endfor %}
         <hr>
-        <span id="comment_title" class="stickers_pink">Commentaires:</span>
+        {#--------------------------------------- Section commentaires ----------------------------------------#}
+        {# Compteur de commentaires #}
+        <span id="comment_title" class="stickers_pink" data-count="{{article.comments|length}}">
+            {{article.comments|length}}
+            {% if article.comments|length <= 1 %} 
+                Commentaire:
+            {% else %} 
+                Commentaires:
+            {% endif %}
+        </span>
         <section id="comments_section">
             {% set sortedComments = article.comments|sort((a, b) => b.commentDate.timestamp - a.commentDate.timestamp) %}
             {% for comment in sortedComments %}
                 <div class="comment" id="comment-{{ comment.id }}" data-slug="{{ article.slug }}">
-                    <p>{{ comment.user.username }}</p>
+                    <div class="comment_head">
+                        <p>{{ comment.user.username }}</p>
+                        <p>{{ comment.commentDate|date("d/m/Y à H:i") }}</p>
+                    </div>
                     <div class="comment_content">
                         <p>{{ comment.commentContent }}</p>
                     </div>
-                    <p>{{ comment.commentDate|date }}</p>
 
                     {# Suppression si utilisateur = auteur ou admin #}
                     {% if is_granted('ROLE_ADMIN') or comment.user == app.user %}
-                        <a href="#" class="edit_comment" data-id="{{ comment.id }}">Modifier</a>
-                        <a href="#" class="delete_comment" data-id="{{ comment.id }}">Supprimer</a>
+                    <div class="comment_actions">
+                        <a href="#" class="edit_comment" data-id="{{ comment.id }}"><img src="{{ asset('/img/editer.png')}}" height="18" alt="icône d'édition"></a>
+                        <a href="#" class="delete_comment" data-id="{{ comment.id }}"><img src="{{ asset('/img/annuler.png')}}" height="18" alt="icône d'annulation"></a>
+                    </div>
                     {% endif %}
                 </div>
             {% endfor %}

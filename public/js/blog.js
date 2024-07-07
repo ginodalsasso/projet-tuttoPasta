@@ -28,7 +28,7 @@ $(document).ready(function() {
         deleteComment(slug, commentId, csrfToken);
     });
 
-    // Gestion de l'édition de commentaire
+    // Gestion de l'édition de commentaire (formulaire d'édition)
     $('.edit_comment').on('click', function(e) {
         e.preventDefault();
         var commentId = $(this).data('id'); // Récupère l'ID du commentaire à éditer
@@ -67,6 +67,7 @@ function submitNewComment($form, csrfToken) {
         success: function(data) {
             if (data.success) {
                 addNewComment(data.comment);
+                updateCommentCount(true); // Incrémente le count commentaire
                 $form[0].reset(); // Réinitialise le formulaire après l'ajout du commentaire
             } else {
                 alert("Erreur lors de l'ajout du commentaire. Veuillez réessayer.");
@@ -78,7 +79,6 @@ function submitNewComment($form, csrfToken) {
         }
     });
 }
-
 
 // Requête de soumission du formulaire pour l'édition d'un commentaire
 function submitEditComment($form, csrfToken) {
@@ -107,6 +107,7 @@ function submitEditComment($form, csrfToken) {
     });
 }
 
+
 function deleteComment(slug, commentId, csrfToken) {
     var url = `/blog/${slug}/comment/${commentId}/delete`;
 
@@ -120,6 +121,7 @@ function deleteComment(slug, commentId, csrfToken) {
             if (data.success) {
                 // Supprimer le commentaire de l'interface utilisateur
                 $('#comment-' + commentId).remove();
+                updateCommentCount(false) // Décrémente le count commentaire
             } else {
                 alert("Erreur lors de la suppression du commentaire. Veuillez réessayer.");
                 console.log(data)
@@ -138,13 +140,17 @@ function deleteComment(slug, commentId, csrfToken) {
 function addNewComment(comment) {
     var newCommentHtml = `
         <div class="comment" id="comment-${comment.id}" data-slug="${comment.slug}">
-            <p>${comment.username}</p>
+            <div class="comment_head">
+                <p>${comment.username}</p>
+                <p>${comment.date}</p>
+            </div>
             <div class="comment_content">
                 ${comment.commentContent}
             </div>
-            <p>${comment.date}</p>
-            <a href="#" class="edit_comment" data-id="${comment.id}">Modifier</a>
-            <a href="#" class="delete_comment" data-id="${comment.id}">Supprimer</a>
+            <div class="comment_actions">
+                <a href="#" class="edit_comment" data-id="${comment.id}"><img src="/img/editer.png" height="18" alt="icône d'édition"></a>
+                <a href="#" class="delete_comment" data-id="${comment.id}"><img src="/img/annuler.png" height="18" alt="icône d'annulation"></a>
+            </div>
         </div>
     `;
     $('#comments_section').prepend(newCommentHtml); // Ajoute le nouveau commentaire à la fin de la section des commentaires
@@ -153,14 +159,36 @@ function addNewComment(comment) {
 // Mise à jour html de l'édition d'un commentaire
 function updateExistingComment(commentId, comment) {
     var updatedCommentHtml = `
-        <p>${comment.username}</p>
+        <div class="comment_head">
+            <p>${comment.username}</p>
+            <p>${comment.date}</p>
+        </div>
         <div class="comment_content">
             ${comment.commentContent}
         </div>
-        <p>${comment.date}</p>
-        <a href="#" class="edit_comment" data-id="${comment.id}">Modifier</a>
-        <a href="#" class="delete_comment" data-id="${comment.id}">Supprimer</a>
-
+        <div class="comment_actions">
+            <a href="#" class="edit_comment" data-id="${comment.id}"><img src="/img/editer.png" height="18" alt="icône d'édition"></a>
+            <a href="#" class="delete_comment" data-id="${comment.id}"><img src="/img/annuler.png" height="18" alt="icône d'annulation"></a>
+        </div>
     `;
     $(`#comment-${commentId}`).html(updatedCommentHtml); // Met à jour le contenu du commentaire dans la vue
+}
+
+
+//___________________________________LOGIQUE COMMENTAIRE_______________________________________
+// Mise à jour du count des commentaires
+function updateCommentCount(addComment) {
+    var $commentTitle = $('#comment_title');
+    var commentCount = $commentTitle.data('count') || 0;
+
+    if (addComment) {
+        commentCount += 1;
+    } else {
+        if (commentCount > 0) { // Empêche le compteur d'aller en dessous de 0
+            commentCount -= 1;
+        }
+    }
+
+    $commentTitle.data('count', commentCount);
+    // $commentTitle.text(commentCount + ' Commentaires:');
 }
