@@ -8,16 +8,20 @@ $(document).ready(function() {
         submitNewComment($(this), csrfToken);
     });
 
+
     // Gestion de la soumission du formulaire d'édition
     $(document).on('submit', '.edit_comment_form', function(e) {
         e.preventDefault();
-        submitEditComment($(this), csrfToken);
+        var $form = $(this);
+        submitEditComment($form, csrfToken);
     });
+    
 
     // Gestion de l'annulation de l'édition
     $(document).on('click', '.cancel_edit', function() {
         location.reload();
     });
+
 
     // // Gestion de la suppression de commentaire
     $('.delete_comment').on('click', function(e) {
@@ -27,31 +31,29 @@ $(document).ready(function() {
         deleteComment(slug, commentId, csrfToken);
     });
 
-    // Gestion de l'édition de commentaire (formulaire d'édition)
+    // Formulaire d'édition d'un commentaire
     $('.edit_comment').on('click', function(e) {
         e.preventDefault();
         var commentId = $(this).data('id'); // Récupère l'ID du commentaire à éditer
-        var commentContent = $(this).closest('.comment').find('.comment_content').text().trim(); // Récupère le contenu du commentaire à éditer
+        var commentContent = $(this).closest('.comment').find('.comment_content p').text().trim(); // Récupère le contenu du commentaire à éditer
         var slug = $(this).closest('.comment').data('slug'); // Récupère le slug de l'article
         var csrfToken = $('#comment_form').find('input[name="comment[_token]"]').val(); // Récupère le token CSRF du formulaire d'ajout
 
-        var editUrl = `/blog/${slug}/comment/${commentId}/edit`;
-
         var editForm = `
-            <form class="edit_comment_form" action="${editUrl}" method="POST" data-id="${commentId}">
+            <form class="edit_comment_form" action="/blog/${slug}/comment/${commentId}/edit" method="POST" data-id="${commentId}">
                 <textarea name="comment[commentContent]">${commentContent}</textarea>
                 <input type="hidden" name="comment[_token]" value="${csrfToken}">
                 <button type="button" class="cancel_edit stickers_white">Annuler</button>
-                <button id="update_comment" class="stickers_black" type="submit">Mettre à jour</button>
+                <button class="stickers_black" type="submit">Mettre à jour</button>
             </form>
         `;
-        $(this).closest('.comment').html(editForm); // Remplace le contenu du commentaire par le formulaire d'édition
+        $(this).closest('.comment').find('.comment_content').html(editForm); // Remplace le contenu du commentaire par le formulaire d'édition
     });
 });
 
 
 //___________________________________AJAX_______________________________________
-// Requête de soumission du formulaire pour un nouveau commentaire
+// Requête d'ajout d'un commentaire
 function submitNewComment($form, csrfToken) {
     var url = $form.attr('action');
     var formData = $form.serialize();
@@ -66,8 +68,12 @@ function submitNewComment($form, csrfToken) {
         success: function(data) {
             if (data.success) {
                 addNewComment(data.comment);
+                
                 updateCommentCount(true); // Incrémente le count commentaire
+
                 $form[0].reset(); // Réinitialise le formulaire après l'ajout du commentaire
+
+                updateCommentCount(true); // Mets à jour le compteur de commentaires
             } else {
                 alert("Erreur lors de l'ajout du commentaire. Veuillez réessayer.");
             }
@@ -79,7 +85,9 @@ function submitNewComment($form, csrfToken) {
     });
 }
 
-// Requête de soumission du formulaire pour l'édition d'un commentaire
+
+
+// Requête d'édition d'un commentaire
 function submitEditComment($form, csrfToken) {
     var url = $form.attr('action');
     var formData = $form.serialize();
@@ -93,8 +101,8 @@ function submitEditComment($form, csrfToken) {
         },
         success: function(data) {
             if (data.success) {
-                var commentId = $form.data('id');  // Récupère l'ID du commentaire à mettre à jour
-                updateExistingComment(commentId, data.comment);
+                var commentDiv = $('#comment-' + data.comment.id); // Cherche l'id du commentaire séléctionné
+                commentDiv.find('.comment_content').html('<p>' + data.comment.commentContent + '</p>'); // Met à jour le contenu du commentaire
             } else {
                 alert("Erreur lors de la modification du commentaire. Veuillez réessayer.");
             }
@@ -107,6 +115,8 @@ function submitEditComment($form, csrfToken) {
 }
 
 
+
+// Requête suppression d'un commentaire
 function deleteComment(slug, commentId, csrfToken) {
     var url = `/blog/${slug}/comment/${commentId}/delete`;
 
@@ -133,8 +143,7 @@ function deleteComment(slug, commentId, csrfToken) {
     });
 }
 
-
-//___________________________________HTML D'AJOUT ET EDITION COMMENTAIRE_______________________________________
+//___________________________________HTML D'AJOUT D'UN COMMENTAIRE_______________________________________
 // Ajout html du nouveau commentaire
 function addNewComment(comment) {
     var newCommentHtml = `
@@ -155,27 +164,9 @@ function addNewComment(comment) {
     $('#comments_section').prepend(newCommentHtml); // Ajoute le nouveau commentaire à la fin de la section des commentaires
 }
 
-// Mise à jour html de l'édition d'un commentaire
-function updateExistingComment(commentId, comment) {
-    var updatedCommentHtml = `
-        <div class="comment_head">
-            <p>${comment.username}</p>
-            <p>${comment.date}</p>
-        </div>
-        <div class="comment_content">
-            ${comment.commentContent}
-        </div>
-        <div class="comment_actions">
-            <a href="#" class="edit_comment" data-id="${comment.id}"><img src="/img/editer.png" height="18" alt="icône d'édition"></a>
-            <a href="#" class="delete_comment" data-id="${comment.id}"><img src="/img/annuler.png" height="18" alt="icône d'annulation"></a>
-        </div>
-    `;
-    $(`#comment-${commentId}`).html(updatedCommentHtml); // Met à jour le contenu du commentaire dans la vue
-}
 
-
-//___________________________________LOGIQUE COMMENTAIRE_______________________________________
-// Mise à jour du count des commentaires
+// //___________________________________LOGIQUE COMMENTAIRE_______________________________________
+// // Mise à jour du count des commentaires
 function updateCommentCount(addComment) {
     var $commentTitle = $('#comment_title');
     var commentCount = $commentTitle.data('count') || 0;
