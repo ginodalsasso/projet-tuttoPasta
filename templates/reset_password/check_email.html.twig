@@ -6,7 +6,7 @@
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
-    <section class="wrapper">
+    <main class="wrapper">
         <div class="form_container">
             <p>
                 Si un compte correspondant à votre adresse e-mail existe, un e-mail contenant un lien de réinitialisation de mot de passe vous sera alors envoyé.
@@ -14,5 +14,5 @@
             </p>
             <p>Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier de spam ou <a href="{{ path('app_forgot_password_request') }}">réessayez</a>.</p>
         </div>
-    </section>
+    </main>
 {% endblock %}

@@ -7,7 +7,7 @@
 {% block body %}
 {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
 
-<section class="wrapper">
+<main class="wrapper">
     {#--------------------------------------- Section article ----------------------------------------#}
     <article class="article_content">        
         <span id="article_date">Rédigé par TuttoPasta, le {{ article.date }} | <a href="#comment_title">{{article.comments|length}} {% if article.comments|length <= 1 %}Commentaire{% else %}Commentaires{% endif %}</a></span>
@@ -15,7 +15,7 @@
         {% for category in article.categories %}
             <p>{{ category.categoryName }}</p>
         {% endfor %}
-        <hr>
+        <hr id="article_separator">
         {#--------------------------------------- Section commentaires ----------------------------------------#}
         {# Compteur de commentaires #}
         <span id="comment_title" class="stickers_pink" data-count="{{article.comments|length}}">
@@ -61,7 +61,7 @@
             {{ form_end(form) }}
         {% endif %}
     </article>
-</section>
+</main>
 {% endblock %}
 
 {% block javascripts %}

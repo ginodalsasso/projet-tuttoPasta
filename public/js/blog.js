@@ -69,11 +69,10 @@ function submitNewComment($form, csrfToken) {
             if (data.success) {
                 addNewComment(data.comment);
                 
+                $form[0].reset(); // Réinitialise le formulaire après l'ajout du commentaire
+                
                 updateCommentCount(true); // Incrémente le count commentaire
 
-                $form[0].reset(); // Réinitialise le formulaire après l'ajout du commentaire
-
-                updateCommentCount(true); // Mets à jour le compteur de commentaires
             } else {
                 alert("Erreur lors de l'ajout du commentaire. Veuillez réessayer.");
             }

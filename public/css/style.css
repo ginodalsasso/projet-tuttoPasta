@@ -31,7 +31,7 @@ body {
     background: var(--black-color);
     color: var(--white-color);
     font-size: var(--font-size);
-    font-family: var(--font-family)
+    font-family: var(--font-family);
 }
 
 /*=============== NAVBAR ===============*/
@@ -277,6 +277,10 @@ a{
     line-height: 1.5;;
 }
 
+#article_separator{
+    margin: 50px 0;
+}
+
 #comment_title {
     display: inline-block;
     margin-bottom: 10px;
@@ -308,6 +312,10 @@ a{
 
 .comment_head p:first-child {
     font-weight: 600;
+}
+
+.comment_content {
+    word-wrap: break-word;
 }
 
 .comment_actions {
@@ -399,7 +407,7 @@ footer {
 
 hr {
     margin: 0 100px;
-    margin-bottom: 50px;
+    /* margin-bottom: 50px; */
 }
 
 .footer_social {
