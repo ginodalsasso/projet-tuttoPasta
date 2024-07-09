@@ -7,22 +7,21 @@
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper">
-        <h2>Les derniers articles</h2>
         <ul class="article_list">
             {% for article in articles %}
-            <li class="article_item">
-                <article>
-                    <div>
-                        <h3><a href="{{ path('app_article', { 'slug': article.slug }) }}">{{ article.articleTitle }}</a></h3>
-                        <p>{{ article.date }}</p>
-                    </div>
-                    <div class="article-categories">
-                        {% for category in article.categories %}
-                            <span class="category">{{ category.categoryName }}</span>
-                        {% endfor %}
-                    </div>
-                </article>
-            </li>
+                <a href="{{ path('app_article', { 'slug': article.slug }) }}">
+                    <li class="article_items">
+                        <article class="article_card">
+                            <h2 class="article_card_title">{{ article.articleTitle }}</h2>
+                            <p>{{ article.date }}</p>
+                            <div class="article-categories">
+                                {% for category in article.categories %}
+                                    <span class="category">{{ category.categoryName }}</span>
+                                {% endfor %}
+                            </div>
+                        </article>
+                    </li>
+                </a>
             {% endfor %}
         </ul>
     </main>

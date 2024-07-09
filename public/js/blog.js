@@ -49,6 +49,12 @@ $(document).ready(function() {
         `;
         $(this).closest('.comment').find('.comment_content').html(editForm); // Remplace le contenu du commentaire par le formulaire d'édition
     });
+
+
+    var colors = ['var(--pink-color)', 'var(--red-color)', 'var(--blue-color)', 'var(--green-color)'];
+    $('.article_card_title').each(function(index) {
+        $(this).css('color', colors[index % colors.length]);
+    });
 });
 
 

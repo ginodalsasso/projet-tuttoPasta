@@ -34,6 +34,11 @@ body {
     font-family: var(--font-family);
 }
 
+/* .color-pink { color: var(--pink-color); }
+.color-red { color: var(--red-color); }
+.color-blue { color: var(--blue-color); }
+.color-green { color: var(--green-color); } */
+
 /*=============== NAVBAR ===============*/
 a{
     text-decoration : none;
@@ -257,6 +262,29 @@ a{
 #appointment_services {
     display: flex;
     width: 500px;
+}
+
+/*=============== LISTE ARTICLES ===============*/
+.article_list {
+    display: grid;
+    grid-template-columns: 2fr 50%;
+    gap: 20px;
+    list-style-type: none;
+}
+
+.article_items {
+    border: 1px solid black;
+    padding: 5%;
+}
+
+.article_card_title{
+    background-color: white;
+    font-weight: unset;
+    padding: 10px;
+}
+
+.article_card :nth-child(2n){
+    font-size: 14px;
 }
 
 /*=============== ARTICLES ===============*/
