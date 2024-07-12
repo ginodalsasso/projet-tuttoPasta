@@ -9,16 +9,11 @@
     <main class="wrapper">
         <ul class="article_list">
             {% for article in articles %}
+            <li class="article_items">
                 <a href="{{ path('app_article', { 'slug': article.slug }) }}">
-                    <li class="article_items">
                         <article class="article_card">
                             <h2 class="article_card_title">{{ article.articleTitle }}</h2>
                             <p>{{ article.date }}</p>
-                            {# <div class="article-categories">
-                                {% for category in article.categories %}
-                                    <span class="category">{{ category.categoryName }}</span>
-                                {% endfor %}
-                            </div> #}
                             <div class="article_tags">
                                 {% for tag in article.tags %}
                                     <span class="tag">{{ tag.tagName }}</span>
@@ -26,8 +21,8 @@
                             </div>    
                             <div class="see_more">Voir l'article <img src="{{ asset('/img/arrow_right.svg')}}" height="18" alt="icône d'annulation"></div>  
                         </article>
-                    </li>
-                </a>
+                    </a>
+                </li>
             {% endfor %}
         </ul>
     </main>

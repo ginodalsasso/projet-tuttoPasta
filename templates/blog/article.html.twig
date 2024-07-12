@@ -3,7 +3,7 @@
 {% block head %}
     {{ parent() }} {# Etend le block head défini dans le layout  #}
     <meta property="og:title" content="{{ article.articleTitle }}" />
-    <meta property="og:url" content="{{ app.request.uri }}" />
+    {# <meta property="og:url" content="{{ app.request.uri }}" /> #}
     {# <meta property="og:image" content="{{ asset('path/to/article/image.jpg') }}" /> #}
     <meta property="og:type" content="article" />
 {% endblock %}
@@ -94,6 +94,26 @@
             {{ form_end(form) }}
         {% endif %}
     </article>
+
+    <hr id="article_separator">
+    <ul class="article_list">
+        {% for article in articles|slice(2) %}
+        <li class="article_items">
+            <a href="{{ path('app_article', { 'slug': article.slug }) }}">
+                    <article class="article_card">
+                        <h2 class="article_card_title">{{ article.articleTitle }}</h2>
+                        <p>{{ article.date }}</p>
+                        <div class="article_tags">
+                            {% for tag in article.tags %}
+                                <span class="tag">{{ tag.tagName }}</span>
+                            {% endfor %}
+                        </div>    
+                        <div class="see_more">Voir l'article <img src="{{ asset('/img/arrow_right.svg')}}" height="18" alt="icône d'annulation"></div>  
+                    </article>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
 </main>
 {% endblock %}
 

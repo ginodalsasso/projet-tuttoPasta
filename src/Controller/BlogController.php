@@ -42,6 +42,8 @@ class BlogController extends AbstractController
     public function articleShow(string $slug, ArticleRepository $articleRepository): Response
     {
         $article = $articleRepository->findOneBy(['slug' => $slug]);
+        $articles = $articleRepository->findAll();
+
 
         if (!$article) {
             $this->addFlash('info', 'Article non trouvé');
@@ -56,6 +58,7 @@ class BlogController extends AbstractController
         $form = $this->createForm(CommentType::class, $comment);
 
         return $this->render('blog/article.html.twig', [
+            'articles' => $articles,
             'article' => $article,
             'form' => $form->createView(),
         ]);
