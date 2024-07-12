@@ -43,7 +43,12 @@ class ArticleCrudController extends AbstractCrudController
                 ->setFormTypeOptions([
                     'by_reference' => false,
                     'multiple' => true,
-                ]),        // CollectionField::new('comments'),
+                ]),        
+            AssociationField::new('tags')
+                ->setFormTypeOptions([
+                    'by_reference' => false,
+                    'multiple' => true,
+                ]),       
             AssociationField::new('comments')
                 ->setFormTypeOptions([
                     'by_reference' => false,

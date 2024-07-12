@@ -1,5 +1,13 @@
 {% extends 'base.html.twig' %}
 
+{% block head %}
+    {{ parent() }} {# Etend le block head défini dans le layout  #}
+    <meta property="og:title" content="{{ article.articleTitle }}" />
+    <meta property="og:url" content="{{ app.request.uri }}" />
+    {# <meta property="og:image" content="{{ asset('path/to/article/image.jpg') }}" /> #}
+    <meta property="og:type" content="article" />
+{% endblock %}
+
 {% block title %}{{article.articleTitle}}{% endblock %}
 
 {% block page_title %} {{ article.articleTitle }} {% endblock %}
@@ -9,12 +17,37 @@
 
 <main class="wrapper">
     {#--------------------------------------- Section article ----------------------------------------#}
-    <article class="article_content">        
+    <article class="article_content">
         <span id="article_date">Rédigé par TuttoPasta, le {{ article.date }} | <a href="#comment_title">{{article.comments|length}} {% if article.comments|length <= 1 %}Commentaire{% else %}Commentaires{% endif %}</a></span>
-        {{ article.articleContent|raw }} <br>
+        
         {% for category in article.categories %}
-            <p>{{ category.categoryName }}</p>
+        <p>{{ category.categoryName }}</p>
         {% endfor %}
+        <div class="article_description">
+            {{ article.articleContent|raw }} <br>
+        </div>
+        <div class="article_tags">
+            {% for tag in article.tags %}
+                <span class="tag">{{ tag.tagName }}</span>
+            {% endfor %}
+        </div>        
+        <hr id="article_separator">
+
+        <div class="social_share">
+            <p>Partager cet article : </p>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:8000/blog/{{article.slug}}" class="social_icons" target="_blank">
+                <img src="{{ asset('/img/icons/facebook.svg')}}" alt="icône Facebook">
+            </a>
+            <a href="https://https://www.instagram.com/share/url/?url=http://127.0.0.1:8000/blog/{{article.slug}}" class="social_icons" target="_blank">
+                <img src="{{ asset('/img/icons/instagram.svg')}}" alt="icône Instagram">
+            </a>
+            <a href="https://x.com/intent/post?url=http://127.0.0.1:8000/blog/{{article.slug}}" class="social_icons" target="_blank">
+                <img src="{{ asset('/img/icons/twitter.svg')}}" alt="icône Twitter">
+            </a>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://127.0.0.1:8000/blog/{{article.slug}}" class="social_icons" target="_blank">
+                <img src="{{ asset('/img/icons/linkedin.svg')}}" alt="icône Linkedin">
+            </a>
+        </div>
         <hr id="article_separator">
         {#--------------------------------------- Section commentaires ----------------------------------------#}
         {# Compteur de commentaires #}

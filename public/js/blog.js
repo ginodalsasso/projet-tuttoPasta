@@ -55,6 +55,7 @@ $(document).ready(function() {
     $('.article_card_title').each(function(index) {
         $(this).css('color', colors[index % colors.length]);
     });
+
 });
 
 

@@ -44,9 +44,9 @@ class Article
     private Collection $comments;
 
     /**
-     * @var Collection<int, tag>
+     * @var Collection<int, Tag>
      */
-    #[ORM\ManyToMany(targetEntity: tag::class, inversedBy: 'articles')]
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'articles')]
     private Collection $tags;
 
     public function __construct()

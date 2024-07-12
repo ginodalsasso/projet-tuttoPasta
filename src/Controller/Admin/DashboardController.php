@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Tag;
 use App\Entity\User;
 use App\Entity\DayOff;
 use App\Entity\Article;
@@ -56,6 +57,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Images projets', 'fas fa-images', ProjectImg::class);
         yield MenuItem::linkToCrud('Services', 'fas fa-concierge-bell', Service::class);
         yield MenuItem::linkToCrud('Articles', 'fas fa-newspaper', Article::class);
+        yield MenuItem::linkToCrud('Tag', 'fas fa-newspaper', Tag::class);
         yield MenuItem::linkToCrud('Commentaires', 'fas fa-comments', Comment::class);
         
         yield MenuItem::linkToCrud('Rendez-vous', 'fas fa-calendar-check', Appointment::class);

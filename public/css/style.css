@@ -9,12 +9,12 @@
     --white-color: #F5F5F5;
     --pink-color: #F088FF;
     --red-color: #F53358;
-    --blue-color: #5757FF;
+    --blue-color: #6C6CFF;
     --green-color: #27B474;
     --black-color: #0F0F0F;
 
     --h1-fontsize: 60px;
-    --h2-fontsize: 45px;
+    --h2-fontsize: 40px;
     --h3-fontsize: 30px;
     --h4-fontsize: 18px;
     --font-size: 16px;
@@ -34,11 +34,6 @@ body {
     font-family: var(--font-family);
 }
 
-/* .color-pink { color: var(--pink-color); }
-.color-red { color: var(--red-color); }
-.color-blue { color: var(--blue-color); }
-.color-green { color: var(--green-color); } */
-
 /*=============== NAVBAR ===============*/
 a{
     text-decoration : none;
@@ -48,7 +43,7 @@ a{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 38px 100px 0 100px;
+    margin: 38px 8% 0;
 }
 #nav_container {
     display: flex;
@@ -149,7 +144,7 @@ a{
 .wrapper{
     color: var(--black-color);
     background-color: var(--white-color);
-    padding: 100px 100px ;
+    padding: 8% ;
 }
 
 /*=============== TITLES ===============*/
@@ -160,6 +155,8 @@ a{
     margin: 200px;
     width: 70vw;
 }
+
+h2 {font-size: var(--h2-fontsize);}
 
 /*=============== REGISTRATION ===============*/
 .agree_terms {
@@ -200,8 +197,6 @@ a{
 .form_container label{
     display: block;
     margin-bottom: 10px;
-    
-    color: var(--black-color);
 }
 
 .form_container input[type=text],
@@ -275,16 +270,34 @@ a{
 .article_items {
     border: 1px solid black;
     padding: 5%;
+    height: 100%;
+}
+
+.article_items:hover{
+    scale: 1.01;
+}
+
+.article_card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--black-color);
 }
 
 .article_card_title{
     background-color: white;
     font-weight: unset;
-    padding: 10px;
+    padding: 5%;
 }
 
-.article_card :nth-child(2n){
-    font-size: 14px;
+.see_more {
+    text-align: end;
+    text-decoration: underline;
+    margin-top: 10px;
+}
+
+.see_more img{
+    vertical-align: sub;
 }
 
 /*=============== ARTICLES ===============*/
@@ -293,9 +306,20 @@ a{
     margin-bottom: 50px;   
     color: grey; 
 }
-#article_date a{
+
+#article_date a { 
+    color: var(--black-color); 
     text-decoration: underline;
-    color: var(--black-color) 
+}
+
+.social_share {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.social_icons img {
+    height: 35px;
 }
 
 .article_content {
@@ -303,6 +327,23 @@ a{
     margin-right: auto;
     margin-left: auto;
     line-height: 1.5;;
+}
+
+.article_description {
+    margin-bottom: 50px;
+}
+
+.article_tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    padding: 4px 8px;
+    background-color: var(--black-color);
+    color: var(--white-color);
+    
 }
 
 #article_separator{
