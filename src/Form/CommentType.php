@@ -29,6 +29,7 @@ class CommentType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Votre message',
+                    'autocomplete' => 'off',
                     ]
             ]);    
     }

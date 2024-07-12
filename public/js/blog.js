@@ -5,15 +5,50 @@ $(document).ready(function() {
     // Événement soumission du formulaire commentaire
     $('#comment_form').on('submit', function(e) {
         e.preventDefault();
-        submitNewComment($(this), csrfToken);
+        $(".error_msg").text("");
+        $("#comment_commentContent").removeClass("input_invalid");
+    
+        let isValid = true;
+        const message = $("#comment_commentContent").val();
+    
+        if ($("#comment_commentContent").val() === "") {
+            $("#comment_commentContent").addClass("input_invalid");
+            isValid = false;
+        }
+    
+        if (message === "" || message.length < 5) {
+            $("#message_error").text("Le message est invalide et doit contenir au minimum 5 caractères");
+            $("#comment_commentContent").addClass("input_invalid");
+            isValid = false;
+        }
+    
+        if (isValid) {
+            // Si les contraintes sont respectées alors envoi la requête d'ajout d'un commentaire
+            submitNewComment($(this), csrfToken);
+        }
     });
 
 
     // Gestion de la soumission du formulaire d'édition
     $(document).on('submit', '.edit_comment_form', function(e) {
         e.preventDefault();
-        var $form = $(this);
-        submitEditComment($form, csrfToken);
+
+        $(".error_msg").text("");
+        $(".edit_commentContent").removeClass("input_invalid");
+        
+        let isValid = true;
+        const editMessage = $("#edit_commentContent").val();
+
+        if (editMessage === "" || editMessage.length < 5) {
+            $("#editMessage_error").text("Le message est invalide et doit contenir au minimum 5 caractères");
+            $("#edit_commentContent").addClass("input_invalid");
+            isValid = false;
+        }
+        // Si les contraintes sont respectées alors envoi la requête d'édition d'un commentaire
+        if (isValid) {
+            var $form = $(this);
+            submitEditComment($form, csrfToken);
+        }
     });
     
 
@@ -38,24 +73,30 @@ $(document).ready(function() {
         var commentContent = $(this).closest('.comment').find('.comment_content p').text().trim(); // Récupère le contenu du commentaire à éditer
         var slug = $(this).closest('.comment').data('slug'); // Récupère le slug de l'article
         var csrfToken = $('#comment_form').find('input[name="comment[_token]"]').val(); // Récupère le token CSRF du formulaire d'ajout
-
+    
         var editForm = `
             <form class="edit_comment_form" action="/blog/${slug}/comment/${commentId}/edit" method="POST" data-id="${commentId}">
-                <textarea name="comment[commentContent]">${commentContent}</textarea>
+                <textarea name="comment[commentContent]" class="data" id="edit_commentContent">${commentContent}</textarea>
+                <div class="error_msg" id="editMessage_error"></div>
                 <input type="hidden" name="comment[_token]" value="${csrfToken}">
                 <button type="button" class="cancel_edit stickers_white">Annuler</button>
-                <button class="stickers_black" type="submit">Mettre à jour</button>
+                <button id="editCommentMessage" class="stickers_black" type="submit">Mettre à jour</button>
             </form>
         `;
         $(this).closest('.comment').find('.comment_content').html(editForm); // Remplace le contenu du commentaire par le formulaire d'édition
     });
-
-
+    
+    // Variable de couleur pour les H2 des cards articles
     var colors = ['var(--pink-color)', 'var(--red-color)', 'var(--blue-color)', 'var(--green-color)'];
     $('.article_card_title').each(function(index) {
         $(this).css('color', colors[index % colors.length]);
     });
+    
+    // Message d'erreurs UI
+    $("#saved_comment").on("click", function(event) {
 
+    });
+    
 });
 
 

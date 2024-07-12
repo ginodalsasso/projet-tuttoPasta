@@ -72,7 +72,7 @@
                         <p>{{ comment.commentContent }}</p>
                     </div>
 
-                    {# Suppression si utilisateur = auteur ou admin #}
+                    {# Suppression ou édition si utilisateur = auteur ou admin #}
                     {% if is_granted('ROLE_ADMIN') or comment.user == app.user %}
                     <div class="comment_actions">
                         <a href="#" class="edit_comment" data-id="{{ comment.id }}"><img src="{{ asset('/img/editer.png')}}" height="18" alt="icône d'édition"></a>
@@ -89,6 +89,8 @@
             <span>Laisser un commentaire</span>
             {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
                 {{ form_row(form.commentContent) }} 
+                <div class="error_msg" id="message_error"></div>
+
                 {{ form_errors(form) }}
                 <button id="saved_comment" class="full_button_black" type="submit">Envoyer</button>
             {{ form_end(form) }}
@@ -96,24 +98,28 @@
     </article>
 
     <hr id="article_separator">
-    <ul class="article_list">
-        {% for article in articles|slice(2) %}
-        <li class="article_items">
-            <a href="{{ path('app_article', { 'slug': article.slug }) }}">
-                    <article class="article_card">
-                        <h2 class="article_card_title">{{ article.articleTitle }}</h2>
-                        <p>{{ article.date }}</p>
-                        <div class="article_tags">
-                            {% for tag in article.tags %}
-                                <span class="tag">{{ tag.tagName }}</span>
-                            {% endfor %}
-                        </div>    
-                        <div class="see_more">Voir l'article <img src="{{ asset('/img/arrow_right.svg')}}" height="18" alt="icône d'annulation"></div>  
-                    </article>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+
+    {#--------------------------------------- Section Autres articles ----------------------------------------#}
+    <section>
+        <ul class="article_list">
+            {% for article in articles|slice(2) %}
+            <li class="article_items">
+                <a href="{{ path('app_article', { 'slug': article.slug }) }}">
+                        <article class="article_card">
+                            <h2 class="article_card_title">{{ article.articleTitle }}</h2>
+                            <p>{{ article.date }}</p>
+                            <div class="article_tags">
+                                {% for tag in article.tags %}
+                                    <span class="tag">{{ tag.tagName }}</span>
+                                {% endfor %}
+                            </div>    
+                            <div class="see_more">Voir l'article <img src="{{ asset('/img/arrow_right.svg')}}" height="18" alt="icône d'annulation"></div>  
+                        </article>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
 </main>
 {% endblock %}
 
