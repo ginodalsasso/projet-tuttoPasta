@@ -22,8 +22,8 @@ $(document).ready(function() {
             isValid = false;
         }
     
+        // Si les contraintes sont respectées alors envoi la requête d'ajout d'un commentaire
         if (isValid) {
-            // Si les contraintes sont respectées alors envoi la requête d'ajout d'un commentaire
             submitNewComment($(this), csrfToken);
         }
     });

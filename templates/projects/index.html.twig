@@ -9,11 +9,14 @@
     <main class="wrapper">
         {% for project in projects %}
             <a href="{{ path('app_project', { 'slug': project.slug }) }}"> lien</a>
-            {% for projectImg in projectImgs %}
-                {{projectImg.image}}
+
+            {# Itération sur les images du projet #}
+            {% for projectImg in project.images %}
+                <img class="projects_list_img" src="{{ asset(projectImg.image) }}" alt="{{ projectImg.alt }}">
             {% endfor %}
-            {{project.projectName}} <br>
-            {{project.projectContent}}
+
+            <p>{{ project.projectName }}</p>
+            <p>{{ project.projectContent }}</p>
         {% endfor %}
     </main>
 {% endblock %}
