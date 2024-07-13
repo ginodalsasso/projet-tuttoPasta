@@ -8,6 +8,7 @@ use App\Form\AppointmentType;
 use App\Repository\DayOffRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\ServiceRepository;
+use App\Repository\CategoryRepository;
 use App\Repository\ProjectImgRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
@@ -39,19 +40,21 @@ class HomeController extends AbstractController
 
     // ---------------------------------Vue liste projets--------------------------------- //
     #[Route('/projects', name: 'app_projectList')]
-    public function listProjectsShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository): Response
+    public function listProjectsShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, CategoryRepository $categoryRepository): Response
     {
         $projects = $projectRepository->findAll();
         $projectImgs= $projectImgRepository->findAll();
+        $categories= $categoryRepository->findAll();
 
         // Vérifie si les projets et les images de projets existent
-        if (!$projects || !$projectImgs) {
+        if (!$projects || !$projectImgs || !$categories) {
             throw new NotFoundHttpException('No projects or project images found');        
         }
 
         return $this->render('projects/index.html.twig', [
             'projects' => $projects,
             'projectImgs' => $projectImgs,
+            'categories' => $categories,
         ]);
     }
     

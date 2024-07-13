@@ -7,16 +7,26 @@
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper">
-        {% for project in projects %}
-            <a href="{{ path('app_project', { 'slug': project.slug }) }}"> lien</a>
-
-            {# Itération sur les images du projet #}
-            {% for projectImg in project.images %}
-                <img class="projects_list_img" src="{{ asset(projectImg.image) }}" alt="{{ projectImg.alt }}">
+        <ul class="project_list">
+            {% for project in projects %}
+                <li>
+                    <a class="project_container" href="{{ path('app_project', { 'slug': project.slug }) }}">
+                        <div class="project_content">
+                            <p>{{ project.projectDate|date("Y") }}</p>
+                            <p>{{ project.projectName }}</p>
+                            {# Itération sur les catégories du projet #}
+                                {% for category in project.categories %}
+                                    <p>{{ category.categoryName }}</p>
+                                {% endfor %}
+                        </div>
+                        {# Itération sur les images du projet #}
+                        {% for projectImg in project.images %}
+                            <img class="projects_list_img" src="{{ asset(projectImg.image) }}" alt="{{ projectImg.alt }}">
+                        {% endfor %}
+                    </a>
+                </li>
+                <hr class="separator">
             {% endfor %}
-
-            <p>{{ project.projectName }}</p>
-            <p>{{ project.projectContent }}</p>
-        {% endfor %}
+        </ul>
     </main>
 {% endblock %}

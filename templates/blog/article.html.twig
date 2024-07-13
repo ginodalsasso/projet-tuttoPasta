@@ -31,7 +31,7 @@
                 <span class="tag">{{ tag.tagName }}</span>
             {% endfor %}
         </div>        
-        <hr id="article_separator">
+        <hr class="separator">
 
         <div class="social_share">
             <p>Partager cet article : </p>
@@ -48,7 +48,7 @@
                 <img src="{{ asset('/img/icons/linkedin.svg')}}" alt="icône Linkedin">
             </a>
         </div>
-        <hr id="article_separator">
+        <hr class="separator">
         {#--------------------------------------- Section commentaires ----------------------------------------#}
         {# Compteur de commentaires #}
         <span id="comment_title" class="stickers_pink" data-count="{{article.comments|length}}">
@@ -97,7 +97,7 @@
         {% endif %}
     </article>
 
-    <hr id="article_separator">
+    <hr class="separator">
 
     {#--------------------------------------- Section Autres articles ----------------------------------------#}
     <section>

@@ -169,6 +169,10 @@ h2 {font-size: var(--h2-fontsize);}
     margin-top: 100px;
 }
 
+.separator {
+    margin: 50px 0;
+}
+
 /*=============== REGISTRATION ===============*/
 .agree_terms {
     display: block !important;
@@ -274,6 +278,16 @@ h2 {font-size: var(--h2-fontsize);}
 .projects_list_img{
     width: clamp(300px, 40vw, 40vw);
 }
+
+.project_list{
+    list-style-type: none;
+}
+
+.project_container{
+    display: flex;
+    justify-content: space-between;
+    color: var(--black-color);
+}
 /*=============== LISTE ARTICLES ===============*/
 .article_list {
     display: grid;
@@ -359,10 +373,6 @@ h2 {font-size: var(--h2-fontsize);}
     background-color: var(--black-color);
     color: var(--white-color);
     
-}
-
-#article_separator{
-    margin: 50px 0;
 }
 
 #comment_title {
