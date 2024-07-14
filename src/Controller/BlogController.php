@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,29 +65,36 @@ class BlogController extends AbstractController
     }
 
     // ---------------------------------Ajout/Edition d'un commentaire article--------------------------------- //
-    #[IsGranted('ROLE_ADMIN')] 
     #[IsGranted('ROLE_USER')]
     #[Route('blog/{slug}/comment', name: 'app_article_addComment', methods: ['POST'], requirements: ['slug' => '[a-z0-9\-]+'])]
     #[Route('blog/{slug}/comment/{id}/edit', name: 'app_article_editComment', methods: ['POST'], requirements: ['slug' => '[a-z0-9\-]+', 'id' => '\d+'])]
-    public function add_editComment(string $slug, Request $request, ?Comment $comment = null, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): JsonResponse
+    public function add_editComment(string $slug, Request $request, ?Comment $comment = null, ?int $commentId = null, CommentRepository $commentRepository, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): JsonResponse
     {
-
+        // Vérifie si l'utilisateur est connecté
         $user = $security->getUser();
-
+        
+        // Recherche de l'article correspondant au slug fourni
         $article = $articleRepository->findOneBy(['slug' => $slug]);
         if (!$article) {
-            return $this->redirectToRoute('app_blog');
-            $this->addFlash('error', 'Article non trouvé !');
+            return new JsonResponse(['error' => 'Article non trouvé !'], Response::HTTP_NOT_FOUND);
         }
 
-        // Vérifie si l'utilisateur est autorisé à ajouter ou éditer un commentaire
-        if ($user && !($user === $comment->getUser() || $this->isGranted('ROLE_ADMIN'))) {
-            $this->addFlash('error', 'Veuillez vous connecter ou vous assurer d\'avoir les droits !');
-            return $this->redirectToRoute('app_blog');
-        }
-
-        if (!$comment) {
+        if ($commentId !== null) {
+            // Si un ID de commentaire est fourni, recherche le commentaire
+            $comment = $commentRepository->find($commentId);
+            if (!$comment) {
+                return new JsonResponse(['error' => 'Commentaire non trouvé !'], Response::HTTP_NOT_FOUND);
+            }
+            // Vérifie si l'utilisateur est autorisé à modifier le commentaire
+            if ($comment->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+                return new JsonResponse(['error' => 'Vous n\'êtes pas autorisé à modifier ce commentaire.'], Response::HTTP_FORBIDDEN);
+            }
+        } else {
+            // Si aucun ID de commentaire n'est fourni, création d'un nouveau commentaire
             $comment = new Comment();
+            $comment->setUser($user);
+            $comment->setArticle($article);
+            $comment->setCommentDate(new \DateTime());
         }
     
         $form = $this->createForm(CommentType::class, $comment);
@@ -94,11 +102,11 @@ class BlogController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Associer l'utilisateur actuel au commentaire
-            $comment->setUser($user);
+  
             $comment->setArticle($article);
             $entityManager->persist($comment);
             $entityManager->flush();
-    
+            // Retourne une réponse JSON avec les détails du commentaire
             return new JsonResponse([
                 'success' => true,
                 'comment' => [
@@ -109,7 +117,7 @@ class BlogController extends AbstractController
                 ]
             ]);
         }
-    
+        // Collecte des erreurs du formulaire pour les retourner en réponse JSON
         $errors = [];
         foreach ($form->getErrors(true) as $error) {
             $errors[] = $error->getMessage();
@@ -119,7 +127,6 @@ class BlogController extends AbstractController
     }
     
     // ---------------------------------Suppression d'un commentaire article--------------------------------- //
-    #[IsGranted('ROLE_ADMIN')]
     #[IsGranted('ROLE_USER')]
     #[Route('/blog/{slug}/comment/{id}/delete', name: 'app_article_deleteComment', methods: ['DELETE'], requirements: ['slug' => '[a-z0-9\-]+', 'id' => '\d+'])]
     public function deleteComment(string $slug, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): JsonResponse

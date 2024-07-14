@@ -115,6 +115,7 @@ function submitNewComment($form, csrfToken) {
         },
         success: function(data) {
             if (data.success) {
+                console.log(data)
                 addNewComment(data.comment);
                 
                 $form[0].reset(); // Réinitialise le formulaire après l'ajout du commentaire
