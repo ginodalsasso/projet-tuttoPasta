@@ -14,11 +14,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
-class RegistrationController extends AbstractController
+class UserController extends AbstractController
 {
     public function __construct(private EmailVerifier $emailVerifier)
     {
@@ -59,7 +63,7 @@ class RegistrationController extends AbstractController
             return  $this->redirectToRoute('app_login');
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('user/register.html.twig', [
             'registrationForm' => $form,
         ]);
     }
@@ -96,4 +100,48 @@ class RegistrationController extends AbstractController
 
         return $this->redirectToRoute('app_login');
     }
+
+        // Méthode de connexion
+        #[Route(path: '/login', name: 'app_login')]
+        public function login(AuthenticationUtils $authenticationUtils): Response
+        {
+            if ($this->getUser()) {
+                return $this->redirectToRoute('app_home');
+            }
+    
+            // get the login error if there is one
+            $error = $authenticationUtils->getLastAuthenticationError();
+    
+            // last username entered by the user
+            $lastUsername = $authenticationUtils->getLastUsername();
+    
+            return $this->render('user/login.html.twig', [
+                'last_username' => $lastUsername,
+                'error' => $error,
+            ]);
+        }
+    
+        // Méthode de déconnexion
+        #[Route(path: '/logout', name: 'app_logout')]
+        public function logout(): void
+        {
+            throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        }
+
+        // Méthode de vue profil
+        #[IsGranted('ROLE_USER')]
+        #[Route(path: '/profil', name: 'app_profil')]
+        public function profilShow(Security $security): Response
+        {        
+            // Récupère l'utilisateur actuellement authentifié
+            $user = $security->getUser();
+            // Vérifie que l'utilisateur est bien authentifié
+            if (!$user instanceof UserInterface) {
+                throw new AccessDeniedException('Accès refusé');
+            }
+        
+            return $this->render('user/profil.html.twig', [
+                'user' => $user,
+            ]);
+        }   
 }
