@@ -173,15 +173,14 @@ h2 {font-size: var(--h2-fontsize);}
  .modal_edit_data,
  .modal_edit_password {
     display: none;
-    width: 30vw;
-    height: 20vh;
     top: 50%;
     left: 50%;
+    padding: 50px 100px;
     transform: translate(-50%, -50%);
     opacity: 0;
     translate: 0 25vh;
-    transition-property: overlay display opcacity;
     transition-duration: 1s;
+
 }
 
 .modal_edit_data[open],
@@ -189,8 +188,6 @@ h2 {font-size: var(--h2-fontsize);}
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-
     opacity: 1;
     translate: 0 0;
 
@@ -215,6 +212,24 @@ h2 {font-size: var(--h2-fontsize);}
     cursor: pointer;
 }
 
+#user_form_username,
+#user_form_email,
+#edit_password_oldPassword,
+#edit_password_plainPassword_first,
+#edit_password_plainPassword_second {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #000000;
+}
+
+.center_button {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;;
+}
 
 
 /*=============== APPOINTMENT ===============*/
@@ -225,11 +240,6 @@ h2 {font-size: var(--h2-fontsize);}
     padding: 10px;
 }
 
-.background_top{
-    top: 25vh;
-    left: 0;
-    height: auto;
-}
 .error_msg{
     color: var(--red-color);
     font-size: 14px;

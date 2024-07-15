@@ -23,7 +23,9 @@
                 {{ form_row(form.email) }}
                 <div class="error_msg" id="email_error"></div>
 
-                <button id="save_edit_data" type="submit">Valider les informations</button>
+                <div class="center_button">
+                    <button class="full_button_black" id="save_edit_data" type="submit">Valider les informations</button>
+                </div>
             {{ form_end(form) }}
             <button class="closeModal">X</button>
         </dialog>
@@ -31,10 +33,12 @@
         {# Modal d'édition de mot de passe #}
         <dialog class="modal_edit_password">
             {{ form_start(passwordForm) }}
-            {{ form_widget(passwordForm) }}
-            <div class="error_msg" id="password_error"></div>
+                {{ form_widget(passwordForm) }}
+                <div class="error_msg" id="password_error"></div>
 
-                <button id="save_edit_password" type="submit">Changer le mot de passe</button>
+                <div class="center_button">
+                    <button class="full_button_black" id="save_edit_password" type="submit">Changer le mot de passe</button>
+                </div>
             {{ form_end(form) }}
             <button class="closeModal">X</button>
         </dialog>

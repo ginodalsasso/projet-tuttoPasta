@@ -13,6 +13,7 @@ use App\Repository\ProjectImgRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -81,7 +82,7 @@ class HomeController extends AbstractController
     // ---------------------------------Vue RDV et Gestion de RDV--------------------------------- //
     // Gère le processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
-    public function addAppointment(Request $request, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, AppointmentRepository $appointmentRepository, Security $security): Response
+    public function addAppointment(Request $request, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, AppointmentRepository $appointmentRepository): Response
     {
         $appointment = new Appointment();
         $form = $this->createForm(AppointmentType::class, $appointment);

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserFormType;
+use App\Form\EditPasswordType;
 use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
@@ -22,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class UserController extends AbstractController
@@ -130,51 +132,6 @@ class UserController extends AbstractController
             throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
         }
 
-        // // Méthode de vue profil
-        // #[IsGranted('ROLE_USER')]
-        // #[Route(path: '/profil', name: 'app_profil')]
-        // public function profilShow(Security $security): Response
-        // {        
-        //     // Récupère l'utilisateur actuellement authentifié
-        //     $user = $security->getUser();
-        //     // Vérifie que l'utilisateur est bien authentifié
-        //     if (!$user instanceof UserInterface) {
-        //         throw new AccessDeniedException('Accès refusé');
-        //     }
-        
-        //     return $this->render('user/profil.html.twig', [
-        //         'user' => $user,
-        //     ]);
-        // }
-        
-        // // Méthode de modification des informations classiques utilisateur
-        // #[IsGranted('ROLE_USER')]
-        // #[Route('/user/editDara', name: 'edit_user_data')]
-        // public function editUserData(Request $request, Security $security, EntityManagerInterface $entityManager): Response
-        // {
-        //     $user = $security->getUser();
-    
-        //     if (!$user) {
-        //         throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
-        //     }
-    
-        //     $form = $this->createForm(UserFormType::class, $user);
-    
-        //     $form->handleRequest($request);
-    
-        //     if ($form->isSubmitted() && $form->isValid()) {
-        //         $entityManager->persist($user);
-        //         $entityManager->flush();
-    
-        //         $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
-    
-        //         return $this->redirectToRoute('app_profil');
-        //     }
-    
-        //     return $this->render('user/profil.html.twig', [
-        //         'form' => $form->createView(),
-        //     ]);
-        // }
 
         #[Route('/profil', name: 'app_profil')]
         #[IsGranted('ROLE_USER')]
@@ -182,7 +139,7 @@ class UserController extends AbstractController
         {
             $user = $security->getUser();
         
-            if (!$user instanceof UserInterface) {
+            if (!$user instanceof PasswordAuthenticatedUserInterface) {
                 throw new AccessDeniedException('Accès refusé');
             }
         
@@ -191,7 +148,7 @@ class UserController extends AbstractController
             $form->handleRequest($request);
         
             // Formulaire pour le changement de mot de passe
-            $passwordForm = $this->createForm(ChangePasswordFormType::class, $user);
+            $passwordForm = $this->createForm(EditPasswordType::class, $user);
             $passwordForm->handleRequest($request);
         
             // Gestion du formulaire des informations utilisateur
@@ -206,17 +163,24 @@ class UserController extends AbstractController
         
             // Gestion du formulaire de changement de mot de passe
             if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
-                // Hashage et mise à jour du mot de passe
-                $newPassword = $passwordForm->get('plainPassword')->getData();
-                $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
-                $user->setPassword($hashedPassword);
+                $oldPassword = $passwordForm->get('oldPassword')->getData();
         
-                $entityManager->persist($user);
-                $entityManager->flush();
+                // Vérifiez que l'ancien mot de passe est correct
+                if (!$passwordHasher->isPasswordValid($user, $oldPassword)) {
+                    $this->addFlash('error', 'L\'ancien mot de passe est incorrect.');
+                } else {
+                    // Hashage et mise à jour du mot de passe
+                    $newPassword = $passwordForm->get('plainPassword')->getData();
+                    $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+                    $user->setPassword($hashedPassword);
         
-                $this->addFlash('success', 'Votre mot de passe a été changé avec succès.');
+                    $entityManager->persist($user);
+                    $entityManager->flush();
         
-                return $this->redirectToRoute('app_profil');
+                    $this->addFlash('success', 'Votre mot de passe a été changé avec succès.');
+        
+                    return $this->redirectToRoute('app_profil');
+                }
             }
         
             return $this->render('user/profil.html.twig', [
