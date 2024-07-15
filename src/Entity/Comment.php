@@ -14,6 +14,9 @@ class Comment
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+    
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $username = null;
 
     #[ORM\Column(type: Types::TEXT)]
     //use Assert pour les contraintes formulaire
@@ -44,6 +47,19 @@ class Comment
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+
+    public function setUsername(?string $username): self
+    {
+        $this->username = $username;
+        return $this;
     }
 
     public function getCommentContent(): ?string
@@ -95,6 +111,8 @@ class Comment
     public function setUser(?User $user): static
     {
         $this->user = $user;
+        // Condition ? valeur_si_vrai : valeur_si_faux;
+        $this->username = $user ? $user->getUsername() : null;
 
         return $this;
     }

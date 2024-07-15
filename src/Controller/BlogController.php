@@ -111,7 +111,7 @@ class BlogController extends AbstractController
                 'success' => true,
                 'comment' => [
                     'id' => $comment->getId(),
-                    'username' => $user->getUsername(),
+                    'username' => $comment->getUsername() ?? $user->getUsername(),  // Si l'utilisateur suprime son compte alors cherche l'username anonyme
                     'commentContent' => $comment->getCommentContent(),
                     'date' => $comment->getCommentDate()->format('d/m/Y à H:i')
                 ]

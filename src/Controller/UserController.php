@@ -9,13 +9,14 @@ use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use Symfony\Component\Mime\Address;
-use App\Form\ChangePasswordFormType;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -25,6 +26,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
 
 class UserController extends AbstractController
 {
@@ -135,7 +138,7 @@ class UserController extends AbstractController
 
         #[Route('/profil', name: 'app_profil')]
         #[IsGranted('ROLE_USER')]
-        public function profilShow(Request $request, Security $security, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+        public function profilShowAction(Request $request, Security $security, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
         {
             $user = $security->getUser();
         
@@ -189,4 +192,41 @@ class UserController extends AbstractController
                 'user' => $user,
             ]);
         }
+
+
+
+        #[Route('/delete_account', name: 'app_delete_account')]
+        #[IsGranted('ROLE_USER')]
+        public function deleteAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository
+        ): RedirectResponse
+        {
+            // Récupère l'utilisateur actuellement connecté
+            $user = $this->getUser();
+
+            // Vérifie si l'utilisateur est valide
+            if (!$user instanceof UserInterface) {
+                throw new AccessDeniedException('Accès refusé');
+            }
+
+            // Récupérer et anonymiser les commentaires de l'utilisateur
+            $comments = $commentRepository->findBy(['user' => $user]);
+            foreach ($comments as $comment) {
+                $comment->setUser(null);
+                $comment->setUsername('Utilisateur anonyme');
+                $entityManager->persist($comment);
+            }
+
+            // Supprime l'utilisateur de la base de données
+            $entityManager->remove($user);
+            $entityManager->flush();
+
+            // Déconnecte l'utilisateur après la suppression du compte
+            $tokenStorage->setToken(null);
+
+            $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
+
+            // Redirige vers la page d'accueil après la suppression du compte
+            return $this->redirectToRoute('app_home');
+        }
+        
 }

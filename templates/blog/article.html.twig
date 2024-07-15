@@ -65,15 +65,20 @@
             {% for comment in sortedComments %}
                 <div class="comment" id="comment-{{ comment.id }}" data-slug="{{ article.slug }}">
                     <div class="comment_head">
-                        <p>{{ comment.user.username }}</p>
+                        {# <p>{{ comment.user.username }}</p> #}
+                        {% if comment.user %}
+                            {{ comment.user.username|capitalize }}
+                        {% else %}
+                            {{ comment.username }}
+                        {% endif %}
                         <p>{{ comment.commentDate|date("d/m/Y à H:i") }}</p>
                     </div>
                     <div class="comment_content">
                         <p>{{ comment.commentContent }}</p>
                     </div>
 
-                    {# Suppression ou édition si utilisateur = auteur ou admin #}
-                    {% if is_granted('ROLE_ADMIN') or comment.user == app.user %}
+                    {# Suppression ou édition si utilisateur connecté = auteur ou admin #}
+                    {% if is_granted('ROLE_ADMIN') or (app.user and comment.username == app.user.username) %}
                     <div class="comment_actions">
                         <a href="#" class="edit_comment" data-id="{{ comment.id }}"><img src="{{ asset('/img/editer.png')}}" height="18" alt="icône d'édition"></a>
                         <a href="#" class="delete_comment" data-id="{{ comment.id }}"><img src="{{ asset('/img/annuler.png')}}" height="18" alt="icône d'annulation"></a>
