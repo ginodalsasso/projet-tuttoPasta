@@ -170,7 +170,8 @@ h2 {font-size: var(--h2-fontsize);}
 }
 
 /*=============== PROFIL ===============*/
- .modal{
+ .modal_edit_data,
+ .modal_edit_password {
     display: none;
     width: 30vw;
     height: 20vh;
@@ -183,7 +184,8 @@ h2 {font-size: var(--h2-fontsize);}
     transition-duration: 1s;
 }
 
-.modal[open] {
+.modal_edit_data[open],
+.modal_edit_password[open] {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -196,6 +198,11 @@ h2 {font-size: var(--h2-fontsize);}
         opacity: 0;
         translate: 0 -25vh;
     }
+}
+
+.modal_edit_data[open]::backdrop,
+.modal_edit_password[open]::backdrop {
+    background-color: #0000008c;
 }
 
 .closeModal {

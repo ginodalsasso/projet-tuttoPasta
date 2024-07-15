@@ -8,6 +8,7 @@ use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use Symfony\Component\Mime\Address;
+use App\Form\ChangePasswordFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -177,28 +178,50 @@ class UserController extends AbstractController
 
         #[Route('/profil', name: 'app_profil')]
         #[IsGranted('ROLE_USER')]
-        public function profilShow(Request $request, Security $security, EntityManagerInterface $entityManager): Response
+        public function profilShow(Request $request, Security $security, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
         {
             $user = $security->getUser();
-
+        
             if (!$user instanceof UserInterface) {
                 throw new AccessDeniedException('Accès refusé');
             }
-
+        
+            // Formulaire pour les informations utilisateur
             $form = $this->createForm(UserFormType::class, $user);
             $form->handleRequest($request);
-
+        
+            // Formulaire pour le changement de mot de passe
+            $passwordForm = $this->createForm(ChangePasswordFormType::class, $user);
+            $passwordForm->handleRequest($request);
+        
+            // Gestion du formulaire des informations utilisateur
             if ($form->isSubmitted() && $form->isValid()) {
                 $entityManager->persist($user);
                 $entityManager->flush();
-
+        
                 $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
-
+        
                 return $this->redirectToRoute('app_profil');
             }
-
+        
+            // Gestion du formulaire de changement de mot de passe
+            if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
+                // Hashage et mise à jour du mot de passe
+                $newPassword = $passwordForm->get('plainPassword')->getData();
+                $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+                $user->setPassword($hashedPassword);
+        
+                $entityManager->persist($user);
+                $entityManager->flush();
+        
+                $this->addFlash('success', 'Votre mot de passe a été changé avec succès.');
+        
+                return $this->redirectToRoute('app_profil');
+            }
+        
             return $this->render('user/profil.html.twig', [
                 'form' => $form->createView(),
+                'passwordForm' => $passwordForm->createView(),
                 'user' => $user,
             ]);
         }

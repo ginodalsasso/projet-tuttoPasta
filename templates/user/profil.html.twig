@@ -10,13 +10,31 @@
         <p>Pseudo: {{user.username|capitalize}} </p>
         <p>Adresse Email: {{user.email}} </p>
         <p>Création du compte: {{user.accountDate|date('d/m/Y')}}</p>
-        <button class="showModal">Modifier mes informations</button>
-        <a href="{{ path('app_forgot_password_request') }}">Modifier mon mot de passe</a>
-        <dialog class="modal">
+
+        <a class="show_modal_edit_data full_button_black">Modifier mes informations</a>
+        <a class="show_modal_edit_password full_button_black">Modifier mon mot de passe</a>
+        
+        {# Modale d'édition des information utilisateur #}
+        <dialog class="modal_edit_data">
             {{ form_start(form) }}
                 {{ form_row(form.username) }}
+                <div class="error_msg" id="pseudo_error"></div>
+
                 {{ form_row(form.email) }}
-                <button type="submit">Mettre à jour</button>
+                <div class="error_msg" id="email_error"></div>
+
+                <button id="save_edit_data" type="submit">Valider les informations</button>
+            {{ form_end(form) }}
+            <button class="closeModal">X</button>
+        </dialog>
+
+        {# Modal d'édition de mot de passe #}
+        <dialog class="modal_edit_password">
+            {{ form_start(passwordForm) }}
+            {{ form_widget(passwordForm) }}
+            <div class="error_msg" id="password_error"></div>
+
+                <button id="save_edit_password" type="submit">Changer le mot de passe</button>
             {{ form_end(form) }}
             <button class="closeModal">X</button>
         </dialog>
