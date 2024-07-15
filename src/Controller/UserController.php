@@ -135,7 +135,7 @@ class UserController extends AbstractController
             throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
         }
 
-
+        // Affichage et édition des donnés d'un utilisateur
         #[Route('/profil', name: 'app_profil')]
         #[IsGranted('ROLE_USER')]
         public function profilShowAction(Request $request, Security $security, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
@@ -194,7 +194,7 @@ class UserController extends AbstractController
         }
 
 
-
+        // Suppression d'un compte utilisateur
         #[Route('/delete_account', name: 'app_delete_account')]
         #[IsGranted('ROLE_USER')]
         public function deleteAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository

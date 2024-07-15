@@ -123,4 +123,11 @@ $(document).ready(function () {
             event.preventDefault();
         }
     });
+
+    // Confirmation pour la suppression du compte
+    $("#delete_account_link").on("click", function (event) {
+        if (!confirm("Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.")) {
+            event.preventDefault();
+        }
+    });
 });

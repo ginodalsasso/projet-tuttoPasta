@@ -7,13 +7,16 @@
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper">
-        <p>Pseudo: {{user.username|capitalize}} </p>
-        <p>Adresse Email: {{user.email}} </p>
-        <p>Création du compte: {{user.accountDate|date('d/m/Y')}}</p>
-
-        <a class="show_modal_edit_data full_button_black">Modifier mes informations</a>
-        <a class="show_modal_edit_password full_button_black">Modifier mon mot de passe</a>
-        <a class="full_button_black" href="{{ path('app_delete_account') }}">Suprimer mon comtpe</a>
+        <div id="user_content">
+            <p><b>Pseudo:</b> {{user.username|capitalize}} </p>
+            <p><b>Email:</b> {{user.email}} </p>
+            <p><b>Date de création du compte:</b> {{user.accountDate|date('d/m/Y')}}</p>
+        </div>
+        <div id="user_action_buttons">
+            <a class="show_modal_edit_data full_button_black">Modifier mes informations</a>
+            <a class="show_modal_edit_password full_button_black">Modifier mon mot de passe</a>
+            <a class="full_button_red" id="delete_account_link" href="{{ path('app_delete_account') }}">Suprimer mon comtpe</a>
+        </div>
 
         
         {# Modale d'édition des information utilisateur #}
