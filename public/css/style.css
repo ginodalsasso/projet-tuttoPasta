@@ -124,27 +124,18 @@ a{
 
 /*=============== HEADER ===============*/
 .sub_header_tittle_container {
-    /* position: relative; */
     height: 50vh;
-    /* overflow: hidden; */
     display: flex;
-    /* justify-content: space-between; */
     align-items: center;
     justify-content: center;
 }
 
 .sub_header_tittle_container h1{
-    /* margin-left: auto; */
-    /* margin-right: auto; */
     font-size: 60px;
     font-weight: 100;
     text-align: center;
     width: 70vw;;
 }
-
-/* .background_top {
-    position: absolute;
-} */
 
 .wrapper{
     color: var(--black-color);
@@ -177,6 +168,47 @@ h2 {font-size: var(--h2-fontsize);}
 .agree_terms {
     display: block !important;
 }
+
+/*=============== PROFIL ===============*/
+ .modal{
+    display: none;
+    width: 30vw;
+    height: 20vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    translate: 0 25vh;
+    transition-property: overlay display opcacity;
+    transition-duration: 1s;
+}
+
+.modal[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 1;
+    translate: 0 0;
+
+    @starting-style{
+        opacity: 0;
+        translate: 0 -25vh;
+    }
+}
+
+.closeModal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
 
 /*=============== APPOINTMENT ===============*/
 .form_display {

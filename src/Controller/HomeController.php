@@ -81,7 +81,7 @@ class HomeController extends AbstractController
     // ---------------------------------Vue RDV et Gestion de RDV--------------------------------- //
     // Gère le processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
-    public function addAppointment(Request $request, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, AppointmentRepository $appointmentRepository): Response
+    public function addAppointment(Request $request, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, AppointmentRepository $appointmentRepository, Security $security): Response
     {
         $appointment = new Appointment();
         $form = $this->createForm(AppointmentType::class, $appointment);
@@ -116,6 +116,13 @@ class HomeController extends AbstractController
                     // Définit les dates de début et de fin du rendez-vous
                     $appointment->setStartDate($startDate);
                     $appointment->setEndDate($endDate);
+
+                    // Vérifie si un utilisateur est connecté
+                    // $user = $security->getUser();
+                    // if ($user) {
+                    //     // Si un utilisateur est connecté, associe ses informations au rendez-vous
+                    //     $appointment->setUser($user);
+                    // }
 
                     // Persiste le rendez-vous dans la base de données
                     $entityManager->persist($appointment);

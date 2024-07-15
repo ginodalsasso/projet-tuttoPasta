@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserFormType;
 use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
@@ -128,20 +129,77 @@ class UserController extends AbstractController
             throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
         }
 
-        // Méthode de vue profil
+        // // Méthode de vue profil
+        // #[IsGranted('ROLE_USER')]
+        // #[Route(path: '/profil', name: 'app_profil')]
+        // public function profilShow(Security $security): Response
+        // {        
+        //     // Récupère l'utilisateur actuellement authentifié
+        //     $user = $security->getUser();
+        //     // Vérifie que l'utilisateur est bien authentifié
+        //     if (!$user instanceof UserInterface) {
+        //         throw new AccessDeniedException('Accès refusé');
+        //     }
+        
+        //     return $this->render('user/profil.html.twig', [
+        //         'user' => $user,
+        //     ]);
+        // }
+        
+        // // Méthode de modification des informations classiques utilisateur
+        // #[IsGranted('ROLE_USER')]
+        // #[Route('/user/editDara', name: 'edit_user_data')]
+        // public function editUserData(Request $request, Security $security, EntityManagerInterface $entityManager): Response
+        // {
+        //     $user = $security->getUser();
+    
+        //     if (!$user) {
+        //         throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        //     }
+    
+        //     $form = $this->createForm(UserFormType::class, $user);
+    
+        //     $form->handleRequest($request);
+    
+        //     if ($form->isSubmitted() && $form->isValid()) {
+        //         $entityManager->persist($user);
+        //         $entityManager->flush();
+    
+        //         $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
+    
+        //         return $this->redirectToRoute('app_profil');
+        //     }
+    
+        //     return $this->render('user/profil.html.twig', [
+        //         'form' => $form->createView(),
+        //     ]);
+        // }
+
+        #[Route('/profil', name: 'app_profil')]
         #[IsGranted('ROLE_USER')]
-        #[Route(path: '/profil', name: 'app_profil')]
-        public function profilShow(Security $security): Response
-        {        
-            // Récupère l'utilisateur actuellement authentifié
+        public function profilShow(Request $request, Security $security, EntityManagerInterface $entityManager): Response
+        {
             $user = $security->getUser();
-            // Vérifie que l'utilisateur est bien authentifié
+
             if (!$user instanceof UserInterface) {
                 throw new AccessDeniedException('Accès refusé');
             }
-        
+
+            $form = $this->createForm(UserFormType::class, $user);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
+
+                return $this->redirectToRoute('app_profil');
+            }
+
             return $this->render('user/profil.html.twig', [
+                'form' => $form->createView(),
                 'user' => $user,
             ]);
-        }   
+        }
 }

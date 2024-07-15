@@ -2,14 +2,27 @@
 
 {% block title %}Mon profil{% endblock %}
 
-{% block page_title %} Profil {{user.username}} {% endblock %}
+{% block page_title %}Profil{% endblock %}
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper">
-
+        <p>Pseudo: {{user.username|capitalize}} </p>
+        <p>Adresse Email: {{user.email}} </p>
+        <p>Création du compte: {{user.accountDate|date('d/m/Y')}}</p>
+        <button class="showModal">Modifier mes informations</button>
+        <a href="{{ path('app_forgot_password_request') }}">Modifier mon mot de passe</a>
+        <dialog class="modal">
+            {{ form_start(form) }}
+                {{ form_row(form.username) }}
+                {{ form_row(form.email) }}
+                <button type="submit">Mettre à jour</button>
+            {{ form_end(form) }}
+            <button class="closeModal">X</button>
+        </dialog>
     </main>
 {% endblock %}
 
 {% block javascripts %}
+    <script src="{{ asset('/js/profil.js')}}"></script>
 {% endblock %}
