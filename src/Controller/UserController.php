@@ -62,7 +62,7 @@ class UserController extends AbstractController
                     ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
                     ->to($user->getEmail())
                     ->subject('Merci de bien confirmer votre compte afin de pouvoir vous connecter.')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->htmlTemplate('user/confirmation_email.html.twig')
             );
 
             // do anything else you need here, like send an email
@@ -212,7 +212,7 @@ class UserController extends AbstractController
             $comments = $commentRepository->findBy(['user' => $user]);
             foreach ($comments as $comment) {
                 $comment->setUser(null);
-                $comment->setUsername('Utilisateur anonyme');
+                $comment->setUsername('Utilisateur supprimé');
                 $entityManager->persist($comment);
             }
 

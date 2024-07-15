@@ -115,7 +115,6 @@ function submitNewComment($form, csrfToken) {
         },
         success: function(data) {
             if (data.success) {
-                console.log(data)
                 addNewComment(data.comment);
                 
                 $form[0].reset(); // Réinitialise le formulaire après l'ajout du commentaire
@@ -149,6 +148,7 @@ function submitEditComment($form, csrfToken) {
         },
         success: function(data) {
             if (data.success) {
+                console.log('ok')
                 var commentDiv = $('#comment-' + data.comment.id); // Cherche l'id du commentaire séléctionné
                 commentDiv.find('.comment_content').html('<p>' + data.comment.commentContent + '</p>'); // Met à jour le contenu du commentaire
             } else {

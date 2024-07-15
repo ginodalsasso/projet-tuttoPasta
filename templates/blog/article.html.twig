@@ -78,7 +78,7 @@
                     </div>
 
                     {# Suppression ou édition si utilisateur connecté = auteur ou admin #}
-                    {% if is_granted('ROLE_ADMIN') or (app.user and comment.username == app.user.username) %}
+                    {% if is_granted('ROLE_ADMIN') or (app.user and comment.user == app.user) %}
                     <div class="comment_actions">
                         <a href="#" class="edit_comment" data-id="{{ comment.id }}"><img src="{{ asset('/img/editer.png')}}" height="18" alt="icône d'édition"></a>
                         <a href="#" class="delete_comment" data-id="{{ comment.id }}"><img src="{{ asset('/img/annuler.png')}}" height="18" alt="icône d'annulation"></a>
