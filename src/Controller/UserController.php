@@ -111,125 +111,147 @@ class UserController extends AbstractController
 
 
 // ---------------------------------Méthode de connexion--------------------------------- //
-        #[Route(path: '/login', name: 'app_login')]
-        public function login(AuthenticationUtils $authenticationUtils): Response
-        {
-            if ($this->getUser()) {
-                return $this->redirectToRoute('app_home');
-            }
-    
-            // get the login error if there is one
-            $error = $authenticationUtils->getLastAuthenticationError();
-    
-            // last username entered by the user
-            $lastUsername = $authenticationUtils->getLastUsername();
-    
-            return $this->render('user/login.html.twig', [
-                'last_username' => $lastUsername,
-                'error' => $error,
-            ]);
-        }
-    
-        // Méthode de déconnexion
-        #[Route(path: '/logout', name: 'app_logout')]
-        public function logout(): void
-        {
-            throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-        }
-
-
-    // ---------------------------------Affichage et édition des donnés d'un utilisateur--------------------------------- //
-        #[Route('/profil', name: 'app_profil')]
-        #[IsGranted('ROLE_USER')]
-        public function profilShowAction(Request $request, Security $security, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
-        {
-            $user = $security->getUser();
-        
-            if (!$user instanceof PasswordAuthenticatedUserInterface) {
-                throw new AccessDeniedException('Accès refusé');
-            }
-        
-            // Formulaire pour les informations utilisateur
-            $form = $this->createForm(UserFormType::class, $user);
-            $form->handleRequest($request);
-        
-            // Formulaire pour le changement de mot de passe
-            $passwordForm = $this->createForm(EditPasswordType::class, $user);
-            $passwordForm->handleRequest($request);
-        
-            // Gestion du formulaire des informations utilisateur
-            if ($form->isSubmitted() && $form->isValid()) {
-                $entityManager->persist($user);
-                $entityManager->flush();
-        
-                $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
-        
-                return $this->redirectToRoute('app_profil');
-            }
-        
-            // Gestion du formulaire de changement de mot de passe
-            if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
-                $oldPassword = $passwordForm->get('oldPassword')->getData();
-        
-                // Vérifiez que l'ancien mot de passe est correct
-                if (!$passwordHasher->isPasswordValid($user, $oldPassword)) {
-                    $this->addFlash('error', 'L\'ancien mot de passe est incorrect.');
-                } else {
-                    // Hashage et mise à jour du mot de passe
-                    $newPassword = $passwordForm->get('plainPassword')->getData();
-                    $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
-                    $user->setPassword($hashedPassword);
-        
-                    $entityManager->persist($user);
-                    $entityManager->flush();
-        
-                    $this->addFlash('success', 'Votre mot de passe a été changé avec succès.');
-        
-                    return $this->redirectToRoute('app_profil');
-                }
-            }
-        
-            return $this->render('user/profil.html.twig', [
-                'form' => $form->createView(),
-                'passwordForm' => $passwordForm->createView(),
-                'user' => $user,
-            ]);
-        }
-
-
-// --------------------------------- Suppression d'un compte utilisateur--------------------------------- //
-        #[Route('/delete_account', name: 'app_delete_account')]
-        #[IsGranted('ROLE_USER')]
-        public function deleteAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository
-        ): RedirectResponse
-        {
-            // Récupère l'utilisateur actuellement connecté
-            $user = $this->getUser();
-
-            // Vérifie si l'utilisateur est valide
-            if (!$user instanceof UserInterface) {
-                throw new AccessDeniedException('Accès refusé');
-            }
-
-            // Récupérer et anonymiser les commentaires de l'utilisateur
-            $comments = $commentRepository->findBy(['user' => $user]);
-            foreach ($comments as $comment) {
-                $comment->setUser(null);
-                $comment->setUsername('Utilisateur supprimé');
-                $entityManager->persist($comment);
-            }
-
-            // Supprime l'utilisateur de la base de données
-            $entityManager->remove($user);
-            $entityManager->flush();
-
-            // Déconnecte l'utilisateur après la suppression du compte
-            $tokenStorage->setToken(null);
-
-            $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
-
-            // Redirige vers la page d'accueil après la suppression du compte
+    #[Route(path: '/login', name: 'app_login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('user/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
+    }
+
+    // Méthode de déconnexion
+    #[Route(path: '/logout', name: 'app_logout')]
+    public function logout(): void
+    {
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+
+// ---------------------------------Affichage profil utilisateur--------------------------------- //
+    #[Route('/profil', name: 'app_profil', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function profil(Security $security): Response
+    {
+        $user = $security->getUser();
+
+        if (!$user instanceof PasswordAuthenticatedUserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+
+        // Formulaire pour les informations utilisateur
+        $form = $this->createForm(UserFormType::class, $user);
+
+        // Formulaire pour le changement de mot de passe
+        $passwordForm = $this->createForm(EditPasswordType::class, $user);
+
+        return $this->render('user/profil.html.twig', [
+            'form' => $form->createView(),
+            'passwordForm' => $passwordForm->createView(),
+            'user' => $user,
+        ]);
+    }
+
+// ---------------------------------Edition infos utilisateur--------------------------------- //
+    #[Route('/profil/update-info', name: 'app_profil_update_info', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function updateInfo(Request $request, Security $security, EntityManagerInterface $entityManager): Response
+    {
+        $user = $security->getUser();
+
+        // Formulaire pour les informations utilisateur
+        $form = $this->createForm(UserFormType::class, $user);
+        $form->handleRequest($request);
+
+        // Gestion du formulaire des informations utilisateur
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
+        }
+
+        return $this->redirectToRoute('app_profil');
+    }
+    
+// ---------------------------------Edition password utilisateur--------------------------------- //
+    #[Route('/profil/update-password', name: 'app_profil_update_password', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function updatePassword(Request $request, Security $security, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $user = $security->getUser();
+
+        // Formulaire pour le changement de mot de passe
+        $passwordForm = $this->createForm(EditPasswordType::class, $user);
+        $passwordForm->handleRequest($request);
+
+        // Gestion du formulaire de changement de mot de passe
+        if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
+            $oldPassword = $passwordForm->get('oldPassword')->getData();
+
+            // Vérifiez que l'ancien mot de passe est correct
+            if (!$passwordHasher->isPasswordValid($user, $oldPassword)) {
+                $this->addFlash('error', 'L\'ancien mot de passe est incorrect.');
+            } else {
+                // Hashage et mise à jour du mot de passe
+                $newPassword = $passwordForm->get('plainPassword')->getData();
+                $hashedPassword = $passwordHasher->hashPassword($user, $newPassword);
+                $user->setPassword($hashedPassword);
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Votre mot de passe a été changé avec succès.');
+            }
+        }
+
+        return $this->redirectToRoute('app_profil');
+    }
+    
+
+// --------------------------------- Suppression d'un compte utilisateur--------------------------------- //
+    #[Route('/delete_account', name: 'app_delete_account')]
+    #[IsGranted('ROLE_USER')]
+    public function deleteAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository
+    ): RedirectResponse
+    {
+        // Récupère l'utilisateur actuellement connecté
+        $user = $this->getUser();
+
+        // Vérifie si l'utilisateur est valide
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+
+        // Récupérer et anonymiser les commentaires de l'utilisateur
+        $comments = $commentRepository->findBy(['user' => $user]);
+        foreach ($comments as $comment) {
+            $comment->setUser(null);
+            $comment->setUsername('Utilisateur supprimé');
+            $entityManager->persist($comment);
+        }
+
+        // Supprime l'utilisateur de la base de données
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        // Déconnecte l'utilisateur après la suppression du compte
+        $tokenStorage->setToken(null);
+
+        $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
+
+        // Redirige vers la page d'accueil après la suppression du compte
+        return $this->redirectToRoute('app_home');
+    }
         
 }

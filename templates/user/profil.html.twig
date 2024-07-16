@@ -21,7 +21,7 @@
         
         {# Modale d'édition des information utilisateur #}
         <dialog class="modal_edit_data">
-            {{ form_start(form) }}
+            {{ form_start(form, {'action': path('app_profil_update_info')}) }}
                 {{ form_row(form.username) }}
                 <div class="error_msg" id="pseudo_error"></div>
 
@@ -37,7 +37,7 @@
 
         {# Modal d'édition de mot de passe #}
         <dialog class="modal_edit_password">
-            {{ form_start(passwordForm) }}
+            {{ form_start(passwordForm, {'action': path('app_profil_update_password')}) }}
                 {{ form_widget(passwordForm) }}
                 <div class="error_msg" id="password_error"></div>
 
