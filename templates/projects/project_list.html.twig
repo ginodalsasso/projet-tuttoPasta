@@ -6,27 +6,30 @@
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
-    <main class="wrapper">
+    <main class="wrapper_project">
         <ul class="project_list">
+            <hr>
             {% for project in projects %}
-                <li>
-                    <a class="project_container" href="{{ path('app_project', { 'slug': project.slug }) }}">
-                        <div class="project_content">
-                            <p>{{ project.projectDate|date("Y") }}</p>
-                            <p><img src="{{ asset('/img/arrow_right.svg')}}" height="18" alt="icône de flêche">{{ project.projectName }}</p>
-                            {# Itération sur les catégories du projet #}
-                                {% for category in project.categories %}
-                                    <p><img src="{{ asset('/img/arrow_right.svg')}}" height="18" alt="icône de flêche">{{ category.categoryName }}</p>
-                                {% endfor %}
-                        </div>
-                        {% set firstImage = project.images|first %}
-                        {% if firstImage %}
-                            <img class="projects_list_img" src="{{ asset('img/projects/' ~ firstImage.image) }}" alt="{{ firstImage.alt }}">
-                        {% endif %}
-                    </a>
-                </li>
-                <hr class="separator">
-            {% endfor %}
+            <li class="animated_li">
+                <a class="project_container" href="{{ path('app_project', { 'slug': project.slug }) }}">
+                    <div class="project_content">
+                        <p>{{ project.projectDate|date("Y") }}</p>
+                        <h3>{{ project.projectName }}</h3>
+                        {% for category in project.categories %}
+                            <p class="project_content_category">
+                                <img src="{{ asset('/img/arrow_right.svg')}}" class="arrow_right" height="18" alt="icône de flêche">
+                                {{ category.categoryName }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                    {% set firstImage = project.images|first %}
+                    {% if firstImage %}
+                        <img class="projects_list_img" src="{{ asset('img/projects/' ~ firstImage.image) }}" alt="{{ firstImage.alt }}">
+                    {% endif %}
+                </a>
+            </li>
+            <hr>
+        {% endfor %}
         </ul>
     </main>
 {% endblock %}

@@ -45,15 +45,29 @@ a{
 }
 
 #header_content {
+    background-color: var(--black-color);
+    padding: 38px 8% 10px 8%; 
+    position: sticky;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 38px 8% 0;
+    z-index: 1000;
+    transition: top 0.5s ease;
 }
+
+#header_content nav {
+    display: flex;
+}
+
 #nav_container {
     display: flex;
+    align-items: center;
     list-style: none;
     position: relative;
+}
+
+#nav_container nav {
+    display: flex;
 }
 
 #nav_container li a {
@@ -156,6 +170,20 @@ a{
     padding: 8% ;
 }
 
+.wrapper_project{
+    color: var(--black-color);
+    background-color: var(--white-color);
+    padding: 8% 0;
+}
+
+
+/*=============== BURGER MENU ===============*/
+.burger-menu, .close_burger {
+    display: none;
+    cursor: pointer;
+    z-index: 101;
+}
+
 /*=============== TITLES ===============*/
 .h1_title {
     text-align: center;
@@ -166,6 +194,8 @@ a{
 }
 
 h2 {font-size: var(--h2-fontsize);}
+
+h3 {font-size: var(--h3-fontsize);}
 
 /*=============== GEBERALITIES ===============*/
 .back_to {
@@ -181,6 +211,10 @@ h2 {font-size: var(--h2-fontsize);}
 .delete_comment img:hover, 
 .cancel_appointment img:hover {
     transform: scale(1.2);
+}
+
+.arrow_right {
+    vertical-align: middle;
 }
 
 /*=============== REGISTRATION ===============*/
@@ -382,22 +416,78 @@ h2 {font-size: var(--h2-fontsize);}
 }
 
 /*=============== LISTE PROJETS ===============*/
-.projects_list_img{
+.projects_list_img {
     width: clamp(300px, 35vw, 35vw);
 }
 
-.project_list{
+.project_list {
     list-style-type: none;
-    max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
 }
 
-.project_container{
+.project_container {
     display: flex;
     justify-content: space-between;
     color: var(--black-color);
+    padding: 30px;
 }
+
+.project_content:first-child p {
+    font-weight: 600;
+}
+
+.project_content_category {
+    margin-top: 30px;
+    font-weight: 100;
+}
+
+.animated_li {
+    position: relative;
+    overflow: hidden;
+    padding: 0 8%;
+}
+
+.animated_li::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 100%;
+    background-color: var(--black-color);
+    z-index: 1;
+    transition: width 1s ease-in-out, left 1s ease-in-out, transform 1s ease-in-out;
+    transform: translateX(-50%);
+}
+
+.animated_li:hover::before {
+    width: 200%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.animated_li .project_content_category img {
+    transition: filter 0.5s ease-out;
+}
+
+.animated_li:hover .project_content_category img {
+    filter: brightness(0) invert(1);
+}
+
+
+.animated_li a {
+    position: relative;
+    z-index: 2;
+    color: var(--black-color);
+    transition: color 0.5s ease-out;
+}
+
+.animated_li:hover a {
+    color: white;
+}
+
+
 /*=============== LISTE ARTICLES ===============*/
 .article_list {
     display: grid;
@@ -609,11 +699,6 @@ footer {
     padding-top: 100px;
 }
 
-hr {
-    margin: 0 100px;
-    /* margin-bottom: 50px; */
-}
-
 .footer_social {
     margin: 25px 100px 200px 100px; 
 }
@@ -641,4 +726,54 @@ hr {
 #footer_nav p, 
 #footer_nav a {
     font-size: 14px;
+}
+
+
+
+
+@media (max-width: 1200px) {
+
+    .burger-menu {
+        display: block;
+        text-align: end;
+        font-size: 40px;
+    }
+
+    .close_burger {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        font-size: 40px;
+        display: none;
+    }
+
+    #nav_container {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Position initiale en dehors de l'écran */
+        width: 80%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.868);
+        backdrop-filter: blur(10px);
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        transition: right 0.3s ease;
+    }
+    
+    #nav_container.active {
+        right: 0; 
+        font-size: 24px;
+    }
+
+    #nav_container li {
+        margin: 40px 0;
+    }
+    #nav_container .full_button_white {
+        display: block;
+        margin-top: 100px;
+    }
 }
