@@ -67,7 +67,7 @@ class AppointmentRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->andWhere('a.user = :user')
             ->setParameter('user', $user)
-            ->orderBy('a.startDate', 'ASC') //Trié par date de début
+            ->orderBy('a.startDate', 'DESC') //Trié par date de début
             ->getQuery()
             ->getResult()
         ;

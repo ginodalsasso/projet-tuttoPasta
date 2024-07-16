@@ -73,6 +73,14 @@ a{
     border: none;
     cursor: pointer;
 }
+
+.full_button_black,
+.full_button_white {
+    border: 3px solid;
+    border-image: linear-gradient(45deg, var(--pink-color), var(--red-color), var(--blue-color), var(--green-color));
+    border-image-slice: 1;
+}
+
 .full_button_black {
     color: var(--white-color);
     background-color: var(--black-color);
@@ -86,7 +94,7 @@ a{
 .full_button_white {
     color: var(--black-color);
     background-color: var(--white-color);
-    border: 1px solid var(--black-color);
+    /* border: 1px solid var(--black-color); */
 }
 
 .stickers_white,
@@ -170,6 +178,12 @@ h2 {font-size: var(--h2-fontsize);}
     margin: 50px 0;
 }
 
+.edit_comment img:hover,
+.delete_comment img:hover, 
+.cancel_appointment img:hover {
+    transform: scale(1.2);
+}
+
 /*=============== REGISTRATION ===============*/
 .agree_terms {
     display: block !important;
@@ -178,7 +192,7 @@ h2 {font-size: var(--h2-fontsize);}
 /*=============== PROFIL ===============*/
 #user_content {
     border: 1px solid var(--black-color);
-    padding: 20px;
+    padding: 40px;
     display: grid;
     gap: 20px;
 }
@@ -190,6 +204,30 @@ h2 {font-size: var(--h2-fontsize);}
     flex-wrap: wrap;
 }
 
+.appointments_container {
+    max-width: 1000px;
+}
+
+.appointments_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.appointments_table th, .appointments_table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.appointments_table th {
+    background-color: #f2f2f2;
+}
+
+.appointments_table .cancel_appointment img {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
 
 /*=============== MODAL ===============*/
  .modal_edit_data,
