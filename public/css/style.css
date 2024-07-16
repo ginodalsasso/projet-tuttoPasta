@@ -383,11 +383,14 @@ h2 {font-size: var(--h2-fontsize);}
 
 /*=============== LISTE PROJETS ===============*/
 .projects_list_img{
-    width: clamp(300px, 40vw, 40vw);
+    width: clamp(300px, 35vw, 35vw);
 }
 
 .project_list{
     list-style-type: none;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .project_container{
