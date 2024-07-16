@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use App\Repository\DayOffRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\ServiceRepository;
@@ -14,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -85,7 +88,7 @@ class HomeController extends AbstractController
     // ---------------------------------Vue RDV et Gestion de RDV--------------------------------- //
     // Gère le processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
-    public function addAppointment(Request $request, Security $security, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, AppointmentRepository $appointmentRepository): Response
+    public function addAppointment(Request $request, Security $security, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, MailerInterface $mailer): Response
     {
         $appointment = new Appointment();
         $form = $this->createForm(AppointmentType::class, $appointment);
@@ -132,8 +135,17 @@ class HomeController extends AbstractController
                     $entityManager->persist($appointment);
                     $entityManager->flush();
 
+                    // Envoi de l'email de confirmation
+                    $email = (new Email())
+                    ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
+                    ->to($appointment->getEmail())
+                    ->subject('Confirmation de votre rendez-vous')
+                    ->html('<p>Votre rendez-vous a été enregistré avec succès pour le ' . $startDate->format('d/m/Y à H:i') . '.</p>');
+
+                    $mailer->send($email);
+
                     // Ajoute un message de succès et redirige vers la page d'accueil
-                    $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès.');
+                    $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès. Un email de confirmation vous a été envoyé.');
                     return $this->redirectToRoute('app_home');
                 }
             } else {

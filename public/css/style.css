@@ -94,7 +94,6 @@ a{
 .full_button_white {
     color: var(--black-color);
     background-color: var(--white-color);
-    /* border: 1px solid var(--black-color); */
 }
 
 .stickers_white,
