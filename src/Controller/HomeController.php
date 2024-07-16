@@ -12,12 +12,11 @@ use App\Repository\CategoryRepository;
 use App\Repository\ProjectImgRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -82,7 +81,7 @@ class HomeController extends AbstractController
     // ---------------------------------Vue RDV et Gestion de RDV--------------------------------- //
     // Gère le processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
-    public function addAppointment(Request $request, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, AppointmentRepository $appointmentRepository): Response
+    public function addAppointment(Request $request, Security $security, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, AppointmentRepository $appointmentRepository): Response
     {
         $appointment = new Appointment();
         $form = $this->createForm(AppointmentType::class, $appointment);
@@ -118,12 +117,12 @@ class HomeController extends AbstractController
                     $appointment->setStartDate($startDate);
                     $appointment->setEndDate($endDate);
 
-                    // Vérifie si un utilisateur est connecté
-                    // $user = $security->getUser();
-                    // if ($user) {
-                    //     // Si un utilisateur est connecté, associe ses informations au rendez-vous
-                    //     $appointment->setUser($user);
-                    // }
+                    //Vérifie si un utilisateur est connecté
+                    $user = $security->getUser();
+                    if ($user) {
+                        // Si un utilisateur est connecté, associe ses informations au rendez-vous
+                        $appointment->setUser($user);
+                    }
 
                     // Persiste le rendez-vous dans la base de données
                     $entityManager->persist($appointment);

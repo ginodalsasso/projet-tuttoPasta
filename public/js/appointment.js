@@ -156,6 +156,9 @@ function handleServiceSelection() {
         if ($input.is(":checked")) {
             $label.addClass("showRadioClass");
             $("#selectedService").val(slot);
+        } else {
+            $label.removeClass("showRadioClass");
+            $("#selectedService").val('');
         }
     });
 }

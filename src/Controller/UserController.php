@@ -34,7 +34,7 @@ class UserController extends AbstractController
     public function __construct(private EmailVerifier $emailVerifier)
     {
     }
-
+// ---------------------------------Méthode d'inscription--------------------------------- //
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
     {
@@ -68,6 +68,7 @@ class UserController extends AbstractController
             // do anything else you need here, like send an email
 
             return  $this->redirectToRoute('app_login');
+            $this->addFlash('success', 'Un email de confirmation vous a été envoyé, pour confirmer votre compte');
         }
 
         return $this->render('user/register.html.twig', [
@@ -75,7 +76,7 @@ class UserController extends AbstractController
         ]);
     }
 
-
+// ---------------------------------Méthode de vérification d'email--------------------------------- //
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, UserRepository $userRepository, TranslatorInterface $translator): Response
     {
@@ -108,7 +109,8 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
 
-        // Méthode de connexion
+
+// ---------------------------------Méthode de connexion--------------------------------- //
         #[Route(path: '/login', name: 'app_login')]
         public function login(AuthenticationUtils $authenticationUtils): Response
         {
@@ -135,7 +137,8 @@ class UserController extends AbstractController
             throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
         }
 
-        // Affichage et édition des donnés d'un utilisateur
+
+    // ---------------------------------Affichage et édition des donnés d'un utilisateur--------------------------------- //
         #[Route('/profil', name: 'app_profil')]
         #[IsGranted('ROLE_USER')]
         public function profilShowAction(Request $request, Security $security, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
@@ -194,7 +197,7 @@ class UserController extends AbstractController
         }
 
 
-        // Suppression d'un compte utilisateur
+// --------------------------------- Suppression d'un compte utilisateur--------------------------------- //
         #[Route('/delete_account', name: 'app_delete_account')]
         #[IsGranted('ROLE_USER')]
         public function deleteAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository

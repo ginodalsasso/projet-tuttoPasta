@@ -50,18 +50,22 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToUrl('Home', 'fas fa-home', $this -> generateUrl('app_home'));
-        yield MenuItem::linkToCrud('Catégories', 'fas fa-th-list', Category::class);
-        yield MenuItem::linkToCrud('Administration', 'fas fa-cogs', Administration::class);
-        yield MenuItem::linkToCrud('Projets', 'fas fa-project-diagram', Project::class);
-        yield MenuItem::linkToCrud('Images projets', 'fas fa-images', ProjectImg::class);
-        yield MenuItem::linkToCrud('Services', 'fas fa-concierge-bell', Service::class);
-        yield MenuItem::linkToCrud('Articles', 'fas fa-newspaper', Article::class);
-        yield MenuItem::linkToCrud('Tag', 'fas fa-newspaper', Tag::class);
-        yield MenuItem::linkToCrud('Commentaires', 'fas fa-comments', Comment::class);
-        
-        yield MenuItem::linkToCrud('Rendez-vous', 'fas fa-calendar-check', Appointment::class);
-        yield MenuItem::linkToCrud('Jours de congés', 'fas fa-calendar-alt', DayOff::class);
-        yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
+        yield MenuItem::section('Portfolio');
+            yield MenuItem::linkToUrl('Home', 'fas fa-home', $this -> generateUrl('app_home'));
+            yield MenuItem::linkToCrud('Catégories', 'fas fa-th-list', Category::class);
+            yield MenuItem::linkToCrud('Administration', 'fas fa-cogs', Administration::class);
+            yield MenuItem::linkToCrud('Projets', 'fas fa-project-diagram', Project::class);
+            yield MenuItem::linkToCrud('Images projets', 'fas fa-images', ProjectImg::class);
+            yield MenuItem::linkToCrud('Services', 'fas fa-concierge-bell', Service::class);
+
+        yield MenuItem::section('Blog');
+            yield MenuItem::linkToCrud('Articles', 'fas fa-newspaper', Article::class);
+            yield MenuItem::linkToCrud('Tag', 'fas fa-newspaper', Tag::class);
+            yield MenuItem::linkToCrud('Commentaires', 'fas fa-comments', Comment::class);
+            
+        yield MenuItem::section('Administration');
+            yield MenuItem::linkToCrud('Rendez-vous', 'fas fa-calendar-check', Appointment::class);
+            yield MenuItem::linkToCrud('Jours de congés', 'fas fa-calendar-alt', DayOff::class);
+            yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
     }
 }

@@ -51,6 +51,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $accountDate = null;
 
+    /**
+     * @var Collection<int, Appointment>
+     */
+    #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'user')]
+    private Collection $appointments;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -58,6 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         //initialise la date et l'heure de la création de compte user lors de la création de l'objet
         $timezone = new \DateTimeZone('Europe/Paris');
         $this->accountDate = new \DateTime('now', $timezone);
+        $this->appointments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -206,5 +213,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString()
     {
         return $this -> username;
+    }
+
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
+    }
+
+    public function addAppointment(Appointment $appointment): static
+    {
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments->add($appointment);
+            $appointment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): static
+    {
+        if ($this->appointments->removeElement($appointment)) {
+            // set the owning side to null (unless already changed)
+            if ($appointment->getUser() === $this) {
+                $appointment->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

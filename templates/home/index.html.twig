@@ -6,22 +6,24 @@
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
-    {% for project in projects %}
-        {{project.projectName}} <br>
-        {{project.projectContent}}
-    {% endfor %}
+    <main class="wrapper">
+        {% for project in projects %}
+            {{project.projectName}} <br>
+            {{project.projectContent}}
+        {% endfor %}
 
 
-    <h1>Liste des images</h1>
-    {% for projectImg in projectImgs %}
-        {{projectImg.image}}
-    {% endfor %}
+        <h1>Liste des images</h1>
+        {% for projectImg in projectImgs %}
+            {{projectImg.image}}
+        {% endfor %}
 
-    <h1>Liste des services</h1>
-    {% for service in services %}
-        {{service}}
-        {{service.serviceContent}}
-        {{service.servicePrice}}
-    {% endfor %}
+        <h1>Liste des services</h1>
+        {% for service in services %}
+            {{service}}
+            {{service.serviceContent}}
+            {{service.servicePrice}}
+        {% endfor %}
+    </main>
 
 {% endblock %}

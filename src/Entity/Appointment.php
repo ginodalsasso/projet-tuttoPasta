@@ -62,6 +62,9 @@ class Appointment
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'appointments')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -198,6 +201,18 @@ class Appointment
             throw new \InvalidArgumentException('Les RDV ne peuvent pas être pris durant le weekend.');
         }
         return true;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 
 }

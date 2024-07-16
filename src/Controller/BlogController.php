@@ -111,6 +111,7 @@ class BlogController extends AbstractController
                 'success' => true,
                 'comment' => [
                     'id' => $comment->getId(),
+                    //si un utilisateur est associé au commentaire, si non, elle retourne Utilisateur supprimé
                     'username' => $comment->getUser() ? $comment->getUser()->getUsername() : 'Utilisateur supprimé',
                     'commentContent' => $comment->getCommentContent(),
                     'date' => $comment->getCommentDate()->format('d/m/Y à H:i')
