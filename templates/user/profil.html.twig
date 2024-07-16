@@ -11,6 +11,16 @@
             <p><b>Pseudo:</b> {{user.username|capitalize}} </p>
             <p><b>Email:</b> {{user.email}} </p>
             <p><b>Date de création du compte:</b> {{user.accountDate|date('d/m/Y')}}</p>
+            {% if appointments %}                
+                <p><b>Mes rendez-vous: </b></p>
+                {% for appointment in appointments %}
+                    <div class="appointment_user" id="appointment-{{ appointment.id }}">
+                        <p>{{ appointment.startDate|date('d/m/Y H:i') }} 
+                        {{ appointment.endDate|date('à H:i') }}</p>
+                        <a href="#" class="cancel_appointment" data-id="{{ appointment.id }}"><img src="{{ asset('/img/annuler.png')}}" height="18" alt="icône d'annulation"</a>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
         <div id="user_action_buttons">
             <a class="show_modal_edit_data full_button_black">Modifier mes informations</a>
@@ -52,4 +62,5 @@
 
 {% block javascripts %}
     <script src="{{ asset('/js/profil.js')}}"></script>
+    <script src="{{ asset('/js/appointment.js')}}"></script>
 {% endblock %}

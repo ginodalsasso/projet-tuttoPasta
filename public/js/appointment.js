@@ -17,6 +17,16 @@ $(document).ready(function () {
     handleSlotSelection();
     handleServiceSelection();
 
+    // Annulation d'un RDV sur la vue profil
+    $(document).on('click', '.cancel_appointment', function(e) {
+        e.preventDefault();
+        var appointmentId = $(this).data('id');
+        
+        if (confirm("Êtes-vous sûr de vouloir annuler ce rendez-vous ?")) {
+            cancelAppointment(appointmentId, csrfToken);
+        }
+    });
+
     // Messages d'erreurs UI
     $("#appointment_save").on("click", function (event) {
         $(".error_msg").text("");
@@ -172,3 +182,29 @@ function formatTime(dateTimeString) {
     });
 }
 
+
+//___________________________________ANNULATION RDV_______________________________________
+function cancelAppointment(appointmentId, csrfToken) {
+    var url = `/profil/appointment/${appointmentId}/delete`;
+    
+    $.ajax({
+        url: url,
+        method: 'DELETE', 
+        headers: {
+            'X-CSRF-TOKEN': csrfToken  // Ajout du token CSRF dans les headers
+        },
+        success: function(data) {
+            if (data.success) {
+                // Supprimer le RDV de l'interface utilisateur
+                $('#appointment-' + appointmentId).remove();
+            } else {
+                alert(data.message || "Erreur lors de la suppression du rendez-vous. Veuillez réessayer.");
+                console.log(data);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("Erreur lors de la suppression du rendez-vous :", textStatus, errorThrown);
+            alert("Une erreur est survenue lors de la suppression du rendez-vous. Veuillez vérifier votre connexion et réessayer.");
+        }
+    });
+}

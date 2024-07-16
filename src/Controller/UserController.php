@@ -11,6 +11,7 @@ use App\Repository\UserRepository;
 use Symfony\Component\Mime\Address;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AppointmentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -141,7 +142,7 @@ class UserController extends AbstractController
 // ---------------------------------Affichage profil utilisateur--------------------------------- //
     #[Route('/profil', name: 'app_profil', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
-    public function profil(Security $security): Response
+    public function profil(Security $security, AppointmentRepository $appointmentRepository): Response
     {
         $user = $security->getUser();
 
@@ -155,10 +156,13 @@ class UserController extends AbstractController
         // Formulaire pour le changement de mot de passe
         $passwordForm = $this->createForm(EditPasswordType::class, $user);
 
+        $appointments = $appointmentRepository->findByUser($user);
+
         return $this->render('user/profil.html.twig', [
             'form' => $form->createView(),
             'passwordForm' => $passwordForm->createView(),
             'user' => $user,
+            'appointments' => $appointments,
         ]);
     }
 
