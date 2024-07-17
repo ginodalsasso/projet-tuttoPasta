@@ -134,31 +134,20 @@ class HomeController extends AbstractController
                     // Persiste le rendez-vous dans la base de données
                     $entityManager->persist($appointment);
                     $entityManager->flush();
-
-                    // Envoi de l'email de confirmation
-                    // Sanitize et valide l'email
-                    $emailAddress = filter_var($appointment->getEmail(), FILTER_VALIDATE_EMAIL);
-                    if ($emailAddress === false) {
+                    
+                    $emailAddress = $appointment->getEmail();
+                    if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
                         $this->addFlash('error', 'Adresse email invalide.');
-                    } else {
-                        // Néttoie les données pour éviter les failles XSS
-                        $cleanStartDate = htmlspecialchars($startDate->format('d/m/Y à H:i'), ENT_QUOTES, 'UTF-8');
-                        $cleanEmailContent = htmlspecialchars('<p>Votre rendez-vous a été enregistré avec succès pour le ' . $cleanStartDate . '.</p>', ENT_QUOTES, 'UTF-8');
-
-                        // Envoi de l'email de confirmation
-                        $email = (new Email())
-                            ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
-                            ->to($emailAddress)
-                            ->subject('Confirmation de votre rendez-vous')
-                            ->html($cleanEmailContent);
-
-                        $mailer->send($email);
-
-                        // Ajoute un message de succès et redirige vers la page d'accueil
-                        $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès. Un email de confirmation vous a été envoyé.');
-                        return $this->redirectToRoute('app_home');
+                        return $this->redirectToRoute('app_appointment');
                     }
+
+                    $this->sendConfirmationEmail($mailer, $emailAddress, $startDate);
+
+                    // Ajoute un message de succès et redirige vers la page d'accueil
+                    $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès. Un email de confirmation vous a été envoyé.');
+                    return $this->redirectToRoute('app_home');
                 }
+                
             } else {
                 // Si aucun créneau horaire n'est sélectionné, ajoute un message d'erreur
                 $this->addFlash('error', 'Veuillez sélectionner un créneau horaire.');
@@ -170,6 +159,23 @@ class HomeController extends AbstractController
             'title' => 'Prise de rendez-vous'
         ]);
     }
+
+    // Gestion de l'envoi de confiration de prise de RDV
+    private function sendConfirmationEmail(MailerInterface $mailer, string $emailAddress, \DateTime $startDate): void
+    {
+        $emailContent = $this->renderView('emails/appointment_confirmation.html.twig', [
+            'appointmentDate' => $startDate->format('d/m/Y à H:i')
+        ]);
+
+        $email = (new Email())
+            ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
+            ->to($emailAddress)
+            ->subject('Confirmation de votre rendez-vous')
+            ->html($emailContent);
+
+        $mailer->send($email);
+    }
+
 
     // Récupère les créneaux horaires disponibles pour une date donnée
     #[Route('/available_rdv', name:'available_rdv', methods:['POST'])]
@@ -186,6 +192,7 @@ class HomeController extends AbstractController
             'availabilities' => $availabilities,
         ]);
     }
+
 
     // Récupère toutes les dates de congé
      #[Route('/get_dayoff_dates', name:'get_dayoff_dates', methods:['POST'])]
