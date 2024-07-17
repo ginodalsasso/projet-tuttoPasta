@@ -141,12 +141,16 @@ class HomeController extends AbstractController
                     if ($emailAddress === false) {
                         $this->addFlash('error', 'Adresse email invalide.');
                     } else {
+                        // Néttoie les données pour éviter les failles XSS
+                        $cleanStartDate = htmlspecialchars($startDate->format('d/m/Y à H:i'), ENT_QUOTES, 'UTF-8');
+                        $cleanEmailContent = htmlspecialchars('<p>Votre rendez-vous a été enregistré avec succès pour le ' . $cleanStartDate . '.</p>', ENT_QUOTES, 'UTF-8');
+
                         // Envoi de l'email de confirmation
                         $email = (new Email())
                             ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
                             ->to($emailAddress)
                             ->subject('Confirmation de votre rendez-vous')
-                            ->html('<p>Votre rendez-vous a été enregistré avec succès pour le ' . htmlspecialchars($startDate->format('d/m/Y à H:i'), ENT_QUOTES, 'UTF-8') . '.</p>');
+                            ->html($cleanEmailContent);
 
                         $mailer->send($email);
 
