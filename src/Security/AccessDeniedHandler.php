@@ -22,8 +22,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     {
         // Générer l'URL de la page vers laquelle je redirige l'utilisateur
         $url = $this->urlGenerator->generate('app_home');
-
         // Rediriger l'utilisateur
         return new RedirectResponse($url);
     }
-}
+} 

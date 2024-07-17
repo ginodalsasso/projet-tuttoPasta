@@ -29,3 +29,8 @@ services:
             
     acme_security.access_denied_handler:
         alias: App\Security\AccessDeniedHandler
+
+    App\Security\Redirect404:
+        arguments: ['@router']
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.exception' }
