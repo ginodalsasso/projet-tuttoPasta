@@ -184,6 +184,10 @@ a{
     z-index: 101;
 }
 
+#appointment_btn_burger {
+    display: none;
+}
+
 /*=============== TITLES ===============*/
 .h1_title {
     text-align: center;
@@ -745,6 +749,14 @@ footer {
         right: 30px;
         font-size: 40px;
         display: none;
+    }
+
+    #appointment_btn_nav {
+        display: none;
+    }
+
+    #appointment_btn_burger {
+        display: block;
     }
 
     #nav_container {

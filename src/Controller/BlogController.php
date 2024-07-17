@@ -83,45 +83,41 @@ class BlogController extends AbstractController
         }
 
         if ($id !== null) {
-            // Si un ID de commentaire est fourni, recherche le commentaire
             $comment = $commentRepository->find($id);
             if (!$comment) {
                 return new JsonResponse(['error' => 'Commentaire non trouvé !'], Response::HTTP_NOT_FOUND);
             }
-            // Vérifie si l'utilisateur est autorisé à modifier le commentaire
             if ($comment->getUser() !== $user && !$this->isGranted('ROLE_ADMIN')) {
                 return new JsonResponse(['error' => 'Vous n\'êtes pas autorisé à modifier ce commentaire.'], Response::HTTP_FORBIDDEN);
             }
         } else {
-            // Si aucun ID de commentaire n'est fourni, création d'un nouveau commentaire
             $comment = new Comment();
             $comment->setUser($user);
             $comment->setArticle($article);
             $comment->setCommentDate(new \DateTime());
         }
-
+    
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($comment);
             $entityManager->flush();
-            // Retourne une réponse JSON avec les détails du commentaire
+    
             return new JsonResponse([
                 'success' => true,
                 'comment' => [
                     'id' => $comment->getId(),
-                    //si un utilisateur est associé au commentaire, si non, elle retourne Utilisateur supprimé
-                    'username' => $comment->getUser() ? $comment->getUser()->getUsername() : 'Utilisateur supprimé',
-                    'commentContent' => $comment->getCommentContent(),
+                    'username' => $comment->getUser() ? htmlspecialchars($comment->getUser()->getUsername()) : 'Utilisateur supprimé',
+                    'commentContent' => htmlspecialchars($comment->getCommentContent()),
                     'date' => $comment->getCommentDate()->format('d/m/Y à H:i')
                 ]
             ]);
         }
-        // Collecte des erreurs du formulaire pour les retourner en réponse JSON
+    
         $errors = [];
         foreach ($form->getErrors(true) as $error) {
-            $errors[] = $error->getMessage();
+            $errors[] = htmlspecialchars($error->getMessage());
         }
     
         return new JsonResponse(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);

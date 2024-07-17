@@ -15,6 +15,22 @@ function validateUsername(username) {
     return usernameReg.test(username);
 }
 
+// Fonction pour échapper les caractères spéciaux en HTML
+function escapeHtml(unsafe) {
+    if (unsafe === undefined || unsafe === null) {
+        // Si c'est le cas, retourne une chaîne vide pour éviter les erreurs
+        return '';
+    }
+    return unsafe
+        // Convertit la valeur en chaîne de caractères et remplace les caractères spéciaux par leurs équivalents HTML
+        .toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 
 $(document).ready(function() {
     // Evenement click burger menu

@@ -136,17 +136,24 @@ class HomeController extends AbstractController
                     $entityManager->flush();
 
                     // Envoi de l'email de confirmation
-                    $email = (new Email())
-                    ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
-                    ->to($appointment->getEmail())
-                    ->subject('Confirmation de votre rendez-vous')
-                    ->html('<p>Votre rendez-vous a été enregistré avec succès pour le ' . $startDate->format('d/m/Y à H:i') . '.</p>');
+                    // Sanitize et valide l'email
+                    $emailAddress = filter_var($appointment->getEmail(), FILTER_VALIDATE_EMAIL);
+                    if ($emailAddress === false) {
+                        $this->addFlash('error', 'Adresse email invalide.');
+                    } else {
+                        // Envoi de l'email de confirmation
+                        $email = (new Email())
+                            ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
+                            ->to($emailAddress)
+                            ->subject('Confirmation de votre rendez-vous')
+                            ->html('<p>Votre rendez-vous a été enregistré avec succès pour le ' . htmlspecialchars($startDate->format('d/m/Y à H:i'), ENT_QUOTES, 'UTF-8') . '.</p>');
 
-                    $mailer->send($email);
+                        $mailer->send($email);
 
-                    // Ajoute un message de succès et redirige vers la page d'accueil
-                    $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès. Un email de confirmation vous a été envoyé.');
-                    return $this->redirectToRoute('app_home');
+                        // Ajoute un message de succès et redirige vers la page d'accueil
+                        $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès. Un email de confirmation vous a été envoyé.');
+                        return $this->redirectToRoute('app_home');
+                    }
                 }
             } else {
                 // Si aucun créneau horaire n'est sélectionné, ajoute un message d'erreur
