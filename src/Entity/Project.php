@@ -41,6 +41,9 @@ class Project
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $projectTitle = null;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -61,6 +64,18 @@ class Project
     public function setProjectName(string $projectName): static
     {
         $this->projectName = $projectName;
+
+        return $this;
+    }
+
+    public function getProjectTitle(): ?string
+    {
+        return $this->projectTitle;
+    }
+
+    public function setProjectTitle(?string $projectTitle): static
+    {
+        $this->projectTitle = $projectTitle;
 
         return $this;
     }
@@ -162,4 +177,6 @@ class Project
     {
         return $this -> projectName;
     }
+
+
 }

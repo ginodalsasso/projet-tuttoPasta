@@ -25,6 +25,7 @@ class ProjectCrudController extends AbstractCrudController
     {
         return [
             TextField::new('projectName'),
+            TextField::new('projectTitle'),
             TextEditorField::new('projectContent'),
             DateTimeField::new('projectDate'),
             AssociationField::new('categories')

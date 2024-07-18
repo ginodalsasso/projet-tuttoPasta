@@ -6,7 +6,7 @@
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
-    <main class="wrapper_project">
+    <main class="wrapper_project_list">
         <ul class="project_list">
             <hr>
             {% for project in projects %}
@@ -17,7 +17,7 @@
                         <h3>{{ project.projectName }}</h3>
                         {% for category in project.categories %}
                             <p class="project_content_category">
-                                <img src="{{ asset('/img/arrow_right.svg')}}" class="arrow_right" height="18" alt="icône de flêche">
+                                <i class="fa-sharp fa-solid fa-arrow-right" style="color: #000000;"></i>
                                 {{ category.categoryName }}
                             </p>
                         {% endfor %}
