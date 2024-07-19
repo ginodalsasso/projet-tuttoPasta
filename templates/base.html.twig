@@ -24,30 +24,32 @@
     {% endblock %}
 
     <body>
-        <header id="header_content">
-            <a href="{{ path('app_home') }}"><img class="logo_header" src="{{ asset('/img/logo_white.svg')}}" alt="Logo TuttoPasta"></a>
-            <nav>
-                <ul id="nav_container">
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li><a href="{{ path('admin') }}"> Admin </a></li>
-                    {% endif %}
-                    <li><a href="{{ path('app_projectList') }}"> Projets </a></li>
-                    <li><a href="{{ path('app_blog') }}"> Blog </a></li>
-                    {% if app.user %}
-                        <li><a href="{{ path('app_profil') }}"> Profil </a></li>
-                        <li><a href="{{ path('app_logout') }}"> Déconnexion </a></li>
-                    {% else %}
-                        <li><a href="{{ path('app_login') }}"> Connexion </a></li>
-                        <li><a href="{{ path('app_register') }}"> Inscription </a></li>
-                    {% endif %}
-                    
-                    <a id="appointment_btn_burger" class="full_button_white" href="{{ path('app_appointment') }}"> Prendre RDV </a>
-                </ul>
-            </nav>
-            <a id="appointment_btn_nav" class="full_button_white" href="{{ path('app_appointment') }}"> Prendre RDV </a>
-            <div class="burger-menu">☰</div>
-            <div class="close_burger">x</div>
-            </header>
+        <header id="header_container">
+            <div id="header_content">
+                <a href="{{ path('app_home') }}"><img class="logo_header" src="{{ asset('/img/logo_white.svg')}}" alt="Logo TuttoPasta"></a>
+                <nav>
+                    <ul id="nav_container">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('admin') }}"> Admin </a></li>
+                        {% endif %}
+                        <li><a href="{{ path('app_projectList') }}"> Projets </a></li>
+                        <li><a href="{{ path('app_blog') }}"> Blog </a></li>
+                        {% if app.user %}
+                            <li><a href="{{ path('app_profil') }}"> Profil </a></li>
+                            <li><a href="{{ path('app_logout') }}"> Déconnexion </a></li>
+                        {% else %}
+                            <li><a href="{{ path('app_login') }}"> Connexion </a></li>
+                            <li><a href="{{ path('app_register') }}"> Inscription </a></li>
+                        {% endif %}
+                        
+                        <a id="appointment_btn_burger" class="full_button_white" href="{{ path('app_appointment') }}"> Prendre RDV </a>
+                    </ul>
+                </nav>
+                <a id="appointment_btn_nav" class="full_button_white" href="{{ path('app_appointment') }}"> Prendre RDV </a>
+                <div class="burger-menu">☰</div>
+                <div class="close_burger">x</div>
+            </div>
+        </header>
         {% block body %}
             <div class="sub_header_tittle_container">
                 <h1 id="h1_page_title">{% block page_title %}{{ title }}{% endblock %}</h1>

@@ -1,5 +1,13 @@
 {% extends 'base.html.twig' %}
 
+{% block head %}
+    {{ parent() }} {# Etend le block head défini dans le layout  #}
+    <meta property="og:title" content="{{ project.projectName }}" />
+    <meta property="og:url" content="{{ app.request.uri }}" />
+    <meta property="og:image" content="{{ asset('img/projects/' ~ project.images[0].image) }}" />
+    <meta property="og:type" content="article" />
+{% endblock %}
+
 {% block title %}{{project.projectName}}{% endblock %}
 
 {% block page_title %} {{project.projectName}} {% endblock %}
@@ -7,27 +15,26 @@
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper_project">
-        {# Si j'ai besoin que d'un élément de la collection image:  #}
-
-        <div class="project_header">
-            <img src="{{ asset('img/projects/' ~ project.images[0].image) }}" alt="{{ project.images[0].alt }}" />
-            <img src="{{ asset('img/projects/' ~ project.images[1].image) }}" alt="{{ project.images[1].alt }}" />
-            <div class="project_details">
-                <h2>{{ project.projectTitle }}</h2>
-                {% for category in project.categories %}
-                    <i class="fa-sharp fa-solid fa-arrow-right" style="color: #ffffff;"></i>
-                    {{ category.categoryName }}
-                {% endfor %}
+        <section id="project_container">
+            <div class="project_header">
+                <img src="{{ asset('img/projects/' ~ project.images[0].image) }}" alt="{{ project.images[0].alt }}" />
+                <img src="{{ asset('img/projects/' ~ project.images[1].image) }}" alt="{{ project.images[1].alt }}" />
+                <div class="project_details">
+                    <h2>{{ project.projectTitle }}</h2>
+                    {% for category in project.categories %}
+                        <i class="fa-sharp fa-solid fa-arrow-right" style="color: #ffffff;"></i>
+                        {{ category.categoryName }}
+                    {% endfor %}
+                </div>
+                
+                {{project.projectContent}}
             </div>
-            
-            {{project.projectContent}}
-        </div>
-        <div class="project_gallery">
-            <img src="{{ asset('img/projects/' ~ project.images[2].image) }}" alt="{{ project.images[2].alt }}" />
-            <img src="{{ asset('img/projects/' ~ project.images[3].image) }}" alt="{{ project.images[3].alt }}" />
-            <img src="{{ asset('img/projects/' ~ project.images[4].image) }}" alt="{{ project.images[4].alt }}" />
-        </div>
-        
+            <div class="project_gallery">
+                <img src="{{ asset('img/projects/' ~ project.images[2].image) }}" alt="{{ project.images[2].alt }}" />
+                <img src="{{ asset('img/projects/' ~ project.images[3].image) }}" alt="{{ project.images[3].alt }}" />
+                <img src="{{ asset('img/projects/' ~ project.images[4].image) }}" alt="{{ project.images[4].alt }}" />
+            </div>
+        </section>
     </main>
 
 {% endblock %}

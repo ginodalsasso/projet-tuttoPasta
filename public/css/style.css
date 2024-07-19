@@ -35,14 +35,46 @@
 
 html {
     scroll-behavior: smooth;
+    background: var(--black-color);
 
 }
 
 body {
-    background: var(--black-color);
+    background: var(--white-color);
     color: var(--white-color);
     font-size: var(--font-size);
     font-family: var(--font-family);
+}
+
+
+.wrapper,
+.wrapper_project_list
+{
+    color: var(--black-color);
+    background-color: var(--white-color);
+}
+
+.wrapper{
+    padding: 8%;
+}
+
+.wrapper_project {
+    color: var(--white-color);
+    background-color: var(--black-color);
+    padding-bottom: 8%;
+}
+/*=============== MAIN WIDTH ===============*/
+
+#header_content,
+.wrapper,
+#project_container,
+.project_container,
+.footer_collab,
+.footer_social,
+#footer_nav {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /*=============== NAVBAR ===============*/
@@ -50,9 +82,12 @@ a{
     text-decoration : none;
 }
 
-#header_content {
+#header_container {
     background-color: var(--black-color);
-    padding: 38px 8% 10px 8%; 
+}
+
+#header_content {
+    padding: 38px 0 10px 0; 
     position: sticky;
     display: flex;
     align-items: center;
@@ -161,32 +196,15 @@ a{
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--black-color);
 }
 
 .sub_header_tittle_container h1{
     font-size: 60px;
     font-weight: 100;
     text-align: center;
-    width: 70vw;;
+    width: 70vw;
 }
-
-.wrapper,
-.wrapper_project_list
-{
-    color: var(--black-color);
-    background-color: var(--white-color);
-}
-
-.wrapper{
-    padding: 8% ;
-}
-
-.wrapper_project {
-    color: var(--white-color);
-    background-color: var(--black-color);
-    padding-bottom: 8%;
-}
-
 
 /*=============== BURGER MENU ===============*/
 .burger-menu, .close_burger {
@@ -566,6 +584,7 @@ h3 {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    height: 100%;
     color: var(--black-color);
 }
 
@@ -573,6 +592,7 @@ h3 {
     background-color: white;
     font-weight: unset;
     padding: 5%;
+    height: 100%;
 }
 
 .see_more {
@@ -751,12 +771,13 @@ footer {
 }
 
 .footer_collab {
-    margin: 0 100px 100px 100px;
+    margin-bottom: 100px;
     padding-top: 100px;
 }
 
 .footer_social {
-    margin: 25px 100px 200px 100px; 
+    margin-top: 25px;
+    margin-bottom: 200px; 
 }
 .footer_social li {
     list-style: none;
@@ -777,7 +798,7 @@ footer {
 }
 
 #footer_nav {
-    padding: 50px 100px;
+    padding: 50px 0;
 }
 #footer_nav p, 
 #footer_nav a {
