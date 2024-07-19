@@ -1,5 +1,14 @@
 {% extends 'base.html.twig' %}
 
+{% block head %}
+    {{ parent() }} {# Etend le block head défini dans le layout  #}
+    <meta property="og:title"Liste des articles de blog de TuttoPasta" />
+    <meta property="og:description" content="Découvrez les articles par TuttoPasta. Consultez notre portfolio pour voir nos réalisations graphique." />
+    <meta property="og:url" content="{{ app.request.uri }}" />
+    <meta property="og:image" content="{{ asset('img/logo_black.svg') }}" />
+    <meta property="og:type" content="website" />
+{% endblock %}
+
 {% block title %}Blog TuttoPasta{% endblock %}
 
 {% block page_title %} Les actus de TuttoPasta {% endblock %}
