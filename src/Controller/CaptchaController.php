@@ -2,18 +2,21 @@
 
 namespace App\Controller;
 
-use App\Domain\AntiSpam\ChallengeInterface;
-use App\Domain\AntiSpam\ChanllengeGenerator;
+use App\Domain\AntiSpam\ChallengeGenerator;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CaptchaController extends AbstractController
 {
+
     #[Route('/captcha', name: 'captcha')]
-    public function captcha(Request $request, ChanllengeGenerator $generator): Response
+    // Méthode captcha qui traite la requête et génère un challenge
+    public function captcha(Request $request, ChallengeGenerator $generator): Response
     {
-        return $generator->generate($request->query->get('challenge',''));
+        // Appel de la méthode generate de l'objet $generator avec le paramètre 'challenge' de la requête
+        return $generator->generate($request->query->get('challenge', ''));
     }
+
 }

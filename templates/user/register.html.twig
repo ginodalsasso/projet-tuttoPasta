@@ -30,14 +30,6 @@
                 <div class="agreeTerms_display">
                     {{ form_row(registrationForm.agreeTerms) }}
                 </div>
-                
-                <puzzle-captcha 
-                    width="350" 
-                    height="200" 
-                    piece-width="80" 
-                    piece-height="50"
-                    src="{{ path('captcha', {challenge: challenge})}}">
-                </puzzle-captcha>
 
                 <button type="submit" id="register_save" class="full_button_black">S'inscrire</button>
             </div>

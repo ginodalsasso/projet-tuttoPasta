@@ -7,9 +7,8 @@ interface ChallengeInterface
 
     public function generateKey(): string;
 
-    public function verify(string $key, string $answer): bool;
-    
-    public function getSolution(string $key): mixed;
+    public function verify(string $key, string $anwser): bool;
 
+    public function getSolution(string $key): mixed;
 
 }

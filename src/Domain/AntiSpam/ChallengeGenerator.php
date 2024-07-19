@@ -4,10 +4,9 @@ namespace App\Domain\AntiSpam;
 
 use Symfony\Component\HttpFoundation\Response;
 
-interface ChanllengeGenerator
+interface ChallengeGenerator
 {
 
     public function generate(string $key): Response;
-
 
 }

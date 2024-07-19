@@ -268,6 +268,7 @@ h3 {
     background: var(--image);
     position: relative;
     touch-action: none;
+    margin: 0 auto;
 }
 
 .captcha-piece {
@@ -393,6 +394,7 @@ h3 {
     color: var(--red-color);
     font-size: 14px;
     margin-bottom: 5px;
+    max-width: 500px;
 }
 
 .input_invalid {
