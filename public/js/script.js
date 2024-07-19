@@ -49,7 +49,7 @@ $(document).ready(function() {
     });
 
     // Affiche la navbar au scroll vers le haut
-    var $navbar = $('#header_content');
+    var $navbar = $('#header_container');
     var lastScrollTop = 0;
     $(window).on('scroll', function() {
         var scrollTop = $(this).scrollTop();

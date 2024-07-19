@@ -84,16 +84,17 @@ a{
 
 #header_container {
     background-color: var(--black-color);
+    z-index: 1000;
+    position: sticky;
+    transition: top 0.5s ease;
 }
 
 #header_content {
     padding: 38px 0 10px 0; 
-    position: sticky;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    z-index: 1000;
-    transition: top 0.5s ease;
+
 }
 
 #header_content nav {
@@ -220,9 +221,9 @@ a{
 /*=============== TITLES ===============*/
 #h1_page_title {
     text-align: center;
-    font-size: clamp(var(--h1-fontsize-mobile), 10vw, var(--h1-fontsize));
+    font-size: clamp(var(--h1-fontsize-mobile), 8vw, var(--h1-fontsize));
     font-weight: normal;
-    margin: 200px;
+    margin: 200px 0;
     width: 70vw;
 }
 
@@ -563,7 +564,7 @@ h3 {
 
 .project_details h2 {
     width: 75%;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .project_gallery {
@@ -848,9 +849,15 @@ footer {
         margin-top: 20px;
     }
 
+    .project_details {
+        margin-bottom: 40px;
+    }
+
     .project_details h2 {
         width: 100%;
     }
+
+
 }
 
 
@@ -877,6 +884,11 @@ footer {
 
     #appointment_btn_burger {
         display: block;
+    }
+
+    #header_container {
+        padding-left: 8%;
+        padding-right: 8%;
     }
 
     #nav_container {
@@ -907,5 +919,9 @@ footer {
     #nav_container .full_button_white {
         display: block;
         margin-top: 100px;
+    }
+
+    .article_content {
+        width: 100%;
     }
 }
