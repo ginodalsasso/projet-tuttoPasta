@@ -15,6 +15,7 @@ use App\Repository\ProjectImgRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -166,7 +167,7 @@ class HomeController extends AbstractController
             'appointmentDate' => $startDate->format('d/m/Y à H:i')
         ]);
 
-        $email = (new Email())
+        $email = (new TemplatedEmail())
             ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
             ->to($emailAddress)
             ->subject('Confirmation de votre rendez-vous')

@@ -90,3 +90,5 @@ class PuzzleCaptcha extends HTMLElement {
 
 // Définition de l'élément personnalisé puzzle-captcha
 customElements.define("puzzle-captcha", PuzzleCaptcha);
+
+
