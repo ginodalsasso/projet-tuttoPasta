@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Domain\AntiSpam\ChallengeInterface;
 use App\Entity\User;
 use App\Form\UserFormType;
 use App\Form\EditPasswordType;
@@ -37,7 +38,7 @@ class UserController extends AbstractController
     }
 // ---------------------------------Méthode d'inscription--------------------------------- //
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, ChallengeInterface $challenge): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -74,6 +75,7 @@ class UserController extends AbstractController
 
         return $this->render('user/register.html.twig', [
             'registrationForm' => $form,
+            'challenge' => $challenge->generateKey()
         ]);
     }
 

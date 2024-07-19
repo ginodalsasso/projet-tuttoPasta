@@ -260,6 +260,25 @@ h3 {
     display: block !important;
 }
 
+.captcha {
+    display: block;
+    border: 1px solid var(--black-color);
+    width: var(--width);
+    height: var(--height);
+    background: var(--image);
+    position: relative;
+    touch-action: none;
+}
+
+.captcha-piece {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: var(--pieceWidth);
+    height: var(--pieceHeight);
+    background: var(--image) top right;
+}
+
 /*=============== PROFIL ===============*/
 #user_content {
     border: 1px solid var(--black-color);
