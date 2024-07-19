@@ -35,17 +35,17 @@
 
         <div class="social_share">
             <p>Partager cet article : </p>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:8000/blog/{{article.slug}}" class="social_icons" target="_blank">
-                <img src="{{ asset('/img/icons/facebook.svg')}}" alt="icône Facebook">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri }}" class="social_icons" target="_blank">
+                <i class="fa-brands fa-square-facebook fa-xl" style="color: #000000;"></i>
             </a>
-            <a href="https://https://www.instagram.com/share/url/?url=http://127.0.0.1:8000/blog/{{article.slug}}" class="social_icons" target="_blank">
-                <img src="{{ asset('/img/icons/instagram.svg')}}" alt="icône Instagram">
+            <a href="https://https://www.instagram.com/share/url/?url={{ app.request.uri }}" class="social_icons" target="_blank">
+                <i class="fa-brands fa-square-instagram fa-xl" style="color: #000000;"></i>
             </a>
-            <a href="https://x.com/intent/post?url=http://127.0.0.1:8000/blog/{{article.slug}}" class="social_icons" target="_blank">
-                <img src="{{ asset('/img/icons/twitter.svg')}}" alt="icône Twitter">
+            <a href="https://x.com/intent/post?url={{ app.request.uri }}" class="social_icons" target="_blank">
+                <i class="fa-brands fa-square-x-twitter fa-xl" style="color: #000000;"></i>
             </a>
-            <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://127.0.0.1:8000/blog/{{article.slug}}" class="social_icons" target="_blank">
-                <img src="{{ asset('/img/icons/linkedin.svg')}}" alt="icône Linkedin">
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri }}" class="social_icons" target="_blank">
+                <i class="fa-brands fa-linkedin fa-xl" style="color: #000000;"></i>
             </a>
         </div>
         <hr class="separator">

@@ -34,6 +34,25 @@
                 <img src="{{ asset('img/projects/' ~ project.images[3].image) }}" alt="{{ project.images[3].alt }}" />
                 <img src="{{ asset('img/projects/' ~ project.images[4].image) }}" alt="{{ project.images[4].alt }}" />
             </div>
+
+            <hr class="separator">
+
+            <div class="social_share">
+                <p>Partager ce projet : </p>
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ app.request.uri }}" class="social_icons" target="_blank">
+                    <i class="fa-brands fa-square-facebook fa-xl" style="color: #ffffff;"></i>
+                </a>
+                <a href="https://https://www.instagram.com/share/url/?url={{ app.request.uri }}" class="social_icons" target="_blank">
+                    <i class="fa-brands fa-square-instagram fa-xl" style="color: #ffffff;"></i>
+                </a>
+                <a href="https://x.com/intent/post?url={{ app.request.uri }}" class="social_icons" target="_blank">
+                    <i class="fa-brands fa-square-x-twitter fa-xl" style="color: #ffffff;"></i>
+                </a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ app.request.uri }}" class="social_icons" target="_blank">
+                    <i class="fa-brands fa-linkedin fa-xl" style="color: #ffffff;"></i>
+                </a>
+            </div>
+            <hr class="separator">
         </section>
     </main>
 
