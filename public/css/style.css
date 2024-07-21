@@ -256,6 +256,14 @@ h3 {
     vertical-align: middle;
 }
 
+/*=============== ERRORS ===============*/
+#error_content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
 /*=============== REGISTRATION ===============*/
 .agree_terms {
     display: block !important;

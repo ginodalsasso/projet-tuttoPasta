@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page non trouvée{% endblock %}
+
+{% block body %}
+    <main class="wrapper">
+        <div id="error_content">
+            <h1>Page non trouvée (404)</h1>
+            <p>Désolé, la page que vous recherchez n'existe pas.</p>
+            <a class="full_button_black" href="{{ path('app_home') }}">Retour à l'accueil</a>
+        </div>
+    </main>
+{% endblock %}

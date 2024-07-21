@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
 use App\Repository\DayOffRepository;
 use App\Repository\ProjectRepository;
@@ -88,6 +87,20 @@ class HomeController extends AbstractController
             'project' => $project
         ]);
     }
+
+    // ---------------------------------Vue des Erreurs--------------------------------- //
+    #[Route('/error/404', name: 'app_error_404')]
+    public function showError404(): Response
+    {
+        return $this->render('errors/error404.html.twig');
+    }
+
+    #[Route('/error/500', name: 'app_error_500')]
+    public function showError500(): Response
+    {
+        return $this->render('errors/error500.html.twig');
+    }
+
 
 //________________________________________________________________APPOINTMENT______________________________________________________________
 //____________________________________________________________________________________________________________________________

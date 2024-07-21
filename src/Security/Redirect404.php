@@ -23,7 +23,7 @@ class Redirect404
         $exception = $event->getThrowable();
         // Si l'exception n'est pas de type NotFoundHttpException, on ne fait rien
         if ($exception instanceof NotFoundHttpException) {
-            $response = new RedirectResponse($this->router->generate('app_home'));
+            $response = new RedirectResponse($this->router->generate('app_error_404'));
             $event->setResponse($response);
         }
     }
