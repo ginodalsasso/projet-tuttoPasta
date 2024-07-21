@@ -34,7 +34,7 @@
                     </div>
                     {% set firstImage = project.images|first %}
                     {% if firstImage %}
-                        <img class="projects_list_img" src="{{ asset('img/projects/' ~ firstImage.image) }}" alt="{{ firstImage.alt }}">
+                        <img class="projects_list_img" src="{{ asset('img/projects/' ~ firstImage.image) }}" alt="{{ firstImage.alt }}" loading="lazy">
                     {% endif %}
                 </a>
             </li>

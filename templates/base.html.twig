@@ -30,12 +30,12 @@
                 <nav>
                     <ul id="nav_container">
                         {% if is_granted('ROLE_ADMIN') %}
-                            <li><a href="{{ path('admin') }}"> Admin </a></li>
+                            <li><a href="{{ path('admin') }}"> <i class="fa-solid fa-user-shield"></i> Admin </a></li>
                         {% endif %}
                         <li><a href="{{ path('app_projectList') }}"> Projets </a></li>
                         <li><a href="{{ path('app_blog') }}"> Blog </a></li>
                         {% if app.user %}
-                            <li><a href="{{ path('app_profil') }}"> Profil </a></li>
+                            <li><a href="{{ path('app_profil') }}"><i class="fa-solid fa-user"></i> Profil </a></li>
                             <li><a href="{{ path('app_logout') }}"> Déconnexion </a></li>
                         {% else %}
                             <li><a href="{{ path('app_login') }}"> Connexion </a></li>
@@ -53,7 +53,6 @@
         {% block body %}
             <div class="sub_header_tittle_container">
                 <h1 id="h1_page_title">{% block page_title %}{{ title }}{% endblock %}</h1>
-                {# <img class="background_top" src="{{ asset('/img/Background-top.svg') }} " alt="background tuttoPasta" loading="lazy"> #}
             </div>
         {% endblock %}
         <footer>
