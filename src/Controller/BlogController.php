@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Repository\ArticleRepository;
@@ -14,23 +15,26 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 class BlogController extends AbstractController
 {
 //______________________________________________________________AFFICHAGE______________________________________________________________
+//____________________________________________________________________________________________________________________________
+//____________________________________________________________________________________________________________________
 
     // ---------------------------------Vue liste articles--------------------------------- //
     #[Route('/blog', name: 'app_blog')]
     public function listArticlesShow(ArticleRepository $articleRepository): Response
     {
-    
-    $articles = $articleRepository->findAll();
-    
-    // Vérifie si les articles existent
-    if (!$articles) {
-        $this->addFlash('info', 'Article non trouvé');
-        return $this->redirectToRoute('app_blog');
-    }
+        $articles = $articleRepository->findAll();
+
+        // Vérifie si les articles existent
+        if (!$articles) {
+            throw new NotFoundHttpException('Aucun article trouvé');;
+            return $this->redirectToRoute('app_blog');
+        }
 
         return $this->render('blog/article_list.html.twig', [
             'articles' => $articles,
@@ -46,11 +50,11 @@ class BlogController extends AbstractController
 
 
         if (!$article) {
-            $this->addFlash('info', 'Article non trouvé');
+            throw new NotFoundHttpException('Aucun article trouvé');;
             return $this->redirectToRoute('app_blog');
         }
         if ($article->getSlug() !== $slug) {
-            $this->addFlash('info', 'Article non trouvé');
+            throw new NotFoundHttpException('Aucun article trouvé');;
             return $this->redirectToRoute('app_blog');
         }
 
@@ -64,6 +68,9 @@ class BlogController extends AbstractController
         ]);
     }
 
+//________________________________________________________________CRUD________________________________________________________________
+//____________________________________________________________________________________________________________________________
+//____________________________________________________________________________________________________________________
     // ---------------------------------Ajout/Edition d'un commentaire article--------------------------------- //
     #[IsGranted('ROLE_USER')]
     #[Route('blog/{slug}/comment', name: 'app_article_addComment', methods: ['POST'], requirements: ['slug' => '[a-z0-9\-]+'])]
@@ -133,27 +140,28 @@ class BlogController extends AbstractController
         if (!$article) {
             return new JsonResponse(['success' => false, 'error' => 'Article non trouvé'], Response::HTTP_NOT_FOUND);
         }
-
+    
         // Récupère l'utilisateur actuel
         $user = $security->getUser();
-
+        if (!$user instanceof User) {
+            return new JsonResponse(['success' => false, 'error' => 'Utilisateur non authentifié'], Response::HTTP_UNAUTHORIZED);
+        }
+    
         // Recherche le commentaire à supprimer
         $comment = $entityManager->getRepository(Comment::class)->find($id);
-
-        // Vérifie si l'utilisateur est autorisé à supprimer le commentaire
-        if ($user && !($user === $comment->getUser() || $this->isGranted('ROLE_ADMIN'))) {
-            $this->addFlash('error', 'Veuillez vous connecter ou vous assurer d\'avoir les droits !');
-            return $this->redirectToRoute('app_blog');
-        }
-
         if (!$comment) {
-            return new JsonResponse(['success' => false, 'error' => 'Commentaire non trouvé !'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['success' => false, 'error' => 'Commentaire non trouvé'], Response::HTTP_NOT_FOUND);
         }
-
+    
+        // Vérifie si l'utilisateur est autorisé à supprimer le commentaire
+        if ($user !== $comment->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+    
         // Supprime le commentaire
         $entityManager->remove($comment);
         $entityManager->flush();
-
+    
         // Retourne une réponse indiquant le succès de la suppression
         return new JsonResponse(['success' => true]);
     }

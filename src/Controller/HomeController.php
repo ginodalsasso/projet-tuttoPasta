@@ -29,6 +29,10 @@ use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 class HomeController extends AbstractController
 {
+
+//_______________________________________________________________AFFICHAGE_______________________________________________________________
+//____________________________________________________________________________________________________________________________
+//____________________________________________________________________________________________________________________
     // ---------------------------------Vue Home--------------------------------- //
     #[Route('/home', name: 'app_home')]
     public function homeShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, ServiceRepository $serviceRepository): Response
@@ -55,7 +59,7 @@ class HomeController extends AbstractController
 
         // Vérifie si les projets et les images de projets existent
         if (!$projects || !$projectImgs || !$categories) {
-            throw new NotFoundHttpException('No projects or project images found');        
+            throw new NotFoundHttpException('Page non trouvée');        
         }
 
         return $this->render('projects/project_list.html.twig', [
@@ -70,13 +74,13 @@ class HomeController extends AbstractController
     public function projectShow(?Project $project, string $slug): Response
     { 
         if (!$project) {
-            $this->addFlash('info', 'Projet non trouvé');
+            throw new NotFoundHttpException('Aucun projet trouvé');
             return $this->redirectToRoute('app_home');
         }
 
         // Vérifie si le slug de l'objet project correspond au slug de l'URL
         if ($project->getSlug() !== $slug) {
-            $this->addFlash('info', 'Page non trouvée');    
+            throw new NotFoundHttpException('Page non trouvée');   
             return $this->redirectToRoute('app_home');
         }
 
@@ -85,6 +89,9 @@ class HomeController extends AbstractController
         ]);
     }
 
+//________________________________________________________________APPOINTMENT______________________________________________________________
+//____________________________________________________________________________________________________________________________
+//____________________________________________________________________________________________________________________
     // ---------------------------------Vue RDV et Gestion de RDV--------------------------------- //
     // Gère le processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
@@ -126,8 +133,9 @@ class HomeController extends AbstractController
 
                     //Vérifie si un utilisateur est connecté
                     $user = $security->getUser();
+
+                    // Si un utilisateur est connecté, associe ses informations au rendez-vous
                     if ($user) {
-                        // Si un utilisateur est connecté, associe ses informations au rendez-vous
                         $appointment->setUser($user);
                     }
 
@@ -213,6 +221,7 @@ class HomeController extends AbstractController
         ]);
     }
 
+// ---------------------------------Annulation d'un rendez vous sur le profil utilisateur--------------------------------- //
     #[Route('/profil/appointment/{id}/delete', name: 'app_cancel_appointment', methods: ['DELETE'], requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
     public function cancelAppointment(EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse

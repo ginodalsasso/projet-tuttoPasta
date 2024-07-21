@@ -23,14 +23,23 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Security\AccessDeniedHandler:
-        arguments:
-            $urlGenerator: '@router'
-            
-    acme_security.access_denied_handler:
-        alias: App\Security\AccessDeniedHandler
-
+    # Redirect404 service
     App\Security\Redirect404:
+        class: App\Security\Redirect404
         arguments: ['@router']
         tags:
-            - { name: 'kernel.event_listener', event: 'kernel.exception' }
+            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException' }
+
+    # Redirect403 service
+    App\Security\Redirect403:
+        class: App\Security\Redirect403
+        arguments: ['@router']
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException' }
+
+    # Redirect500 service
+    App\Security\Redirect500:
+        class: App\Security\Redirect500
+        arguments: ['@router']
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException' }

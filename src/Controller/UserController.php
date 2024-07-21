@@ -36,6 +36,10 @@ class UserController extends AbstractController
     public function __construct(private EmailVerifier $emailVerifier)
     {
     }
+
+//_____________________________________________________________REGISTER/LOGIN/LOGOUT_____________________________________________________________
+//____________________________________________________________________________________________________________________________
+//____________________________________________________________________________________________________________________
 // ---------------------------------Méthode d'inscription--------------------------------- //
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, ChallengeInterface $challenge): Response
@@ -121,10 +125,10 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        // get the login error if there is one
+        // Intercepte l'erreur d'authentification s'il y en a une
         $error = $authenticationUtils->getLastAuthenticationError();
 
-        // last username entered by the user
+        // Dernier username entré par l'utilisateur
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('user/login.html.twig', [
@@ -137,10 +141,12 @@ class UserController extends AbstractController
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('Cette méthode peut être vide - elle sera interceptée par la clé de déconnexion de votre pare-feu.');
     }
 
-
+//________________________________________________________________AFFICHAGE________________________________________________________________
+//____________________________________________________________________________________________________________________________
+//____________________________________________________________________________________________________________________
 // ---------------------------------Affichage profil utilisateur--------------------------------- //
     #[Route('/profil', name: 'app_profil', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
@@ -168,6 +174,9 @@ class UserController extends AbstractController
         ]);
     }
 
+//________________________________________________________________CRUD________________________________________________________________
+//____________________________________________________________________________________________________________________________
+//____________________________________________________________________________________________________________________
 // ---------------------------------Edition infos utilisateur--------------------------------- //
     #[Route('/profil/update-info', name: 'app_profil_update_info', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]

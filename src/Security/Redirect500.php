@@ -3,11 +3,10 @@
 namespace App\Security;
 
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 
-class Redirect404
+class Redirect500
 {
     private $router;
 
@@ -22,7 +21,7 @@ class Redirect404
     {   // Récupération de l'exception
         $exception = $event->getThrowable();
         // Si l'exception n'est pas de type NotFoundHttpException, on ne fait rien
-        if ($exception instanceof NotFoundHttpException) {
+        if ($exception->getCode() === 500) {
             $response = new RedirectResponse($this->router->generate('app_home'));
             $event->setResponse($response);
         }
