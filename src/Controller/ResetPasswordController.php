@@ -65,7 +65,7 @@ class ResetPasswordController extends AbstractController
             $resetToken = $this->resetPasswordHelper->generateFakeResetToken();
         }
 
-        return $this->render('reset_password/check_email.html.twig', [
+        return $this->render('emails/check_email.html.twig', [
             'resetToken' => $resetToken,
         ]);
     }
@@ -162,7 +162,7 @@ class ResetPasswordController extends AbstractController
             ->from(new Address('admin@tuttoPasta.com', 'Mot de passe oublié'))
             ->to($user->getEmail())
             ->subject('Your password reset request')
-            ->htmlTemplate('reset_password/email.html.twig')
+            ->htmlTemplate('emails/email.html.twig')
             ->context([
                 'resetToken' => $resetToken,
             ])

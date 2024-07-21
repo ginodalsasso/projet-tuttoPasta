@@ -51,7 +51,7 @@ class PuzzleGenerator implements ChallengeGenerator
             )
             // Insère la pièce du puzzle à droite de l'image de fond
             ->insert($piece, 'top-right')
-            // Insère le trou avec une opacité de 60% à la position x et y
+            // Insère le trou avec une opacité de 80% à la position x et y
             ->insert($hole->opacity(80), 'top-left', $x, $y);
 
         // Retourne l'image générée sous forme de réponse HTTP au format PNG

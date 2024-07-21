@@ -16,8 +16,6 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Validator\Constraints\PasswordStrength;
-use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 
 class RegistrationFormType extends AbstractType
 {

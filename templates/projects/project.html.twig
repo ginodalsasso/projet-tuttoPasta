@@ -4,6 +4,7 @@
     {{ parent() }} {# Etend le block head défini dans le layout  #}
     <meta property="og:title" content="{{ project.projectName }}" />
     <meta property="og:url" content="{{ app.request.uri }}" />
+    <meta property="og:language" content="fr">
     <meta property="og:image" content="{{ asset('img/projects/' ~ project.images[0].image) }}" />
     <meta property="og:type" content="article" />
 {% endblock %}

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Service;
 use App\Entity\Appointment;
+use App\Form\Type\CaptchaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -59,6 +60,11 @@ class AppointmentType extends AbstractType
                 'choice_label' => 'serviceName', 
                 'multiple' => true,
                 'expanded' => true, // true pour checkboxes
+            ])
+
+            ->add('captcha', CaptchaType::class, [
+                'mapped' => false,
+                'route' => 'captcha'
             ])
 
             ->add('save', SubmitType::class, [
