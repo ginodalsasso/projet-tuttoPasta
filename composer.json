@@ -12,6 +12,7 @@
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.2",
+        "dompdf/dompdf": "^3.0",
         "easycorp/easyadmin-bundle": "^4.10",
         "intervention/image": "2.7.2",
         "php-flasher/flasher-symfony": "^1.15",

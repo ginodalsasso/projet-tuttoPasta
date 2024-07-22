@@ -20,6 +20,9 @@ class Administration
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $textContent = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $sectionLocate = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,18 @@ class Administration
     public function setTextContent(?string $textContent): static
     {
         $this->textContent = $textContent;
+
+        return $this;
+    }
+
+    public function getSectionLocate(): ?string
+    {
+        return $this->sectionLocate;
+    }
+
+    public function setSectionLocate(?string $sectionLocate): static
+    {
+        $this->sectionLocate = $sectionLocate;
 
         return $this;
     }

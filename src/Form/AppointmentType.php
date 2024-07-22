@@ -62,10 +62,10 @@ class AppointmentType extends AbstractType
                 'expanded' => true, // true pour checkboxes
             ])
 
-            ->add('captcha', CaptchaType::class, [
-                'mapped' => false,
-                'route' => 'captcha'
-            ])
+            // ->add('captcha', CaptchaType::class, [
+            //     'mapped' => false,
+            //     'route' => 'captcha'
+            // ])
 
             ->add('save', SubmitType::class, [
                 'label' => 'Envoyer',
