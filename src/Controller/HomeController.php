@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use Dompdf\Dompdf;
 use App\Entity\Project;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
+use App\Services\PdfGenerator;
 use Symfony\Component\Mime\Address;
 use App\Repository\DayOffRepository;
 use App\Repository\ProjectRepository;
@@ -100,7 +102,6 @@ class HomeController extends AbstractController
     {
         return $this->render('errors/error500.html.twig');
     }
-
 
 //________________________________________________________________APPOINTMENT______________________________________________________________
 //____________________________________________________________________________________________________________________________
@@ -261,5 +262,14 @@ class HomeController extends AbstractController
     
         return new JsonResponse(['success' => true]);
     }
+
+    #[Route('/pdf', name: 'quote.pdf')]
+    public function generatePdf(PdfGenerator $pdf): Response
+    {
+        $html = $this->renderView('admin/quote.html.twig');
+        return $pdf->showPdfFile($html);
+    }
+
+
 
 }
