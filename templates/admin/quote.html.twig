@@ -2,25 +2,53 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Devis pour rendez-vous</title>
+    <title>Quote</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        h1 { color: #333; }
-        .info { margin-bottom: 20px; }
-        .price { font-weight: bold; font-size: 1.2em; }
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .quote {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header, .footer {
+            text-align: center;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .content table, .content th, .content td {
+            border: 1px solid black;
+        }
+        .content th, .content td {
+            padding: 8px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
-    <h1>Devis pour votre rendez-vous</h1>
-    <div class="info">
-        <p>Date: {{ appointment.startDate|date('d/m/Y') }}</p>
-        <p>Heure: {{ appointment.startDate|date('H:i') }} - {{ appointment.endDate|date('H:i') }}</p>
-        <p>Nom: {{ appointment.name }}</p>
-        <p>Email: {{ appointment.email }}</p>
+    <div class="quote">
+        <div class="header">
+            <h1>Quote Reference: {{ quote.reference }}</h1>
+            <p>Date: {{ quote.quoteDate|date('Y-m-d H:i') }}</p>
+        </div>
+        <div class="content">
+            <h2>Customer Information</h2>
+            <p>Name: {{ quote.customerFirstName }} {{ quote.customerName }}</p>
+            <p>Email: {{ quote.customerEmail }}</p>
+            <h2>Appointment Information</h2>
+            <p>Appointment ID: {{ appointment.id }}</p>
+            <p>Start Date: {{ appointment.startDate|date('Y-m-d H:i') }}</p>
+            <p>End Date: {{ appointment.endDate|date('Y-m-d H:i') }}</p>
+            <!-- Ajoutez d'autres informations pertinentes ici -->
+        </div>
+        <div class="footer">
+            <p>&copy; {{ "now"|date("Y") }} Your Company</p>
+        </div>
     </div>
-    <div class="price">
-        <p>Prix total estimé: {{ totalPrice }} €</p>
-    </div>
-    <p>Ce devis est basé sur les informations fournies lors de la prise de rendez-vous. Le prix final peut varier en fonction des services additionnels ou des modifications apportées lors du rendez-vous.</p>
 </body>
 </html>

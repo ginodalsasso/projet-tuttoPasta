@@ -154,15 +154,15 @@ class HomeController extends AbstractController
                         $appointment->setUser($user);
                     }
 
-                    // // Création du devis
-                    // $quote = $this->createQuote($appointment);
+                    // Création du devis
+                    $quote = $this->createQuote($appointment);
                     
-                    // // Génération et stockage du PDF
-                    // $pdfContent = $this->generateAndStorePdf($pdfGenerator, $quote);
+                    // Génération et stockage du PDF
+                    $pdfLink  = $this->generateAndStorePdf($pdfGenerator, $quote);
 
                     // Persiste le rendez-vous dans la base de données
                     $entityManager->persist($appointment);
-                    // $entityManager->persist($quote);
+                    $entityManager->persist($quote);
                     $entityManager->flush();
                     
                     $emailAddress = $appointment->getEmail();
@@ -271,12 +271,72 @@ class HomeController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
-    // #[Route('/pdf', name: 'quote.pdf')]
-    // public function generatePdf(PdfGenerator $pdf): Response
-    // {
-    //     $html = $this->renderView('admin/quote.html.twig');
-    //     return $pdf->showPdfFile($html);
-    // }
 
-  
+    // ---------------------------------Vue PDF DEVIS--------------------------------- //
+    #[Route('/admin/quote/{id}', name: 'quote_pdf')]
+    public function viewQuotePdf(int $id, EntityManagerInterface $entityManager, PdfGenerator $pdfGenerator): Response
+    {
+        $quote = $entityManager->getRepository(Quote::class)->find($id);
+
+        if (!$quote) {
+            throw $this->createNotFoundException('Ce devis n\'existe pas');
+        }
+
+        $html = $this->renderView('admin/quote.html.twig', [
+            'quote' => $quote,
+            'appointment' => $quote->getAppointments(),
+        ]);
+
+        return $pdfGenerator->showPdfFile($html);
+    }
+
+
+
+    // ---------------------------------Création d'un devis--------------------------------- //
+    private function createQuote(Appointment $appointment): Quote
+    {
+        $quote = new Quote();
+        $quote->setReference('QUOTE-' . uniqid());
+        $quote->setQuoteDate(new \DateTime());
+        $quote->setCustomerName($appointment->getName());
+        $quote->setCustomerFirstName($appointment->getFirstName());
+        $quote->setCustomerEmail($appointment->getEmail());
+        $quote->setAppointments($appointment);
+
+        return $quote;
+    }
+
+
+
+    // ---------------------------------Génération et stockage du PDF--------------------------------- //
+    private function generateAndStorePdf(PdfGenerator $pdfGenerator, Quote $quote): string
+    {
+        $html = $this->renderView('admin/quote.html.twig', [
+            'quote' => $quote,
+            'appointment' => $quote->getAppointments(),
+        ]);
+        // Générer le contenu PDF
+        $pdfContent = $pdfGenerator->generatePDF($html);
+        
+        // Définir le chemin de stockage du PDF
+        $pdfDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/pdf/';
+        // Générer un nom de fichier unique
+        $pdfFilename = 'QUOTE-' . uniqid() . '.pdf';
+        // Chemin complet du fichier PDF
+        $pdfFilepath = $pdfDirectory . $pdfFilename;
+    
+        // Créer le répertoire s'il n'existe pas
+        if (!is_dir($pdfDirectory)) {
+            mkdir($pdfDirectory, 0755, true);
+        }
+        // Sauvegarde le PDF sur le système de fichiers
+        file_put_contents($pdfFilepath, $pdfContent);
+    
+        // Stocker le lien du PDF dans l'entité Quote
+        $quote->setPdfContent('/uploads/pdf/' . $pdfFilename);
+        // Mettre à jour l'entité Quote
+        return $quote->getPdfContent();
+    }
+
+
 }

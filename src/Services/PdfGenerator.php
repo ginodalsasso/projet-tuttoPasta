@@ -40,9 +40,10 @@ class PdfGenerator
         );
     }
 
-    public function generatePDF($html){
+    public function generatePDF($html): string
+    {
         $this->domPdf->loadHtml($html);
         $this->domPdf->render();
-        $this->domPdf->output();
+        return $this->domPdf->output();
     }
 }
