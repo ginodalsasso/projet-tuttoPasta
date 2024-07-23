@@ -28,6 +28,13 @@ class AppointmentType extends AbstractType
                     'class' => 'data'
                 ]
             ])
+            ->add('firstName', TextType::class, [
+                'label' => "Prénom",
+                'attr' => [
+                    'autocomplete' => 'off',
+                    'class' => 'data'
+                ]
+            ])
             ->add('email', EmailType::class,[
                 'label' => "E-mail",
                 'attr' => [

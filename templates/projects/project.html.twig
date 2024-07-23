@@ -18,8 +18,9 @@
     <main class="wrapper_project">
         <section id="project_container">
             <div class="project_header">
-                <img src="{{ asset('img/projects/' ~ project.images[0].image) }}" alt="{{ project.images[0].alt }} loading="lazy"" />
-                <img src="{{ asset('img/projects/' ~ project.images[1].image) }}" alt="{{ project.images[1].alt }} loading="lazy"" />
+                {% for image in project.images[:2] %}
+                    <img src="{{ asset('img/projects/' ~ image.image) }}" alt="{{ image.alt }}" loading="lazy" />
+                {% endfor %}
                 <div class="project_details">
                     <h2>{{ project.projectTitle }}</h2>
                     {% for category in project.categories %}
@@ -31,9 +32,9 @@
                 {{project.projectContent}}
             </div>
             <div class="project_gallery">
-                <img src="{{ asset('img/projects/' ~ project.images[2].image) }}" alt="{{ project.images[2].alt }} loading="lazy"" />
-                <img src="{{ asset('img/projects/' ~ project.images[3].image) }}" alt="{{ project.images[3].alt }} loading="lazy"" />
-                <img src="{{ asset('img/projects/' ~ project.images[4].image) }}" alt="{{ project.images[4].alt }} loading="lazy"" />
+                {% for image in project.images[2:5] %}
+                    <img src="{{ asset('img/projects/' ~ image.image) }}" alt="{{ image.alt }} loading="lazy"" />
+                {% endfor %}
             </div>
 
             <hr class="separator">

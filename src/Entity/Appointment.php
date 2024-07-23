@@ -24,6 +24,9 @@ class Appointment
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 100)]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
@@ -65,6 +68,11 @@ class Appointment
     #[ORM\ManyToOne(inversedBy: 'appointments')]
     private ?User $user = null;
 
+    #[ORM\OneToOne(mappedBy: 'appointments', cascade: ['persist', 'remove'])]
+    private ?Quote $quote = null;
+
+
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -87,6 +95,18 @@ class Appointment
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): static
+    {
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -214,5 +234,29 @@ class Appointment
 
         return $this;
     }
+
+    public function getQuote(): ?Quote
+    {
+        return $this->quote;
+    }
+
+    public function setQuote(?Quote $quote): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($quote === null && $this->quote !== null) {
+            $this->quote->setAppointments(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($quote !== null && $quote->getAppointments() !== $this) {
+            $quote->setAppointments($this);
+        }
+
+        $this->quote = $quote;
+
+        return $this;
+    }
+
+
 
 }

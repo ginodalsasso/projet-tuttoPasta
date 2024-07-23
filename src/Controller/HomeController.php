@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Dompdf\Dompdf;
+use App\Entity\Quote;
 use App\Entity\Project;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
@@ -109,7 +110,7 @@ class HomeController extends AbstractController
     // ---------------------------------Vue RDV et Gestion de RDV--------------------------------- //
     // Gère le processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
-    public function addAppointment(Request $request, Security $security, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, MailerInterface $mailer): Response
+    public function addAppointment(Request $request, Security $security, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, MailerInterface $mailer, PdfGenerator $pdfGenerator): Response
     {
         $appointment = new Appointment();
         $form = $this->createForm(AppointmentType::class, $appointment);
@@ -153,8 +154,15 @@ class HomeController extends AbstractController
                         $appointment->setUser($user);
                     }
 
+                    // // Création du devis
+                    // $quote = $this->createQuote($appointment);
+                    
+                    // // Génération et stockage du PDF
+                    // $pdfContent = $this->generateAndStorePdf($pdfGenerator, $quote);
+
                     // Persiste le rendez-vous dans la base de données
                     $entityManager->persist($appointment);
+                    // $entityManager->persist($quote);
                     $entityManager->flush();
                     
                     $emailAddress = $appointment->getEmail();
@@ -263,13 +271,12 @@ class HomeController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
-    #[Route('/pdf', name: 'quote.pdf')]
-    public function generatePdf(PdfGenerator $pdf): Response
-    {
-        $html = $this->renderView('admin/quote.html.twig');
-        return $pdf->showPdfFile($html);
-    }
+    // #[Route('/pdf', name: 'quote.pdf')]
+    // public function generatePdf(PdfGenerator $pdf): Response
+    // {
+    //     $html = $this->renderView('admin/quote.html.twig');
+    //     return $pdf->showPdfFile($html);
+    // }
 
-
-
+  
 }

@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Devis pour rendez-vous</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1 { color: #333; }
+        .info { margin-bottom: 20px; }
+        .price { font-weight: bold; font-size: 1.2em; }
+    </style>
 </head>
 <body>
-    <h1>Hello</h1>
+    <h1>Devis pour votre rendez-vous</h1>
+    <div class="info">
+        <p>Date: {{ appointment.startDate|date('d/m/Y') }}</p>
+        <p>Heure: {{ appointment.startDate|date('H:i') }} - {{ appointment.endDate|date('H:i') }}</p>
+        <p>Nom: {{ appointment.name }}</p>
+        <p>Email: {{ appointment.email }}</p>
+    </div>
+    <div class="price">
+        <p>Prix total estimé: {{ totalPrice }} €</p>
+    </div>
+    <p>Ce devis est basé sur les informations fournies lors de la prise de rendez-vous. Le prix final peut varier en fonction des services additionnels ou des modifications apportées lors du rendez-vous.</p>
 </body>
 </html>
