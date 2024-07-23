@@ -271,7 +271,9 @@ class HomeController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
-
+//________________________________________________________________APPOINTMENT PDF______________________________________________________________
+//____________________________________________________________________________________________________________________________
+//____________________________________________________________________________________________________________________
     // ---------------------------------Vue PDF DEVIS--------------------------------- //
     #[Route('/admin/quote/{id}', name: 'quote_pdf')]
     public function viewQuotePdf(int $id, EntityManagerInterface $entityManager, PdfGenerator $pdfGenerator): Response
@@ -286,7 +288,7 @@ class HomeController extends AbstractController
             'quote' => $quote,
             'appointment' => $quote->getAppointments(),
         ]);
-
+        // Générer le contenu PDF
         return $pdfGenerator->showPdfFile($html);
     }
 
@@ -295,17 +297,29 @@ class HomeController extends AbstractController
     // ---------------------------------Création d'un devis--------------------------------- //
     private function createQuote(Appointment $appointment): Quote
     {
+        $services = $appointment->getServices();
+        if ($services->isEmpty()) {
+            return null;
+        }
+        // Crée un nouveau devis
         $quote = new Quote();
-        $quote->setReference('QUOTE-' . uniqid());
+        $quote->setReference('DEVIS-' . uniqid());
         $quote->setQuoteDate(new \DateTime());
         $quote->setCustomerName($appointment->getName());
         $quote->setCustomerFirstName($appointment->getFirstName());
         $quote->setCustomerEmail($appointment->getEmail());
+        // Associe le rendez-vous au devis
         $quote->setAppointments($appointment);
+
+         // Calcul du prix total des services selectionnés
+         $totalPrice = 0;
+         foreach ($services as $service) {
+            $totalPrice += $service->getServicePrice();
+        }
+         $quote->setTotalTTC($totalPrice);
 
         return $quote;
     }
-
 
 
     // ---------------------------------Génération et stockage du PDF--------------------------------- //
@@ -337,6 +351,5 @@ class HomeController extends AbstractController
         // Mettre à jour l'entité Quote
         return $quote->getPdfContent();
     }
-
 
 }
