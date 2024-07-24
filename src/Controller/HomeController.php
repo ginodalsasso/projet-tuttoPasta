@@ -271,7 +271,7 @@ class HomeController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
-//________________________________________________________________APPOINTMENT PDF______________________________________________________________
+//________________________________________________________________APPOINTMENT PDF_________________________________________________________
 //____________________________________________________________________________________________________________________________
 //____________________________________________________________________________________________________________________
     // ---------------------------------Vue PDF DEVIS--------------------------------- //
@@ -335,14 +335,10 @@ class HomeController extends AbstractController
         // Définir le chemin de stockage du PDF
         $pdfDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/pdf/';
         // Générer un nom de fichier unique
-        $pdfFilename = 'QUOTE-' . uniqid() . '.pdf';
+        $pdfFilename = 'DEVIS-' . uniqid() . '.pdf';
         // Chemin complet du fichier PDF
         $pdfFilepath = $pdfDirectory . $pdfFilename;
     
-        // Créer le répertoire s'il n'existe pas
-        if (!is_dir($pdfDirectory)) {
-            mkdir($pdfDirectory, 0755, true);
-        }
         // Sauvegarde le PDF sur le système de fichiers
         file_put_contents($pdfFilepath, $pdfContent);
     

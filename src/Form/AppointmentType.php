@@ -8,6 +8,9 @@ use App\Form\Type\CaptchaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -26,27 +29,68 @@ class AppointmentType extends AbstractType
                 'attr' => [
                     'autocomplete' => 'off',
                     'class' => 'data'
-                ]
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le nom ne peut pas être vide.',
+                    ]),
+                    new Length([
+                        'min' => 2,
+                        'max' => 50,
+                        'minMessage' => 'Le nom doit contenir au moins {{ limit }} caractères.',
+                        'maxMessage' => 'Le nom ne peut pas contenir plus de {{ limit }} caractères.',
+                    ]),
+                ],
             ])
             ->add('firstName', TextType::class, [
                 'label' => "Prénom",
                 'attr' => [
                     'autocomplete' => 'off',
                     'class' => 'data'
-                ]
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le prénom ne peut pas être vide.',
+                    ]),
+                    new Length([
+                        'min' => 2,
+                        'max' => 50,
+                        'minMessage' => 'Le prénom doit contenir au moins {{ limit }} caractères.',
+                        'maxMessage' => 'Le prénom ne peut pas contenir plus de {{ limit }} caractères.',
+                    ]),
+                ],
             ])
+
             ->add('email', EmailType::class,[
                 'label' => "E-mail",
                 'attr' => [
                     'autocomplete' => 'off',
                     'class' => 'data'
-            ]])
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'L\'e-mail ne peut pas être vide.',
+                    ]),
+                    new Email([
+                        'message' => 'L\'e-mail "{{ value }}" n\'est pas un e-mail valide.',
+                    ]),
+                ],
+            ])
             ->add('message', TextareaType::class, [
                 'label' => "Notes supplémentaires",
                 'attr' => [
                     'autocomplete' => 'off',
                     "class" => "data"
-                ]
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Le message ne peut pas être vide.',
+                    ]),
+                    new Length([
+                        'min' => 5,
+                        'minMessage' => 'Le message doit contenir au moins {{ limit }} caractères.',
+                    ]),
+                ],
             ])
             ->add('startDate', DateType::class, [
                 'label' => "Rendez-vous",
