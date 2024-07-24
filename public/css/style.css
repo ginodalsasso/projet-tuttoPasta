@@ -469,7 +469,7 @@ h3 {
     color: var(--white-color);
 }
 
-.radioSlots, input[type="checkbox"]  {
+.radioSlots, #appointment_services input[type="checkbox"]  {
     display: none;
 }
 

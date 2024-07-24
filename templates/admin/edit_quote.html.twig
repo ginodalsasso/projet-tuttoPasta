@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<main class="wrapper">
+    <div class="form_display">
+        <h1>Éditer le devis</h1>
+
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-primary">Sauvegarder les modifications</button>
+        {{ form_end(form) }}
+    </div>
+</main>
+{% endblock %}

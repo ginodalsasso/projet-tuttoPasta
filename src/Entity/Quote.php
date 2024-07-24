@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\QuoteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\QuoteRepository;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: QuoteRepository::class)]
 class Quote
@@ -135,5 +136,39 @@ class Quote
         $this->pdfContent = $pdfContent;
 
         return $this;
+    }
+
+    private array $services = [];
+
+    public function getServices(): array
+    {
+        return $this->services;
+    }
+
+    public function addService(Service $service): self
+    {
+        // Si le service n'est pas déjà présent dans le tableau
+        if (!in_array($service, $this->services, true)) {
+            // On l'ajoute
+            $this->services[] = $service;
+        }
+
+        return $this;
+    }
+
+    public function clearServices(): self
+    {
+        $this->services = [];
+
+        return $this;
+    }
+
+    public function calculateTotal(Collection $services): float
+    {
+        $totalPrice = 0;
+        foreach ($services as $service) {
+            $totalPrice += $service->getServicePrice();
+        }
+        return $totalPrice;
     }
 }

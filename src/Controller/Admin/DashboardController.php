@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Tag;
 use App\Entity\User;
+use App\Entity\Quote;
 use App\Entity\DayOff;
 use App\Entity\Article;
 use App\Entity\Comment;
@@ -67,5 +68,6 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::linkToCrud('Rendez-vous', 'fas fa-calendar-check', Appointment::class);
             yield MenuItem::linkToCrud('Jours de congés', 'fas fa-calendar-alt', DayOff::class);
             yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
+            yield MenuItem::linkToCrud('Devis', 'fa-sharp fa-solid fa-file-invoice', Quote::class);
     }
 }

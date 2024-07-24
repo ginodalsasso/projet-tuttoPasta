@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 #[IsGranted('ROLE_ADMIN')]
@@ -33,7 +34,11 @@ class AppointmentCrudController extends AbstractCrudController
             DateTimeField::new('endDate'),
             DateTimeField::new('createdAt'),
             BooleanField::new('status'),
-            CollectionField::new('services')
+            AssociationField::new('services')
+            ->setFormTypeOptions([
+                'by_reference' => false,
+                'multiple' => true,
+            ]),
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 use Dompdf\Dompdf;
 use App\Entity\Quote;
 use App\Entity\Project;
+use App\Form\QuoteType;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
 use App\Services\PdfGenerator;
@@ -312,11 +313,8 @@ class HomeController extends AbstractController
         $quote->setAppointments($appointment);
 
          // Calcul du prix total des services selectionnés
-         $totalPrice = 0;
-         foreach ($services as $service) {
-            $totalPrice += $service->getServicePrice();
-        }
-         $quote->setTotalTTC($totalPrice);
+        $totalPrice = $quote->calculateTotal($services);
+        $quote->setTotalTTC($totalPrice);
 
         return $quote;
     }
@@ -347,5 +345,62 @@ class HomeController extends AbstractController
         // Mettre à jour l'entité Quote
         return $quote->getPdfContent();
     }
+
+
+
+    // ---------------------------------Formulaire d'Edition du devis PDF--------------------------------- //
+    #[Route('/admin/quote/edit/{id}', name: 'quote_edit')]
+    public function editQuote(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {   
+        // Récupérer le devis
+        $quote = $entityManager->getRepository(Quote::class)->find($id);
+        // Récupérer l'appointment lié
+        $appointment = $quote->getAppointments();
+    
+        if (!$quote) {
+            throw $this->createNotFoundException('Ce devis n\'existe pas');
+        }
+        if (!$appointment) {
+            throw $this->createNotFoundException('Ce RDV n\'existe pas');
+        }
+    
+        // Créer le formulaire d'édition du devis
+        $form = $this->createForm(QuoteType::class, $quote);
+    
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Récupérer les services sélectionnés
+            $selectedServices = $form->get('services')->getData();
+    
+            // Mettre à jour les services de l'appointment lié
+            foreach ($appointment->getServices() as $service) {
+                // Si le service n'est pas sélectionné, le retirer
+                $appointment->removeService($service);
+            }
+            // Ajouter les services sélectionnés
+            foreach ($selectedServices as $service) {
+                // Ajouter le ou les services à l'appointment
+                $appointment->addService($service);
+            }
+    
+            // Recalculer le total
+            $totalPrice = $quote->calculateTotal($appointment->getServices());
+            $quote->setTotalTTC($totalPrice);
+    
+            $entityManager->persist($appointment);
+            $entityManager->persist($quote);
+            $entityManager->flush();
+    
+            // Rediriger vers la vue du devis mis à jour
+            return $this->redirectToRoute('quote_pdf', ['id' => $quote->getId()]);
+        }
+    
+        return $this->render('admin/edit_quote.html.twig', [
+            'quote' => $quote,
+            'form' => $form->createView(),
+        ]);
+    }
+
 
 }
