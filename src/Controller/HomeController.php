@@ -5,7 +5,9 @@ namespace App\Controller;
 use Dompdf\Dompdf;
 use App\Entity\Quote;
 use App\Entity\Project;
+use App\Entity\Service;
 use App\Form\QuoteType;
+use App\Entity\Category;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
 use App\Services\PdfGenerator;
@@ -372,6 +374,24 @@ class HomeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Récupérer les services sélectionnés
             $selectedServices = $form->get('services')->getData();
+            // Vérifier si un nouveau service a été ajouté
+            $newServiceName = $form->get('newService')->getData();
+            $newServicePrice = $form->get('newServicePrice')->getData();
+            $newServiceCategory = $form->get('newServiceCategory')->getData();
+
+            if ($newServiceName && $newServicePrice) {
+                // Créer et sauvegarder le nouveau service
+                $newService = new Service();
+                $newService->setServiceName($newServiceName);
+                $newService->setServicePrice($newServicePrice);
+                $newService->setCategory($newServiceCategory);
+
+                $entityManager->persist($newService);
+                $entityManager->flush();
+
+                // Ajouter le nouveau service aux services sélectionnés
+                $selectedServices[] = $newService;
+            }
     
             // Mettre à jour les services de l'appointment lié
             foreach ($appointment->getServices() as $service) {
