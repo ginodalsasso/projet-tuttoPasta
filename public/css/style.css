@@ -124,6 +124,7 @@ a{
 .full_button_red,
 .full_button_white  {
     padding: 20px 30px;
+    font-size: 16px;
     font-weight: 600;
     text-transform: uppercase;
     border: none;
@@ -308,19 +309,24 @@ h3 {
     max-width: 1000px;
 }
 
-.appointments_table {
+.appointments_table,
+.quotes_table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
 }
 
-.appointments_table th, .appointments_table td {
+.appointments_table th, 
+.appointments_table td,
+.quotes_table th, 
+.quotes_table td {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
 }
 
-.appointments_table th {
+.appointments_table th,
+.quotes_table th {
     background-color: #f2f2f2;
 }
 

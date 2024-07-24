@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des devis{% endblock %}
+
+{% block page_title %} Liste des devis {% endblock %}
+
+{% block body %}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+    <main class="wrapper">
+        <div class="quotes_container">
+            <table class="quotes_table">
+                <thead>
+                    <tr>
+                        <th>Référence</th>
+                        <th>Nom</th>
+                        <th>Prenom</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quote in quotes %}
+                        <tr id="quote-{{ quote.id }}">
+                            <td>{{ quote.reference }}</td>
+                            <td>{{ quote.customerName }}</td>
+                            <td>{{ quote.customerfirstName }}</td>
+                            <td>{{ quote.customerEmail }}</td>
+                            <td>
+                                <a href="{{ path('quote_pdf', { 'id': quote.id }) }}"><i class="fa-solid fa-eye"></i></a>
+                                <a href="{{ path('quote_edit', { 'id': quote.id }) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="back_to">
+            <a class="full_button_white" href="{{ path('app_home') }}">Retour à la page d'accueil</a> 
+        </div>
+    </main>
+{% endblock %}

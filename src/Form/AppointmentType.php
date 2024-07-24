@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Service;
 use App\Entity\Appointment;
 use App\Form\Type\CaptchaType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -111,6 +112,10 @@ class AppointmentType extends AbstractType
                 'choice_label' => 'serviceName', 
                 'multiple' => true,
                 'expanded' => true, // true pour checkboxes
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('s')
+                        ->where('s.category IS NOT NULL');
+                },
             ])
 
             // ->add('captcha', CaptchaType::class, [

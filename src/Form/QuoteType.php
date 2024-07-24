@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Quote;
 use App\Entity\Service;
 use App\Entity\Category;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -36,6 +37,10 @@ class QuoteType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'mapped' => false, // Ce champ n'est pas mappé directement à l'entité Quote
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('s')
+                        ->where('s.category IS NOT NULL');
+                },
                 'label' => 'Services',
             ])
             ->add('newService', TextType::class, [

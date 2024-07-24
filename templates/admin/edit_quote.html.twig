@@ -10,7 +10,7 @@
 
         {{ form_start(form) }}
             <div class="form_container">
-                {{ form_row(form.reference) }}
+                {{ form_row(form.reference, { 'attr':{'disabled':'disabled'}}) }}
 
                 {{ form_row(form.customerName) }}
 

@@ -68,6 +68,7 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::linkToCrud('Rendez-vous', 'fas fa-calendar-check', Appointment::class);
             yield MenuItem::linkToCrud('Jours de congés', 'fas fa-calendar-alt', DayOff::class);
             yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
-            yield MenuItem::linkToCrud('Devis', 'fa-sharp fa-solid fa-file-invoice', Quote::class);
+            yield MenuItem::linkToUrl('Devis', 'fa-regular fa-money-bills', $this -> generateUrl('app_quotes'));
+
     }
 }

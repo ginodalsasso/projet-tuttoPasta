@@ -11,6 +11,7 @@ use App\Entity\Category;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
 use App\Services\PdfGenerator;
+use App\Repository\QuoteRepository;
 use Symfony\Component\Mime\Address;
 use App\Repository\DayOffRepository;
 use App\Repository\ProjectRepository;
@@ -53,7 +54,6 @@ class HomeController extends AbstractController
 
         ]);
     }
-
     // ---------------------------------Vue liste projets--------------------------------- //
     #[Route('/projects', name: 'app_projectList')]
     public function listProjectsShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, CategoryRepository $categoryRepository): Response
@@ -278,6 +278,7 @@ class HomeController extends AbstractController
 //____________________________________________________________________________________________________________________________
 //____________________________________________________________________________________________________________________
     // ---------------------------------Vue PDF DEVIS--------------------------------- //
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/{id}', name: 'quote_pdf')]
     public function viewQuotePdf(int $id, EntityManagerInterface $entityManager, PdfGenerator $pdfGenerator): Response
     {
@@ -295,7 +296,17 @@ class HomeController extends AbstractController
         return $pdfGenerator->showPdfFile($html);
     }
 
+    // ---------------------------------Vue LISTE DES DEVIS--------------------------------- //
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/admin/quotes', name: 'app_quotes')]
+    public function listQuotesShow (QuoteRepository $quoteRepository): Response
+    {
+        $quotes = $quoteRepository->findAll();
 
+        return $this->render('admin/quote_list.html.twig', [
+            'quotes' => $quotes,
+        ]);
+    }
 
     // ---------------------------------Création d'un devis--------------------------------- //
     private function createQuote(Appointment $appointment): Quote
@@ -351,6 +362,7 @@ class HomeController extends AbstractController
 
 
     // ---------------------------------Formulaire d'Edition du devis PDF--------------------------------- //
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/edit/{id}', name: 'quote_edit')]
     public function editQuote(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {   
