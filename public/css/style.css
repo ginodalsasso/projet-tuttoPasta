@@ -124,7 +124,7 @@ a{
 .full_button_red,
 .full_button_white  {
     padding: 20px 30px;
-    font-weight: bold;
+    font-weight: 600;
     text-transform: uppercase;
     border: none;
     cursor: pointer;
@@ -391,12 +391,14 @@ h3 {
     margin-top: 20px;;
 }
 
-/*=============== APPOINTMENT ===============*/
+/*=============== APPOINTMENT/EDIT QUOTE ===============*/
 .form_display {
-    background-color: var(--white-color);
+    background-color: white;
     position: relative;
     z-index: 1;
-    padding: 10px;
+    border: 2px solid;
+    border-image: linear-gradient(45deg, var(--pink-color), var(--red-color), var(--blue-color), var(--green-color));
+    border-image-slice: 1;
 }
 
 .error_msg{
@@ -427,14 +429,23 @@ h3 {
 .form_container input[type=password],
 .form_container input[type=email], 
 .form_container input[type=date], 
-.form_container textarea {
-    width: 500px;
+.form_container select, 
+.form_container textarea,
+#quote_services {
+    width: 600px;
     height: 40px;
     padding: 10px;
     font-size: 16px;
     margin-bottom: 1px;
     border-radius: 0;
     border: 2px solid #000000;
+}
+
+#quote_services {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
 }
 
 .agreeTerms_display div{
@@ -480,7 +491,9 @@ h3 {
 
 #appointment_services {
     display: flex;
-    width: 500px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 600px;
 }
 
 /*=============== LISTE PROJETS ===============*/

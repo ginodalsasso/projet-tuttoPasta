@@ -47,6 +47,11 @@ class QuoteType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Prix du nouveau service',
+                'scale' => 2, // Assure que le champ accepte un nombre avec deux chiffres après la virgule.
+                'attr' => [
+                    'step' => '0.01', 
+                    'min' => '0', // Empêche l'utilisateur de saisir un nombre négatif
+                ],
             ])
             ->add('newServiceCategory', EntityType::class, [
                 'class' => Category::class,

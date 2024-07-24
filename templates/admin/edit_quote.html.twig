@@ -1,13 +1,34 @@
 {% extends 'base.html.twig' %}
 
+{% block page_title %} Éditer le devis{% endblock %}
+
 {% block body %}
+{{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+
 <main class="wrapper">
     <div class="form_display">
-        <h1>Éditer le devis</h1>
 
         {{ form_start(form) }}
-            {{ form_widget(form) }}
-            <button class="btn btn-primary">Sauvegarder les modifications</button>
+            <div class="form_container">
+                {{ form_row(form.reference) }}
+
+                {{ form_row(form.customerName) }}
+
+                {{ form_row(form.customerFirstName) }}
+
+                {{ form_row(form.customerEmail) }}
+
+                {{ form_row(form.services) }}
+
+                {{ form_row(form.newService) }}
+
+                {{ form_row(form.newServicePrice) }}
+
+                {{ form_row(form.newServiceCategory) }}
+
+                <button class="full_button_black">Sauvegarder les modifications</button>
+            <div class="form_container">
+
         {{ form_end(form) }}
     </div>
 </main>

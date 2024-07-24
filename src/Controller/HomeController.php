@@ -378,7 +378,7 @@ class HomeController extends AbstractController
             $newServiceName = $form->get('newService')->getData();
             $newServicePrice = $form->get('newServicePrice')->getData();
             $newServiceCategory = $form->get('newServiceCategory')->getData();
-
+            // Vérifier si le nom et le prix du nouveau service sont définis
             if ($newServiceName && $newServicePrice) {
                 // Créer et sauvegarder le nouveau service
                 $newService = new Service();
