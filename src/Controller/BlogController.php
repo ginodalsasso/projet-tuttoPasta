@@ -14,11 +14,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 class BlogController extends AbstractController
 {
+
+    private $htmlSanitizer;
+
+    public function __construct(HtmlSanitizerInterface  $htmlSanitizer) {
+        $this->htmlSanitizer = $htmlSanitizer;
+    }
 
 //________________________________________________________________CRUD________________________________________________________________
 //____________________________________________________________________________________________________________________________
@@ -60,6 +67,12 @@ class BlogController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            // Sanitize le contenu du commentaire
+            $sanitizedCommentContent = $this->htmlSanitizer->sanitize($comment->getCommentContent());
+            // Enregistre le contenu du commentaire
+            $comment->setCommentContent($sanitizedCommentContent);
+
             $entityManager->persist($comment);
             $entityManager->flush();
     
@@ -68,7 +81,7 @@ class BlogController extends AbstractController
                 'comment' => [
                     'id' => $comment->getId(),
                     'username' => $comment->getUser() ? htmlspecialchars($comment->getUser()->getUsername()) : 'Utilisateur supprimé',
-                    'commentContent' => htmlspecialchars($comment->getCommentContent()),
+                    'commentContent' => $sanitizedCommentContent,
                     'date' => $comment->getCommentDate()->format('d/m/Y à H:i')
                 ]
             ]);
