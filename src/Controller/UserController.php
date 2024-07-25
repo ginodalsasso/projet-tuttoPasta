@@ -235,7 +235,7 @@ class UserController extends AbstractController
 // --------------------------------- Suppression d'un compte utilisateur--------------------------------- //
     #[Route('/delete_account', name: 'app_delete_account')]
     #[IsGranted('ROLE_USER')]
-    public function deleteAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository, AppointmentRepository $appointmentRepository
+    public function deleteAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository, AppointmentRepository $appointmentRepository, MailerInterface $mailer
     ): RedirectResponse
     {
         // Récupère l'utilisateur actuellement connecté
@@ -267,6 +267,9 @@ class UserController extends AbstractController
 
         // Déconnecte l'utilisateur après la suppression du compte
         $tokenStorage->setToken(null);
+
+        // Envoie un email de notification de suppression de compte
+        $this->sendAccountDeletionEmail($mailer, $user);
 
         $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
 
@@ -306,6 +309,7 @@ class UserController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 
+
      // Gestion de l'envoi de notification d'annulation de RDV
      private function sendCancellationEmail(MailerInterface $mailer, Appointment $appointment): void
      {
@@ -323,5 +327,23 @@ class UserController extends AbstractController
  
          $mailer->send($email);
      }
+
+     
+    // Gestion de l'envoi de notification de suppression de compte
+    private function sendAccountDeletionEmail(MailerInterface $mailer, UserInterface $user): void
+    {
+        $emailContent = $this->renderView('emails/account_deletion.html.twig', [
+            'username' => $user->getUsername(),
+            'email' => $user->getEmail(),
+        ]);
+
+        $email = (new Email())
+            ->from(new Address('no-reply@tuttoPasta.com', 'TuttoPasta'))
+            ->to('admin@tuttoPasta.com')
+            ->subject('Suppression de compte utilisateur')
+            ->html($emailContent);
+
+        $mailer->send($email);
+    }
         
 }
