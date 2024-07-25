@@ -12,6 +12,7 @@
                 <thead>
                     <tr>
                         <th>Référence</th>
+                        <th>Date</th>
                         <th>Nom</th>
                         <th>Prénom</th>
                         <th>Email</th>
@@ -19,9 +20,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for quote in quotes %}
+                    {% set sorted_quotes = quotes|sort((a, b) => b.quoteDate <=> a.quoteDate) %}
+                    {% for quote in sorted_quotes %}
                         <tr id="quote-{{ quote.id }}">
                             <td>{{ quote.reference }}</td>
+                            <td>{{ quote.quoteDate|date('d-m-Y') }}</td>
                             <td>{{ quote.customerName }}</td>
                             <td>{{ quote.customerfirstName }}</td>
                             <td>{{ quote.customerEmail }}</td>

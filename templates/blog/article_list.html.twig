@@ -18,7 +18,8 @@
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper">
         <ul class="article_list">
-            {% for article in articles %}
+            {% set sorted_articles = articles|sort((a, b) => b.articleDate <=> a.articleDate) %}
+            {% for article in sorted_articles %}
                 <li class="article_items">
                     <a href="{{ path('app_article', { 'slug': article.slug }) }}">
                         <article class="article_card">
