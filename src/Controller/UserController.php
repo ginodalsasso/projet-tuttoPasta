@@ -7,6 +7,7 @@ use App\Form\UserFormType;
 use App\Entity\Appointment;
 use App\Form\EditPasswordType;
 use App\Security\EmailVerifier;
+use Symfony\Component\Mime\Email;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use Symfony\Component\Mime\Address;
@@ -17,6 +18,7 @@ use App\Domain\AntiSpam\ChallengeInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -276,7 +278,7 @@ class UserController extends AbstractController
     // ---------------------------------Annulation d'un rendez vous sur le profil utilisateur--------------------------------- //
     #[Route('/profil/appointment/{id}/delete', name: 'app_cancel_appointment', methods: ['DELETE'], requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
-    public function cancelAppointment(EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
+    public function cancelAppointment(EntityManagerInterface $entityManager, int $id, Security $security, MailerInterface $mailer): JsonResponse
     {
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
@@ -297,8 +299,29 @@ class UserController extends AbstractController
         // Supprime le rendez-vous de la base de données
         $entityManager->remove($appointment);
         $entityManager->flush();
+
+        // Envoie un email de notification d'annulation
+        $this->sendCancellationEmail($mailer, $appointment);
     
         return new JsonResponse(['success' => true]);
     }
+
+     // Gestion de l'envoi de notification d'annulation de RDV
+     private function sendCancellationEmail(MailerInterface $mailer, Appointment $appointment): void
+     {
+         $user = $appointment->getUser();
+         $emailContent = $this->renderView('emails/appointment_cancellation.html.twig', [
+             'appointmentDate' => $appointment->getStartDate()->format('d/m/Y à H:i'),
+             'username' => $user ? $user->getUsername() : 'Utilisateur anonyme',
+         ]);
+ 
+         $email = (new Email())
+             ->from(new Address('no-reply@tuttoPasta.com', 'TuttoPasta'))
+             ->to('admin@tuttoPasta.com')
+             ->subject('Annulation de rendez-vous')
+             ->html($emailContent);
+ 
+         $mailer->send($email);
+     }
         
 }
