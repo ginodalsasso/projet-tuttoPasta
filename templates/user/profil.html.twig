@@ -12,63 +12,7 @@
             <p><b>Pseudo:</b> {{user.username|capitalize}} </p>
             <p><b>Email:</b> {{user.email}} </p>
             <p><b>Date de création du compte:</b> {{user.accountDate|date('d/m/Y')}}</p>
-            <hr class="separator">
-
-            {% set now = "now"|date('Y-m-d H:i:s') %}  {# On crée une variable pour la date actuelle avec heure au format 'Y-m-d H:i:s' #}
-
-            {% if appointments is not empty %}
-                <div class="appointments_container">
-                    <h3>Rendez-vous à venir:</h3>
-                    <table class="appointments_table">
-                        <thead>
-                            <tr>
-                                <th>Date de début</th>
-                                <th>Date de fin</th>
-                                <th>Annulation</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for appointment in appointments %}
-                                {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
-                                {% if appointmentDate >= now %}
-                                    <tr id="appointment-{{ appointment.id }}">
-                                        <td>{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
-                                        <td>{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
-                                        <td>
-                                            <a href="#" class="cancel_appointment" data-id="{{ appointment.id }}">
-                                                <img src="{{ asset('/img/annuler.png') }}" height="18" alt="icône d'annulation"/>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-            
-                    <h3>Rendez-vous passés:</h3>
-                    <table class="appointments_table">
-                        <thead>
-                            <tr>
-                                <th>Date de début</th>
-                                <th>Date de fin</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for appointment in appointments %}
-                                {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
-                                {% if appointmentDate < now %}
-                                    <tr id="appointment-{{ appointment.id }}">
-                                        <td>{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
-                                        <td>{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endif %}
         </section>
-
         {# Boutton de modification et suppression #}
         <div id="user_action_buttons">
             <a class="show_modal_edit_data full_button_black">Modifier mes informations</a>
@@ -105,6 +49,108 @@
             {{ form_end(form) }}
             <button class="closeModal">X</button>
         </dialog>
+
+        <section id="user_table">
+            {% set now = "now"|date('Y-m-d H:i:s') %}  {# On crée une variable pour la date actuelle avec heure au format 'Y-m-d H:i:s' #}
+            
+            {# On vérifie si l'utilisateur a des rendez-vous #}
+            {% if appointments is not empty %}
+                {% set hasUpcomingAppointments = false %}
+                {% set hasPastAppointments = false %}
+        
+                {% for appointment in appointments %}
+                    {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
+                    {% if appointmentDate >= now %}
+                        {% set hasUpcomingAppointments = true %}
+                    {% else %}
+                        {% set hasPastAppointments = true %}
+                    {% endif %}
+                {% endfor %}
+        
+                <div class="appointments_container">
+                    {% if hasUpcomingAppointments %}
+                        <h3>Rendez-vous à venir:</h3>
+                        <table class="appointments_table">
+                            <thead>
+                                <tr>
+                                    <th>Date de début</th>
+                                    <th>Date de fin</th>
+                                    <th>Annulation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments %}
+                                    {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
+                                    {% if appointmentDate >= now %}
+                                        <tr id="appointment-{{ appointment.id }}">
+                                            <td>{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
+                                            <td>{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
+                                            <td>
+                                                <a href="#" class="cancel_appointment" data-id="{{ appointment.id }}">
+                                                    <i class="fa-solid fa-x"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+        
+                    {% if hasPastAppointments %}
+                        <h3>Rendez-vous passés:</h3>
+                        <table class="appointments_table">
+                            <thead>
+                                <tr>
+                                    <th>Date de début</th>
+                                    <th>Date de fin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments %}
+                                    {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
+                                    {% if appointmentDate < now %}
+                                        <tr id="appointment-{{ appointment.id }}">
+                                            <td>{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
+                                            <td>{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if quotes is not empty %}
+                <h3>Devis:</h3>
+                <table class="appointments_table">
+                    <thead>
+                        <tr>
+                            <th>Référence</th>
+                            <th>Date</th>
+                            <th>Prix</th>
+                            <th>Télécharger</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for quote in quotes %}
+                            {% if quote.status == 1 %}
+                                <tr id="quote-{{ quote.id }}">
+                                    <td>{{ quote.reference }}</td>
+                                    <td>{{ quote.quoteDate|date('d/m/Y') }}</td>
+                                    <td>{{ quote.totalTTC }}</td>
+                                    <td>
+                                        <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" download><i class="fa-solid fa-download"></i></a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </section>
+
+
     </main>
 {% endblock %}
 

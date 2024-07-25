@@ -140,6 +140,9 @@ class Quote
 
     private array $services = [];
 
+    #[ORM\Column]
+    private ?bool $status = null;
+
     public function getServices(): array
     {
         return $this->services;
@@ -170,5 +173,17 @@ class Quote
             $totalPrice += $service->getServicePrice();
         }
         return $totalPrice;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): static
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }

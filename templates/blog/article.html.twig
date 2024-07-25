@@ -51,6 +51,19 @@
         </div>
         <hr class="separator">
         {#--------------------------------------- Section commentaires ----------------------------------------#}
+        {# Ajout d'un commentaire #}
+        {% if not app.user %}   
+            <a id="comment_join_btn" class="full_button_black" href="{{ path('app_register') }}">Inscrit toi et joins la conversation</a>
+        {% else %}
+            <span>Laisser un commentaire</span>
+            {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
+                {{ form_row(form.commentContent) }} 
+                <div class="error_msg" id="message_error"></div>
+            
+                {{ form_errors(form) }}
+                <button id="saved_comment" class="full_button_black" type="submit">Envoyer</button>
+            {{ form_end(form) }}
+        {% endif %}
         {# Compteur de commentaires #}
         <span id="comment_title" class="stickers_pink" data-count="{{article.comments|length}}">
             {{article.comments|length}}
@@ -88,19 +101,7 @@
                 </div>
             {% endfor %}
         </section>
-        {# Ajout d'un commentaire #}
-        {% if not app.user %}   
-            <a id="comment_join_btn" class="full_button_black" href="{{ path('app_register') }}">Inscrit toi et joins la conversation</a>
-        {% else %}
-            <span>Laisser un commentaire</span>
-            {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
-                {{ form_row(form.commentContent) }} 
-                <div class="error_msg" id="message_error"></div>
 
-                {{ form_errors(form) }}
-                <button id="saved_comment" class="full_button_black" type="submit">Envoyer</button>
-            {{ form_end(form) }}
-        {% endif %}
     </article>
 
     <hr class="separator">

@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Quote;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Quote>
@@ -30,6 +31,22 @@ class QuoteRepository extends ServiceEntityRepository
     //            ->getResult()
     //        ;
     //    }
+
+    //    /**
+    //     * @return Quote[] Returns an array of Quotes objects
+    //     */
+    // Requête pour récupérer les RDV user
+    public function findByUser(User $user): array
+    {
+        return $this->createQueryBuilder('q')
+            ->innerJoin('q.appointments', 'a')
+            ->andWhere('a.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('q.quoteDate', 'DESC') // Trié par date de début
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     //    public function findOneBySomeField($value): ?Quote
     //    {

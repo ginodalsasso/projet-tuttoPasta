@@ -322,6 +322,7 @@ class HomeController extends AbstractController
         $quote->setCustomerName($appointment->getName());
         $quote->setCustomerFirstName($appointment->getFirstName());
         $quote->setCustomerEmail($appointment->getEmail());
+        $quote->setStatus(0);
         // Associe le rendez-vous au devis
         $quote->setAppointments($appointment);
 
@@ -419,6 +420,9 @@ class HomeController extends AbstractController
             // Recalculer le total
             $totalPrice = $quote->calculateTotal($appointment->getServices());
             $quote->setTotalTTC($totalPrice);
+
+            // Transmorme le status du devis afin de l'afficher dans le profil user
+            $quote->setStatus(1);
     
             $entityManager->persist($appointment);
             $entityManager->persist($quote);
@@ -434,5 +438,30 @@ class HomeController extends AbstractController
         ]);
     }
 
-
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/admin/quote/{id}/delete', name: 'app_delete_quote', methods: ['DELETE'], requirements: ['id' => '\d+'])]
+    public function deleteQuote(EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
+    {
+        // Récupère l'utilisateur actuellement connecté
+        $user = $security->getUser();
+    
+        // Vérifie si l'utilisateur est valide
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+    
+        // Récupère le devis
+        $quote = $entityManager->getRepository(Quote::class)->find($id);
+    
+        // Vérifie si l'utilisateur est autorisé à le supprimer
+        if (!$quote || !($this->isGranted('ROLE_ADMIN'))) {
+            return new JsonResponse(['success' => false, 'message' => 'Rendez-vous non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
+        }
+    
+        // Supprime le devis de la base de données
+        $entityManager->remove($quote);
+        $entityManager->flush();
+    
+        return new JsonResponse(['success' => true]);
+    }
 }

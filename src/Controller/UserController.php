@@ -2,17 +2,18 @@
 
 namespace App\Controller;
 
-use App\Domain\AntiSpam\ChallengeInterface;
 use App\Entity\User;
 use App\Form\UserFormType;
 use App\Form\EditPasswordType;
 use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
+use App\Repository\QuoteRepository;
 use Symfony\Component\Mime\Address;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
+use App\Domain\AntiSpam\ChallengeInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -150,7 +151,7 @@ class UserController extends AbstractController
 // ---------------------------------Affichage profil utilisateur--------------------------------- //
     #[Route('/profil', name: 'app_profil', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
-    public function profil(Security $security, AppointmentRepository $appointmentRepository): Response
+    public function profil(Security $security, AppointmentRepository $appointmentRepository, QuoteRepository $quoteRepository): Response
     {
         $user = $security->getUser();
 
@@ -165,12 +166,14 @@ class UserController extends AbstractController
         $passwordForm = $this->createForm(EditPasswordType::class, $user);
 
         $appointments = $appointmentRepository->findByUser($user);
+        $quotes = $quoteRepository->findByUser($user);
 
         return $this->render('user/profil.html.twig', [
             'form' => $form->createView(),
             'passwordForm' => $passwordForm->createView(),
             'user' => $user,
             'appointments' => $appointments,
+            'quotes' => $quotes,
         ]);
     }
 

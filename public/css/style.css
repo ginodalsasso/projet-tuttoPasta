@@ -291,17 +291,22 @@ h3 {
 }
 
 /*=============== PROFIL ===============*/
-#user_content {
+#user_content,
+#user_table {
     border: 1px solid var(--black-color);
     padding: 40px;
+}
+
+#user_content {
     display: grid;
     gap: 20px;
 }
 
+
 #user_action_buttons {
     display: flex;
     justify-content: space-evenly;
-    margin-top: 50px;    
+    margin: 50px 0;    
     flex-wrap: wrap;
 }
 
@@ -330,7 +335,7 @@ h3 {
     background-color: #f2f2f2;
 }
 
-.appointments_table .cancel_appointment img {
+.appointments_table a i {
     cursor: pointer;
     transition: transform 0.2s;
 }

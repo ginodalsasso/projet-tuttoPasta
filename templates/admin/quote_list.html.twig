@@ -13,7 +13,7 @@
                     <tr>
                         <th>Référence</th>
                         <th>Nom</th>
-                        <th>Prenom</th>
+                        <th>Prénom</th>
                         <th>Email</th>
                         <th>Actions</th>
                     </tr>
@@ -28,6 +28,9 @@
                             <td>
                                 <a href="{{ path('quote_pdf', { 'id': quote.id }) }}"><i class="fa-solid fa-eye"></i></a>
                                 <a href="{{ path('quote_edit', { 'id': quote.id }) }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="#" class="delete_quote" data-id="{{ quote.id }}">
+                                    <i class="fa-solid fa-x"></i>
+                                </a>
                             </td>
                         </tr>
                     {% endfor %}

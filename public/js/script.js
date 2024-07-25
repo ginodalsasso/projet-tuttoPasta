@@ -1,3 +1,5 @@
+var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
 
 function validateEmail(email) {
     const emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
@@ -62,5 +64,39 @@ $(document).ready(function() {
         lastScrollTop = scrollTop;
     });
 
+        // Annulation d'un RDV sur la vue profil
+        $(document).on('click', '.delete_quote', function(e) {
+            e.preventDefault();
+            var quoteId = $(this).data('id');
+            
+            if (confirm("Êtes-vous sûr de vouloir supprimer ce devis ?")) {
+                deleteQuote(quoteId, csrfToken);
+            }
+        });
 
+    //___________________________________Suppression devis_______________________________________
+    function deleteQuote(quoteId, csrfToken) {
+        var url = `/admin/quote/${quoteId}/delete`;
+        
+        $.ajax({
+            url: url,
+            method: 'DELETE', 
+            headers: {
+                'X-CSRF-TOKEN': csrfToken  // Ajout du token CSRF dans les headers
+            },
+            success: function(data) {
+                if (data.success) {
+                    // Supprimer le devis
+                    $('#quote-' + quoteId).remove();
+                } else {
+                    alert(data.message || "Erreur lors de la suppression du devis. Veuillez réessayer.");
+                    console.log(data);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Erreur lors de la suppression du devis :", textStatus, errorThrown);
+                alert("Une erreur est survenue lors de la suppression du devis. Veuillez vérifier votre connexion et réessayer.");
+            }
+        });
+}
 });
