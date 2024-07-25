@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: DayOffRepository::class)]
 class DayOff
 {
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -16,6 +17,9 @@ class DayOff
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dayOff = null;
+
+    
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 
     public function getId(): ?int
     {

@@ -2,15 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\ServiceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ServiceRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 class Service
 {
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -23,6 +25,7 @@ class Service
     private ?string $serviceContent = null;
 
     #[ORM\Column(nullable: true)]
+    #[PositiveOrZero(message: "Le prix du service ne peut pas être négatif.")]
     private ?float $servicePrice = null;
 
     #[ORM\ManyToOne(inversedBy: 'services')]
@@ -34,11 +37,14 @@ class Service
     #[ORM\ManyToMany(targetEntity: Appointment::class, mappedBy: 'services')]
     private Collection $appointments;
 
+    // ---------------------------------CONSCTRUCT--------------------------------- //
+
     public function __construct()
     {
         $this->appointments = new ArrayCollection();
     }
 
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
     public function getId(): ?int
     {
         return $this->id;

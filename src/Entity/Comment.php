@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert; //use Assert pour les con
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
 {
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -37,12 +38,18 @@ class Comment
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?User $user = null;
 
+    
+    // ---------------------------------CONSTRUCT--------------------------------- //
+
+
     public function __construct()
     {
         //initialise la date et l'heure du commentaire lors de la création de l'objet
         $timezone = new \DateTimeZone('Europe/Paris');
         $this->commentDate = new \DateTime('now', $timezone);
     }
+
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 
     public function getId(): ?int
     {

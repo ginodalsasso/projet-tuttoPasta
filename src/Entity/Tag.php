@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 class Tag
 {
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -24,10 +25,18 @@ class Tag
     #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'tags')]
     private Collection $articles;
 
+
+    // ---------------------------------CONSTRUCT--------------------------------- //
+
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
     }
+
+    
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
+
 
     public function getId(): ?int
     {

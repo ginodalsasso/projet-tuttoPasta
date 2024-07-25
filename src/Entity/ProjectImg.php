@@ -2,18 +2,26 @@
 
 namespace App\Entity;
 
-use App\Repository\ProjectImgRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProjectImgRepository;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: ProjectImgRepository::class)]
 class ProjectImg
 {
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[NotBlank(message: "L'image ne peut pas être vide.")]
+    #[File(
+        mimeTypes: ["image/webp", "image/png", "image/jpeg", "image/jpg"],
+        mimeTypesMessage: "Veuillez télécharger une image au format valide (WebP, PNG, JPG, JPEG)."
+    )]
     private ?string $image = null;
 
     #[ORM\Column(length: 255)]
@@ -21,6 +29,8 @@ class ProjectImg
 
     #[ORM\ManyToOne(inversedBy: 'images')]
     private ?Project $project = null;
+    
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 
     public function getId(): ?int
     {

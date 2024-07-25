@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
 {
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -41,12 +42,19 @@ class Category
     #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'category')]
     private Collection $services;
 
+    
+    // ---------------------------------CONSTRUCT--------------------------------- //
+
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
         $this->articles = new ArrayCollection();
         $this->services = new ArrayCollection();
     }
+
+
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 
     // Slugifie mon titre pour une URL propre et pour le SEO
     public function  getSlug(): string

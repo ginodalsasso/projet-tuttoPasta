@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
 {
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -44,11 +45,17 @@ class Project
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $projectTitle = null;
 
+    
+    // ---------------------------------CONSTRUCT--------------------------------- //
+
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->categories = new ArrayCollection();
     }
+
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 
 
     public function getId(): ?int

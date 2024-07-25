@@ -7,7 +7,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AppointmentRepository;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Mapping\UniqueConstraint;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -18,21 +17,43 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class Appointment
 {
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le prénom ne peut pas être vide.")]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: "Le prénom doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le prénom ne peut pas contenir plus de {{ limit }} caractères."
+    )]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le nom ne peut pas être vide.")]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: "Le nom doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Le nom ne peut pas contenir plus de {{ limit }} caractères."
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "L'e-mail ne peut pas être vide.")]
+    #[Assert\Email(message: "L'e-mail '{{ value }}' n'est pas un e-mail valide.")]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "Le message ne peut pas être vide.")]
+    #[Assert\Length(
+        min: 5,
+        minMessage: "Le message doit contenir au moins {{ limit }} caractères."
+    )]
     private ?string $message = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -48,6 +69,10 @@ class Appointment
         ]
     )]
     #[Assert\NotBlank(message: 'Veuillez sélectionner une date de début')]
+    #[Assert\GreaterThanOrEqual(
+        "today",
+        message: "Veuillez sélectionner une date dans le présent !"
+    )]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -71,6 +96,8 @@ class Appointment
     #[ORM\OneToOne(mappedBy: 'appointments', cascade: ['persist', 'remove'])]
     private ?Quote $quote = null;
 
+    
+    // ---------------------------------CONSTRUCT--------------------------------- //
 
 
     public function __construct()
@@ -81,6 +108,10 @@ class Appointment
         $timezone = new \DateTimeZone('Europe/Paris');
         $this->createdAt = new \DateTime('now', $timezone);
     }
+
+
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
+
 
     public function getId(): ?int
     {

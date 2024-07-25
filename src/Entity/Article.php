@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -49,12 +50,20 @@ class Article
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'articles')]
     private Collection $tags;
 
+
+    // ---------------------------------CONSTRUCT--------------------------------- //
+
+    
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
+
+
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
+
 
     public function getId(): ?int
     {

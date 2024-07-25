@@ -7,6 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -16,6 +19,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[UniqueEntity(fields: ['email'], message: 'Cet e-mail est déjà renseigné dans nos bases de données')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -34,6 +39,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[NotBlank(message: "Veuillez entrer un mot de passe !")]
+    #[Length(
+        min: 13,
+        max: 256,
+        minMessage: "Votre mot de passe doit contenir au moins {{ limit }} caractères.",
+        maxMessage: "Votre mot de passe ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Regex(
+        pattern: '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{13,}$/',
+        message: "Votre mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre, un caractère spécial et au moins 13 caractères."
+    )]
     private ?string $password = null;
 
     #[ORM\Column]
@@ -57,6 +73,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'user')]
     private Collection $appointments;
 
+    
+    // ---------------------------------CONSTRUCT--------------------------------- //
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -66,6 +85,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->accountDate = new \DateTime('now', $timezone);
         $this->appointments = new ArrayCollection();
     }
+
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 
     public function getId(): ?int
     {

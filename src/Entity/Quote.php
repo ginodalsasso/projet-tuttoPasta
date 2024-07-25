@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 #[ORM\Entity(repositoryClass: QuoteRepository::class)]
 class Quote
 {
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -35,8 +36,14 @@ class Quote
 
     #[ORM\Column(length: 255)]
     private ?string $customerFirstName = null;
+
     #[ORM\Column(length: 255)]
     private ?string $pdfContent = null;
+
+    #[ORM\Column]
+    private ?bool $status = null;
+
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 
     public function getId(): ?int
     {
@@ -140,12 +147,22 @@ class Quote
 
     private array $services = [];
 
-    #[ORM\Column]
-    private ?bool $status = null;
 
     public function getServices(): array
     {
         return $this->services;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): static
+    {
+        $this->status = $status;
+
+        return $this;
     }
 
     public function addService(Service $service): self
@@ -175,15 +192,5 @@ class Quote
         return $totalPrice;
     }
 
-    public function isStatus(): ?bool
-    {
-        return $this->status;
-    }
 
-    public function setStatus(bool $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
 }

@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AdministrationRepository::class)]
 class Administration
 {
+
+    // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -22,6 +24,10 @@ class Administration
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $sectionLocate = null;
+
+
+    // ---------------------------------GETTERS AND SETTERS--------------------------------- //
+
 
     public function getId(): ?int
     {
