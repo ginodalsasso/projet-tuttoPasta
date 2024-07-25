@@ -275,12 +275,12 @@ class HomeController extends AbstractController
     // ---------------------------------Formulaire d'Edition du devis PDF--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/edit/{id}', name: 'quote_edit')]
-    public function editQuote(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    public function editQuote(int $id, Request $request, EntityManagerInterface $entityManager, HtmlSanitizerInterface $htmlSanitizer): Response
     {
         // Récupérer le devis
         $quote = $entityManager->getRepository(Quote::class)->find($id);
         // Récupérer l'appointment lié
-        $appointment = $quote->getAppointments();
+        $appointment = $quote ? $quote->getAppointments() : null;
     
         if (!$quote) {
             throw $this->createNotFoundException('Ce devis n\'existe pas');
@@ -291,25 +291,36 @@ class HomeController extends AbstractController
     
         // Créer le formulaire d'édition du devis
         $form = $this->createForm(QuoteType::class, $quote);
-    
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             // Sanitize et valider les champs du formulaire
-            $reference = $this->htmlSanitizer->sanitize($form->get('reference')->getData());
-            $clientLastName = $this->htmlSanitizer->sanitize($form->get('customerName')->getData());
-            $clientFirstName = $this->htmlSanitizer->sanitize($form->get('customerFirstName')->getData());
-            $email = $this->htmlSanitizer->sanitize($form->get('customerEmail')->getData());
+            $reference = $htmlSanitizer->sanitize($form->get('reference')->getData());
+            $clientLastName = $htmlSanitizer->sanitize($form->get('customerName')->getData());
+            $clientFirstName = $htmlSanitizer->sanitize($form->get('customerFirstName')->getData());
+            $email = $form->get('customerEmail')->getData();
             $services = $form->get('services')->getData();
-            $newServiceName = $this->htmlSanitizer->sanitize($form->get('newService')->getData());
-            $newServicePrice = $form->get('newServicePrice')->getData();
-            
-            // Vérifier si la catégorie de nouveau service est définie et la désinfecter si nécessaire
+    
+            // Vérifier si un nouveau service est défini et le sanitize si nécessaire
             $newServiceCategory = $form->get('newServiceCategory')->getData();
-            if ($newServiceCategory !== null) {
-                $newServiceCategory = $this->htmlSanitizer->sanitize($newServiceCategory);
+            $newServiceName = $form->get('newService')->getData();
+            $newServicePrice = $form->get('newServicePrice')->getData();
+    
+            if ($newServiceName !== null) {
+                $newServiceName = $htmlSanitizer->sanitize($newServiceName);
             }
-            die($email);
+            if ($newServicePrice !== null) {
+                // Valider que le prix est un nombre positif
+                if (!is_numeric($newServicePrice) || $newServicePrice <= 0) {
+                    $this->addFlash('error', 'Le prix du service doit être un nombre positif.');
+                    return $this->render('admin/edit_quote.html.twig', [
+                        'quote' => $quote,
+                        'form' => $form->createView(),
+                    ]);
+                }
+                $newServicePrice = $htmlSanitizer->sanitize($newServicePrice);
+            }
+    
             // Valider l'email
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $this->addFlash('error', 'Adresse email invalide.');
@@ -318,27 +329,18 @@ class HomeController extends AbstractController
                     'form' => $form->createView(),
                 ]);
             }
-
+    
             // Vérifier si un nouveau service a été ajouté
             if ($newServiceName && $newServicePrice) {
-                // Valider les entrées pour le nouveau service
-                if (!is_numeric($newServicePrice) || $newServicePrice <= 0) {
-                    $this->addFlash('error', 'Le prix du service doit être un nombre positif.');
-                    return $this->render('admin/edit_quote.html.twig', [
-                        'quote' => $quote,
-                        'form' => $form->createView(),
-                    ]);
-                }
-
                 // Créer et sauvegarder le nouveau service
                 $newService = new Service();
                 $newService->setServiceName($newServiceName);
                 $newService->setServicePrice($newServicePrice);
                 $newService->setCategory($newServiceCategory);
-
+    
                 $entityManager->persist($newService);
                 $entityManager->flush();
-
+    
                 // Ajouter le nouveau service aux services sélectionnés
                 $services[] = $newService;
             }
@@ -356,7 +358,7 @@ class HomeController extends AbstractController
             // Recalculer le total
             $totalPrice = $quote->calculateTotal($appointment->getServices());
             $quote->setTotalTTC($totalPrice);
-
+    
             // Transformer le status du devis afin de l'afficher dans le profil user
             $quote->setStatus(1);
     

@@ -12,6 +12,7 @@ use App\Repository\UserRepository;
 use Symfony\Component\Mime\Address;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AppointmentRepository;
 use App\Domain\AntiSpam\ChallengeInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -232,7 +233,7 @@ class UserController extends AbstractController
 // --------------------------------- Suppression d'un compte utilisateur--------------------------------- //
     #[Route('/delete_account', name: 'app_delete_account')]
     #[IsGranted('ROLE_USER')]
-    public function deleteAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository
+    public function deleteAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository, AppointmentRepository $appointmentRepository
     ): RedirectResponse
     {
         // Récupère l'utilisateur actuellement connecté
@@ -249,6 +250,13 @@ class UserController extends AbstractController
             $comment->setUser(null);
             $comment->setUsername('Utilisateur supprimé');
             $entityManager->persist($comment);
+        }
+
+        // Récupérer et rendre l'user associé au RDV null 
+        $appointments = $appointmentRepository->findBy(['user' => $user]);
+        foreach ($appointments as $appointment) {
+            $appointment->setUser(null);
+            $entityManager->persist($appointment);
         }
 
         // Supprime l'utilisateur de la base de données
