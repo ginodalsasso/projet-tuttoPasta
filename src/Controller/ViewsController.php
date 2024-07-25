@@ -5,15 +5,23 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Project;
 use App\Form\CommentType;
+use App\Form\UserFormType;
+use App\Form\EditPasswordType;
+use App\Repository\QuoteRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\ProjectImgRepository;
+use App\Repository\AppointmentRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 class ViewsController extends AbstractController
 {
@@ -45,6 +53,36 @@ class ViewsController extends AbstractController
             'projectImgs' => $projectImgs,
             'services' => $services,
 
+        ]);
+    }
+
+    
+    // ---------------------------------Affichage profil utilisateur--------------------------------- //
+    #[Route('/profil', name: 'app_profil', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function profil(Security $security, AppointmentRepository $appointmentRepository, QuoteRepository $quoteRepository): Response
+    {
+        $user = $security->getUser();
+
+        if (!$user instanceof PasswordAuthenticatedUserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+
+        // Formulaire pour les informations utilisateur
+        $form = $this->createForm(UserFormType::class, $user);
+
+        // Formulaire pour le changement de mot de passe
+        $passwordForm = $this->createForm(EditPasswordType::class, $user);
+
+        $appointments = $appointmentRepository->findByUser($user);
+        $quotes = $quoteRepository->findByUser($user);
+
+        return $this->render('user/profil.html.twig', [
+            'form' => $form->createView(),
+            'passwordForm' => $passwordForm->createView(),
+            'user' => $user,
+            'appointments' => $appointments,
+            'quotes' => $quotes,
         ]);
     }
 

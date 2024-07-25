@@ -39,17 +39,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[NotBlank(message: "Veuillez entrer un mot de passe !")]
-    #[Length(
-        min: 13,
-        max: 256,
-        minMessage: "Votre mot de passe doit contenir au moins {{ limit }} caractères.",
-        maxMessage: "Votre mot de passe ne peut pas dépasser {{ limit }} caractères."
-    )]
-    #[Regex(
-        pattern: '/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{13,}$/',
-        message: "Votre mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre, un caractère spécial et au moins 13 caractères."
-    )]
     private ?string $password = null;
 
     #[ORM\Column]

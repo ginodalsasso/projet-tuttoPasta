@@ -24,12 +24,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 
 class HomeController extends AbstractController
 {
+
+    private $htmlSanitizer;
+
+    public function __construct(HtmlSanitizerInterface  $htmlSanitizer) {
+        $this->htmlSanitizer = $htmlSanitizer;
+    }
 //________________________________________________________________APPOINTMENT______________________________________________________________
 //____________________________________________________________________________________________________________________________
 //____________________________________________________________________________________________________________________
+
     // ---------------------------------Vue RDV et Gestion de RDV--------------------------------- //
     // Gère le processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
@@ -52,6 +60,17 @@ class HomeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Récupère les données du formulaire
             $appointment = $form->getData();
+
+            // Sanitize les champs du formulaire
+            $appointment->setName($this->htmlSanitizer->sanitize($appointment->getName()));
+            $appointment->setFirstName($this->htmlSanitizer->sanitize($appointment->getFirstName()));
+            $appointment->setMessage($this->htmlSanitizer->sanitize($appointment->getMessage()));
+            // Vérifie si l'adresse email est valide
+            $emailAddress = $appointment->getEmail();
+            if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
+                $this->addFlash('error', 'Adresse email invalide.');
+                return $this->redirectToRoute('app_appointment');
+            }
             // Récupère le créneau horaire sélectionné depuis la requête
             $selectedSlot = $request->request->get('selectedSlot');
 
@@ -88,11 +107,7 @@ class HomeController extends AbstractController
                     $entityManager->persist($quote);
                     $entityManager->flush();
                     
-                    $emailAddress = $appointment->getEmail();
-                    if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
-                        $this->addFlash('error', 'Adresse email invalide.');
-                        return $this->redirectToRoute('app_appointment');
-                    }
+
 
                     $this->sendConfirmationEmail($mailer, $emailAddress, $startDate);
 
@@ -112,6 +127,7 @@ class HomeController extends AbstractController
             'title' => 'Prise de rendez-vous'
         ]);
     }
+
 
     // Gestion de l'envoi de confiration de prise de RDV
     private function sendConfirmationEmail(MailerInterface $mailer, string $emailAddress, \DateTime $startDate): void
@@ -260,7 +276,7 @@ class HomeController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/edit/{id}', name: 'quote_edit')]
     public function editQuote(int $id, Request $request, EntityManagerInterface $entityManager): Response
-    {   
+    {
         // Récupérer le devis
         $quote = $entityManager->getRepository(Quote::class)->find($id);
         // Récupérer l'appointment lié
@@ -279,14 +295,41 @@ class HomeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Récupérer les services sélectionnés
-            $selectedServices = $form->get('services')->getData();
-            // Vérifier si un nouveau service a été ajouté
-            $newServiceName = $form->get('newService')->getData();
+            // Sanitize et valider les champs du formulaire
+            $reference = $this->htmlSanitizer->sanitize($form->get('reference')->getData());
+            $clientLastName = $this->htmlSanitizer->sanitize($form->get('customerName')->getData());
+            $clientFirstName = $this->htmlSanitizer->sanitize($form->get('customerFirstName')->getData());
+            $email = $this->htmlSanitizer->sanitize($form->get('customerEmail')->getData());
+            $services = $form->get('services')->getData();
+            $newServiceName = $this->htmlSanitizer->sanitize($form->get('newService')->getData());
             $newServicePrice = $form->get('newServicePrice')->getData();
+            
+            // Vérifier si la catégorie de nouveau service est définie et la désinfecter si nécessaire
             $newServiceCategory = $form->get('newServiceCategory')->getData();
-            // Vérifier si le nom et le prix du nouveau service sont définis
+            if ($newServiceCategory !== null) {
+                $newServiceCategory = $this->htmlSanitizer->sanitize($newServiceCategory);
+            }
+            die($email);
+            // Valider l'email
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $this->addFlash('error', 'Adresse email invalide.');
+                return $this->render('admin/edit_quote.html.twig', [
+                    'quote' => $quote,
+                    'form' => $form->createView(),
+                ]);
+            }
+
+            // Vérifier si un nouveau service a été ajouté
             if ($newServiceName && $newServicePrice) {
+                // Valider les entrées pour le nouveau service
+                if (!is_numeric($newServicePrice) || $newServicePrice <= 0) {
+                    $this->addFlash('error', 'Le prix du service doit être un nombre positif.');
+                    return $this->render('admin/edit_quote.html.twig', [
+                        'quote' => $quote,
+                        'form' => $form->createView(),
+                    ]);
+                }
+
                 // Créer et sauvegarder le nouveau service
                 $newService = new Service();
                 $newService->setServiceName($newServiceName);
@@ -297,7 +340,7 @@ class HomeController extends AbstractController
                 $entityManager->flush();
 
                 // Ajouter le nouveau service aux services sélectionnés
-                $selectedServices[] = $newService;
+                $services[] = $newService;
             }
     
             // Mettre à jour les services de l'appointment lié
@@ -306,8 +349,7 @@ class HomeController extends AbstractController
                 $appointment->removeService($service);
             }
             // Ajouter les services sélectionnés
-            foreach ($selectedServices as $service) {
-                // Ajouter le ou les services à l'appointment
+            foreach ($services as $service) {
                 $appointment->addService($service);
             }
     
@@ -315,7 +357,7 @@ class HomeController extends AbstractController
             $totalPrice = $quote->calculateTotal($appointment->getServices());
             $quote->setTotalTTC($totalPrice);
 
-            // Transmorme le status du devis afin de l'afficher dans le profil user
+            // Transformer le status du devis afin de l'afficher dans le profil user
             $quote->setStatus(1);
     
             $entityManager->persist($appointment);

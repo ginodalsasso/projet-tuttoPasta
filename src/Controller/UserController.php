@@ -9,11 +9,9 @@ use App\Form\EditPasswordType;
 use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
-use App\Repository\QuoteRepository;
 use Symfony\Component\Mime\Address;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\AppointmentRepository;
 use App\Domain\AntiSpam\ChallengeInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -25,20 +23,24 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
 class UserController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
-    {
+
+    private $htmlSanitizer;
+
+    public function __construct(HtmlSanitizerInterface $htmlSanitizer, private EmailVerifier $emailVerifier) {
+        $this->htmlSanitizer = $htmlSanitizer;
     }
+
 
 //_____________________________________________________________REGISTER/LOGIN/LOGOUT_____________________________________________________________
 //____________________________________________________________________________________________________________________________
@@ -52,7 +54,19 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
+            // Sanitize les entrées utilisateur
+            $user->setUsername($this->htmlSanitizer->sanitize($user->getUsername()));
+
+            // Valider l'email
+            $email = $user->getEmail();
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $this->addFlash('error', 'Adresse email invalide.');
+                return $this->render('user/register.html.twig', [
+                    'registrationForm' => $form->createView(),
+                    'challenge' => $challenge->generateKey()
+                ]);
+            }
+            // Hashage du mot de passe
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -65,7 +79,7 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
+            // Envoi d'un email de confirmation
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
@@ -73,8 +87,6 @@ class UserController extends AbstractController
                     ->subject('Merci de bien confirmer votre compte afin de pouvoir vous connecter.')
                     ->htmlTemplate('emails/confirmation_email.html.twig')
             );
-
-            // do anything else you need here, like send an email
 
             return  $this->redirectToRoute('app_login');
             $this->addFlash('success', 'Un email de confirmation vous a été envoyé, pour confirmer votre compte');
@@ -147,37 +159,6 @@ class UserController extends AbstractController
         throw new \LogicException('Cette méthode peut être vide - elle sera interceptée par la clé de déconnexion de votre pare-feu.');
     }
 
-//________________________________________________________________AFFICHAGE________________________________________________________________
-//____________________________________________________________________________________________________________________________
-//____________________________________________________________________________________________________________________
-// ---------------------------------Affichage profil utilisateur--------------------------------- //
-    #[Route('/profil', name: 'app_profil', methods: ['GET'])]
-    #[IsGranted('ROLE_USER')]
-    public function profil(Security $security, AppointmentRepository $appointmentRepository, QuoteRepository $quoteRepository): Response
-    {
-        $user = $security->getUser();
-
-        if (!$user instanceof PasswordAuthenticatedUserInterface) {
-            throw new AccessDeniedException('Accès refusé');
-        }
-
-        // Formulaire pour les informations utilisateur
-        $form = $this->createForm(UserFormType::class, $user);
-
-        // Formulaire pour le changement de mot de passe
-        $passwordForm = $this->createForm(EditPasswordType::class, $user);
-
-        $appointments = $appointmentRepository->findByUser($user);
-        $quotes = $quoteRepository->findByUser($user);
-
-        return $this->render('user/profil.html.twig', [
-            'form' => $form->createView(),
-            'passwordForm' => $passwordForm->createView(),
-            'user' => $user,
-            'appointments' => $appointments,
-            'quotes' => $quotes,
-        ]);
-    }
 
 //________________________________________________________________CRUD________________________________________________________________
 //____________________________________________________________________________________________________________________________
@@ -195,6 +176,15 @@ class UserController extends AbstractController
 
         // Gestion du formulaire des informations utilisateur
         if ($form->isSubmitted() && $form->isValid()) {
+            // Désinfecter les champs du formulaire
+            $user->setUsername($this->htmlSanitizer->sanitize($user->getUsername()));
+
+            // Valider l'email
+            $email = $user->getEmail();
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $this->addFlash('error', 'Adresse email invalide.');
+                return $this->redirectToRoute('app_profil');
+            }
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -273,6 +263,7 @@ class UserController extends AbstractController
         // Redirige vers la page d'accueil après la suppression du compte
         return $this->redirectToRoute('app_home');
     }
+
 
     // ---------------------------------Annulation d'un rendez vous sur le profil utilisateur--------------------------------- //
     #[Route('/profil/appointment/{id}/delete', name: 'app_cancel_appointment', methods: ['DELETE'], requirements: ['id' => '\d+'])]
