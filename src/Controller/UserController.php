@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserFormType;
+use App\Entity\Appointment;
 use App\Form\EditPasswordType;
 use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
@@ -19,6 +20,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -270,6 +272,34 @@ class UserController extends AbstractController
 
         // Redirige vers la page d'accueil après la suppression du compte
         return $this->redirectToRoute('app_home');
+    }
+
+    // ---------------------------------Annulation d'un rendez vous sur le profil utilisateur--------------------------------- //
+    #[Route('/profil/appointment/{id}/delete', name: 'app_cancel_appointment', methods: ['DELETE'], requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_USER')]
+    public function cancelAppointment(EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
+    {
+        // Récupère l'utilisateur actuellement connecté
+        $user = $security->getUser();
+    
+        // Vérifie si l'utilisateur est valide
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+    
+        // Récupère le rendez-vous
+        $appointment = $entityManager->getRepository(Appointment::class)->find($id);
+    
+        // Vérifie si le rendez-vous existe et si l'utilisateur est autorisé à le supprimer
+        if (!$appointment || !($user === $appointment->getUser() || $this->isGranted('ROLE_ADMIN'))) {
+            return new JsonResponse(['success' => false, 'message' => 'Rendez-vous non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
+        }
+    
+        // Supprime le rendez-vous de la base de données
+        $entityManager->remove($appointment);
+        $entityManager->flush();
+    
+        return new JsonResponse(['success' => true]);
     }
         
 }

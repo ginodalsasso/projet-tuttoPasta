@@ -15,58 +15,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 class BlogController extends AbstractController
 {
-//______________________________________________________________AFFICHAGE______________________________________________________________
-//____________________________________________________________________________________________________________________________
-//____________________________________________________________________________________________________________________
-
-    // ---------------------------------Vue liste articles--------------------------------- //
-    #[Route('/blog', name: 'app_blog')]
-    public function listArticlesShow(ArticleRepository $articleRepository): Response
-    {
-        $articles = $articleRepository->findAll();
-
-        // Vérifie si les articles existent
-        if (!$articles) {
-            throw new NotFoundHttpException('Aucun article trouvé');;
-            return $this->redirectToRoute('app_blog');
-        }
-
-        return $this->render('blog/article_list.html.twig', [
-            'articles' => $articles,
-        ]);
-    }
-
-    // ---------------------------------Vue détail article--------------------------------- //
-    #[Route('blog/{slug}', name: 'app_article', requirements: ['slug' => '[a-z0-9\-]*'])]
-    public function articleShow(string $slug, ArticleRepository $articleRepository): Response
-    {
-        $article = $articleRepository->findOneBy(['slug' => $slug]);
-        $articles = $articleRepository->findAll();
-
-
-        if (!$article) {
-            throw new NotFoundHttpException('Aucun article trouvé');;
-            return $this->redirectToRoute('app_blog');
-        }
-        if ($article->getSlug() !== $slug) {
-            throw new NotFoundHttpException('Aucun article trouvé');;
-            return $this->redirectToRoute('app_blog');
-        }
-
-        $comment = new Comment();
-        $form = $this->createForm(CommentType::class, $comment);
-
-        return $this->render('blog/article.html.twig', [
-            'articles' => $articles,
-            'article' => $article,
-            'form' => $form->createView(),
-        ]);
-    }
 
 //________________________________________________________________CRUD________________________________________________________________
 //____________________________________________________________________________________________________________________________

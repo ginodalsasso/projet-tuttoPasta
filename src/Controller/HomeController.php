@@ -2,22 +2,15 @@
 
 namespace App\Controller;
 
-use Dompdf\Dompdf;
 use App\Entity\Quote;
-use App\Entity\Project;
 use App\Entity\Service;
 use App\Form\QuoteType;
-use App\Entity\Category;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
 use App\Services\PdfGenerator;
 use App\Repository\QuoteRepository;
 use Symfony\Component\Mime\Address;
 use App\Repository\DayOffRepository;
-use App\Repository\ProjectRepository;
-use App\Repository\ServiceRepository;
-use App\Repository\CategoryRepository;
-use App\Repository\ProjectImgRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -30,83 +23,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 class HomeController extends AbstractController
 {
-
-//_______________________________________________________________AFFICHAGE_______________________________________________________________
-//____________________________________________________________________________________________________________________________
-//____________________________________________________________________________________________________________________
-    // ---------------------------------Vue Home--------------------------------- //
-    #[Route('/home', name: 'app_home')]
-    public function homeShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, ServiceRepository $serviceRepository): Response
-    {
-        $projects = $projectRepository->findAll();
-        $projectImgs= $projectImgRepository->findAll();
-        $services= $serviceRepository->findAll();
-
-        return $this->render('home/index.html.twig', [
-            'projects' => $projects,
-            'projectImgs' => $projectImgs,
-            'services' => $services,
-
-        ]);
-    }
-    // ---------------------------------Vue liste projets--------------------------------- //
-    #[Route('/projects', name: 'app_projectList')]
-    public function listProjectsShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, CategoryRepository $categoryRepository): Response
-    {
-        $projects = $projectRepository->findAll();
-        $projectImgs= $projectImgRepository->findAll();
-        $categories= $categoryRepository->findAll();
-
-        // Vérifie si les projets et les images de projets existent
-        if (!$projects || !$projectImgs || !$categories) {
-            throw new NotFoundHttpException('Page non trouvée');        
-        }
-
-        return $this->render('projects/project_list.html.twig', [
-            'projects' => $projects,
-            'projectImgs' => $projectImgs,
-            'categories' => $categories,
-        ]);
-    }
-    
-    // ---------------------------------Vue détail projets--------------------------------- //
-    #[Route('/projects/{slug}', name: 'app_project', requirements: ['slug' => '[a-z0-9\-]*'])]
-    public function projectShow(?Project $project, string $slug): Response
-    { 
-        if (!$project) {
-            throw new NotFoundHttpException('Aucun projet trouvé');
-            return $this->redirectToRoute('app_home');
-        }
-
-        // Vérifie si le slug de l'objet project correspond au slug de l'URL
-        if ($project->getSlug() !== $slug) {
-            throw new NotFoundHttpException('Page non trouvée');   
-            return $this->redirectToRoute('app_home');
-        }
-
-        return $this->render('projects/project.html.twig', [
-            'project' => $project
-        ]);
-    }
-
-    // ---------------------------------Vue des Erreurs--------------------------------- //
-    #[Route('/error/404', name: 'app_error_404')]
-    public function showError404(): Response
-    {
-        return $this->render('errors/error404.html.twig');
-    }
-
-    #[Route('/error/500', name: 'app_error_500')]
-    public function showError500(): Response
-    {
-        return $this->render('errors/error500.html.twig');
-    }
-
 //________________________________________________________________APPOINTMENT______________________________________________________________
 //____________________________________________________________________________________________________________________________
 //____________________________________________________________________________________________________________________
@@ -246,33 +166,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-// ---------------------------------Annulation d'un rendez vous sur le profil utilisateur--------------------------------- //
-    #[Route('/profil/appointment/{id}/delete', name: 'app_cancel_appointment', methods: ['DELETE'], requirements: ['id' => '\d+'])]
-    #[IsGranted('ROLE_USER')]
-    public function cancelAppointment(EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
-    {
-        // Récupère l'utilisateur actuellement connecté
-        $user = $security->getUser();
-    
-        // Vérifie si l'utilisateur est valide
-        if (!$user instanceof UserInterface) {
-            throw new AccessDeniedException('Accès refusé');
-        }
-    
-        // Récupère le rendez-vous
-        $appointment = $entityManager->getRepository(Appointment::class)->find($id);
-    
-        // Vérifie si le rendez-vous existe et si l'utilisateur est autorisé à le supprimer
-        if (!$appointment || !($user === $appointment->getUser() || $this->isGranted('ROLE_ADMIN'))) {
-            return new JsonResponse(['success' => false, 'message' => 'Rendez-vous non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
-        }
-    
-        // Supprime le rendez-vous de la base de données
-        $entityManager->remove($appointment);
-        $entityManager->flush();
-    
-        return new JsonResponse(['success' => true]);
-    }
+
 
 //________________________________________________________________APPOINTMENT PDF_________________________________________________________
 //____________________________________________________________________________________________________________________________
