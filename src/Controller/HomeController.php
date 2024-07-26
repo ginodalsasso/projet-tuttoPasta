@@ -100,7 +100,8 @@ class HomeController extends AbstractController
                     $quote = $this->createQuote($appointment);
                     
                     // Génération et stockage du PDF
-                    $pdfLink  = $this->generateAndStorePdf($pdfGenerator, $quote);
+                    $reference = $quote->getReference();
+                    $pdfLink  = $this->generateAndStorePdf($pdfGenerator, $quote, $reference);
 
                     // Persiste le rendez-vous dans la base de données
                     $entityManager->persist($appointment);
@@ -227,12 +228,15 @@ class HomeController extends AbstractController
         }
         // Crée un nouveau devis
         $quote = new Quote();
-        $quote->setReference('DEVIS-' . uniqid());
+        $reference = 'DEVIS-' . uniqid();
+        $quote->setReference($reference);
         $quote->setQuoteDate(new \DateTime());
         $quote->setCustomerName($appointment->getName());
         $quote->setCustomerFirstName($appointment->getFirstName());
         $quote->setCustomerEmail($appointment->getEmail());
         $quote->setStatus(0);
+        $quote->setState(Quote::STATE_PENDING);
+
         // Associe le rendez-vous au devis
         $quote->setAppointments($appointment);
 
@@ -245,7 +249,7 @@ class HomeController extends AbstractController
 
 
     // ---------------------------------Génération et stockage du PDF--------------------------------- //
-    private function generateAndStorePdf(PdfGenerator $pdfGenerator, Quote $quote): string
+    private function generateAndStorePdf(PdfGenerator $pdfGenerator, Quote $quote, string $reference): string
     {
         $html = $this->renderView('admin/quote.html.twig', [
             'quote' => $quote,
@@ -257,7 +261,7 @@ class HomeController extends AbstractController
         // Définir le chemin de stockage du PDF
         $pdfDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/pdf/';
         // Générer un nom de fichier unique
-        $pdfFilename = 'DEVIS-' . uniqid() . '.pdf';
+        $pdfFilename = $reference . '.pdf';
         // Chemin complet du fichier PDF
         $pdfFilepath = $pdfDirectory . $pdfFilename;
     
@@ -361,6 +365,7 @@ class HomeController extends AbstractController
     
             // Transformer le status du devis afin de l'afficher dans le profil user
             $quote->setStatus(1);
+            $quote->setState(Quote::STATE_IN_PROGRESS);
     
             $entityManager->persist($appointment);
             $entityManager->persist($quote);
@@ -395,8 +400,13 @@ class HomeController extends AbstractController
         if (!$quote || !($this->isGranted('ROLE_ADMIN'))) {
             return new JsonResponse(['success' => false, 'message' => 'Rendez-vous non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
         }
-    
-        // Supprime le devis de la base de données
+
+        // Supprime le fichier PDF associé
+        $pdfPath = $this->getParameter('kernel.project_dir') . '/public' . $quote->getPdfContent();
+        if (file_exists($pdfPath)) {
+            unlink($pdfPath);
+        }
+            // Supprime le devis de la base de données
         $entityManager->remove($quote);
         $entityManager->flush();
     

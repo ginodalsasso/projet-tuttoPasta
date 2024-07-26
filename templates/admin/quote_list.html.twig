@@ -16,6 +16,7 @@
                         <th>Nom</th>
                         <th>Prénom</th>
                         <th>Email</th>
+                        <th>Etat</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -28,6 +29,7 @@
                             <td>{{ quote.customerName }}</td>
                             <td>{{ quote.customerfirstName }}</td>
                             <td>{{ quote.customerEmail }}</td>
+                            <td>{{ quote.state }}</td>
                             <td>
                                 <a href="{{ path('quote_pdf', { 'id': quote.id }) }}"><i class="fa-solid fa-eye"></i></a>
                                 <a href="{{ path('quote_edit', { 'id': quote.id }) }}"><i class="fa-solid fa-pen-to-square"></i></a>

@@ -43,6 +43,11 @@ class Quote
     #[ORM\Column]
     private ?bool $status = null;
 
+    // Constantes d'état du devis
+    public const STATE_PENDING = 'En attente';
+    public const STATE_IN_PROGRESS = 'En cours';
+    public const STATE_COMPLETED = 'Terminé';
+
     // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 
     public function getId(): ?int
@@ -147,6 +152,9 @@ class Quote
 
     private array $services = [];
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $state = null;
+
 
     public function getServices(): array
     {
@@ -190,6 +198,18 @@ class Quote
             $totalPrice += $service->getServicePrice();
         }
         return $totalPrice;
+    }
+
+    public function getState(): ?string
+    {
+        return $this->state;
+    }
+
+    public function setState(?string $state): static
+    {
+        $this->state = $state;
+
+        return $this;
     }
 
 
