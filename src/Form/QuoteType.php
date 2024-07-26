@@ -47,11 +47,16 @@ class QuoteType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Ajouter un nouveau service',
+                'label_attr' => ['id' => 'newService'],
+                'attr' => [
+                    'id' => 'newService',
+                ],
             ])
             ->add('newServicePrice', NumberType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Prix du nouveau service',
+                'label_attr' => ['id' => 'newServicePrice'],
                 'scale' => 2, // Assure que le champ accepte un nombre avec deux chiffres après la virgule.
                 'attr' => [
                     'step' => '0.01', 
@@ -64,6 +69,7 @@ class QuoteType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Catégorie du nouveau service',
+                'label_attr' => ['id' => 'newServiceCategory']
             ])
 
         ;

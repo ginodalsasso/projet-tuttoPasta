@@ -288,7 +288,7 @@ h3 {
     background: var(--image) top right;
 }
 
-/*=============== PROFIL ===============*/
+/*=============== PROFIL / LISTE DEVIS ===============*/
 #user_content,
 #user_table {
     border: 1px solid var(--black-color);
@@ -336,6 +336,19 @@ h3 {
 .appointments_table a i {
     cursor: pointer;
     transition: transform 0.2s;
+}
+
+#action_quote_buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+#action_quote_buttons i {
+    color: var(--black-color);
+}
+
+#action_quote_buttons i:hover {
+    transform: scale(1.2);
 }
 
 /*=============== MODAL ===============*/
@@ -416,6 +429,10 @@ h3 {
     color: var(--red-color);
 }
 
+#quote_services label::after,
+#newService::after,
+#newServicePrice::after,
+#newServiceCategory::after,
 #availableServices label::after,
 #available-rdv label::after {
     content: '';
@@ -453,7 +470,6 @@ h3 {
 .form_container textarea,
 #quote_services {
     width: 600px;
-    height: 40px;
     padding: 10px;
     font-size: 16px;
     margin-bottom: 1px;
