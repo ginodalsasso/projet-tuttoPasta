@@ -47,6 +47,7 @@ class Quote
     public const STATE_PENDING = 'En attente';
     public const STATE_IN_PROGRESS = 'En cours';
     public const STATE_COMPLETED = 'Terminé';
+    public const STATE_ARCHIVED = 'Archivé';
 
     // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 

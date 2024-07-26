@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Quote;
 use App\Form\UserFormType;
 use App\Entity\Appointment;
 use App\Form\EditPasswordType;
+use App\Services\PdfGenerator;
 use App\Security\EmailVerifier;
 use Symfony\Component\Mime\Email;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
+use App\Repository\QuoteRepository;
 use Symfony\Component\Mime\Address;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,15 +43,16 @@ class UserController extends AbstractController
 
     private $htmlSanitizer;
 
-    public function __construct(HtmlSanitizerInterface $htmlSanitizer, private EmailVerifier $emailVerifier) {
+    public function __construct(HtmlSanitizerInterface $htmlSanitizer, private EmailVerifier $emailVerifier)
+    {
         $this->htmlSanitizer = $htmlSanitizer;
     }
 
-#region REGISTER/LOGIN/LOGOUT
-//_____________________________________________________________REGISTER/LOGIN/LOGOUT_____________________________________________________________
-//____________________________________________________________________________________________________________________________
-//____________________________________________________________________________________________________________________
-// ---------------------------------Méthode d'inscription--------------------------------- //
+    #region REGISTER/LOGIN/LOGOUT
+    //_____________________________________________________________REGISTER/LOGIN/LOGOUT_____________________________________________________________
+    //____________________________________________________________________________________________________________________________
+    //____________________________________________________________________________________________________________________
+    // ---------------------------------Méthode d'inscription--------------------------------- //
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, ChallengeInterface $challenge): Response
     {
@@ -83,7 +87,9 @@ class UserController extends AbstractController
             $entityManager->flush();
 
             // Envoi d'un email de confirmation
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
                     ->to($user->getEmail())
@@ -100,9 +106,9 @@ class UserController extends AbstractController
             'challenge' => $challenge->generateKey()
         ]);
     }
-#endregion
+    #endregion
 
-// ---------------------------------Méthode de connexion--------------------------------- //
+    // ---------------------------------Méthode de connexion--------------------------------- //
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -129,11 +135,11 @@ class UserController extends AbstractController
         throw new \LogicException('Cette méthode peut être vide - elle sera interceptée par la clé de déconnexion de votre pare-feu.');
     }
 
-#region CRUD
-//________________________________________________________________CRUD________________________________________________________________
-//____________________________________________________________________________________________________________________________
-//____________________________________________________________________________________________________________________
-// ---------------------------------Edition infos utilisateur--------------------------------- //
+    #region CRUD
+    //________________________________________________________________CRUD________________________________________________________________
+    //____________________________________________________________________________________________________________________________
+    //____________________________________________________________________________________________________________________
+    // ---------------------------------Edition infos utilisateur--------------------------------- //
     #[Route('/profil/update-info', name: 'app_profil_update_info', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
     public function updateInfo(Request $request, Security $security, EntityManagerInterface $entityManager): Response
@@ -163,8 +169,8 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('app_profil');
     }
-    
-// ---------------------------------Edition password utilisateur--------------------------------- //
+
+    // ---------------------------------Edition password utilisateur--------------------------------- //
     #[Route('/profil/update-password', name: 'app_profil_update_password', methods: ['POST'])]
     #[IsGranted('ROLE_USER')]
     public function updatePassword(Request $request, Security $security, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
@@ -197,14 +203,12 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('app_profil');
     }
-    
 
-// --------------------------------- Suppression d'un compte utilisateur--------------------------------- //
+
+    // --------------------------------- Suppression d'un compte utilisateur--------------------------------- //
     #[Route('/delete_account', name: 'app_delete_account')]
     #[IsGranted('ROLE_USER')]
-    public function deleteAccount(EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository, AppointmentRepository $appointmentRepository, MailerInterface $mailer
-    ): RedirectResponse
-    {
+    public function deleteAccount( EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository, AppointmentRepository $appointmentRepository, MailerInterface $mailer, QuoteRepository $quoteRepository, PdfGenerator $pdfGenerator): RedirectResponse {
         // Récupère l'utilisateur actuellement connecté
         $user = $this->getUser();
 
@@ -213,7 +217,7 @@ class UserController extends AbstractController
             throw new AccessDeniedException('Accès refusé');
         }
 
-        // Récupérer et anonymiser les commentaires de l'utilisateur
+        // Récupére et anonymise les commentaires de l'utilisateur
         $comments = $commentRepository->findBy(['user' => $user]);
         foreach ($comments as $comment) {
             $comment->setUser(null);
@@ -221,9 +225,20 @@ class UserController extends AbstractController
             $entityManager->persist($comment);
         }
 
-        // Récupérer et rendre l'user associé au RDV null 
+        // Récupére et rends l'user associé au RDV null 
         $appointments = $appointmentRepository->findBy(['user' => $user]);
         foreach ($appointments as $appointment) {
+            // Récupére les devis associés aux rendez-vous
+            $quotes = $quoteRepository->findBy(['appointments' => $appointment]);
+            foreach ($quotes as $quote) {
+                // Génére et stocke le PDF dans les archives
+                $reference = $quote->getReference();
+                $this->generateAndArchivePdf($pdfGenerator, $quote, $reference);
+
+                // Marque le devis comme archivé
+                $quote->setState(Quote::STATE_ARCHIVED);
+                $entityManager->persist($quote);
+            }
             $appointment->setUser(null);
             $entityManager->persist($appointment);
         }
@@ -252,52 +267,65 @@ class UserController extends AbstractController
     {
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
-    
+
         // Vérifie si l'utilisateur est valide
         if (!$user instanceof UserInterface) {
             throw new AccessDeniedException('Accès refusé');
         }
-    
+
         // Récupère le rendez-vous
         $appointment = $entityManager->getRepository(Appointment::class)->find($id);
-    
+
         // Vérifie si le rendez-vous existe et si l'utilisateur est autorisé à le supprimer
         if (!$appointment || !($user === $appointment->getUser() || $this->isGranted('ROLE_ADMIN'))) {
             return new JsonResponse(['success' => false, 'message' => 'Rendez-vous non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
         }
-    
+
+        // Récupère le devis associé au rendez-vous
+        $quote = $appointment->getQuote();
+
+        if ($quote) {
+            // Supprime le fichier PDF associé
+            $pdfPath = $this->getParameter('kernel.project_dir') . '/public' . $quote->getPdfContent();
+            if (file_exists($pdfPath)) {
+                unlink($pdfPath);
+            }
+            // Supprime le devis de la base de données
+            $entityManager->remove($quote);
+        }
+
         // Supprime le rendez-vous de la base de données
         $entityManager->remove($appointment);
         $entityManager->flush();
 
         // Envoie un email de notification d'annulation
         $this->sendCancellationEmail($mailer, $appointment);
-    
+
         return new JsonResponse(['success' => true]);
     }
-#endregion
+    #endregion
 
 
-#region EMAIL
+    #region EMAIL
 
-// ---------------------------------Méthode de vérification d'email--------------------------------- //
+    // ---------------------------------Méthode de vérification d'email--------------------------------- //
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, UserRepository $userRepository, TranslatorInterface $translator): Response
     {
 
         $id = $request->query->get('id'); // retrieve the user id from the url
 
-    // Verify the user id exists and is not null
-    if (null === $id) {
-        return $this->redirectToRoute('app_home');
-    }
+        // Verify the user id exists and is not null
+        if (null === $id) {
+            return $this->redirectToRoute('app_home');
+        }
 
-    $user = $userRepository->find($id);
+        $user = $userRepository->find($id);
 
-    // Ensure the user exists in persistence
-    if (null === $user) {
-        return $this->redirectToRoute('app_home');
-    }
+        // Ensure the user exists in persistence
+        if (null === $user) {
+            return $this->redirectToRoute('app_home');
+        }
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $user);
@@ -315,25 +343,25 @@ class UserController extends AbstractController
 
 
 
-     // Gestion de l'envoi de notification d'annulation de RDV
-     private function sendCancellationEmail(MailerInterface $mailer, Appointment $appointment): void
-     {
-         $user = $appointment->getUser();
-         $emailContent = $this->renderView('emails/appointment_cancellation.html.twig', [
-             'appointmentDate' => $appointment->getStartDate()->format('d/m/Y à H:i'),
-             'username' => $user ? $user->getUsername() : 'Utilisateur anonyme',
-         ]);
- 
-         $email = (new Email())
-             ->from(new Address('no-reply@tuttoPasta.com', 'TuttoPasta'))
-             ->to('admin@tuttoPasta.com')
-             ->subject('Annulation de rendez-vous')
-             ->html($emailContent);
- 
-         $mailer->send($email);
-     }
+    // Gestion de l'envoi de notification d'annulation de RDV
+    private function sendCancellationEmail(MailerInterface $mailer, Appointment $appointment): void
+    {
+        $user = $appointment->getUser();
+        $emailContent = $this->renderView('emails/appointment_cancellation.html.twig', [
+            'appointmentDate' => $appointment->getStartDate()->format('d/m/Y à H:i'),
+            'username' => $user ? $user->getUsername() : 'Utilisateur anonyme',
+        ]);
 
-     
+        $email = (new Email())
+            ->from(new Address('no-reply@tuttoPasta.com', 'TuttoPasta'))
+            ->to('admin@tuttoPasta.com')
+            ->subject('Annulation de rendez-vous')
+            ->html($emailContent);
+
+        $mailer->send($email);
+    }
+
+
     // Gestion de l'envoi de notification de suppression de compte
     private function sendAccountDeletionEmail(MailerInterface $mailer, UserInterface $user): void
     {
@@ -350,5 +378,30 @@ class UserController extends AbstractController
 
         $mailer->send($email);
     }
-#endregion
+    #endregion
+
+    private function generateAndArchivePdf(PdfGenerator $pdfGenerator, Quote $quote, string $reference): string
+    {
+        $html = $this->renderView('admin/quote.html.twig', [
+            'quote' => $quote,
+            'appointment' => $quote->getAppointments(),
+        ]);
+        // Générer le contenu PDF
+        $pdfContent = $pdfGenerator->generatePDF($html);
+
+        // Définir le chemin de stockage du PDF
+        $pdfDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/pdf/archive/';
+        // Générer un nom de fichier unique
+        $pdfFilename = $reference . '.pdf';
+        // Chemin complet du fichier PDF
+        $pdfFilepath = $pdfDirectory . $pdfFilename;
+
+        // Sauvegarde le PDF sur le système de fichiers
+        file_put_contents($pdfFilepath, $pdfContent);
+
+        // Stocker le lien du PDF dans l'entité Quote
+        $quote->setPdfContent('/uploads/pdf/' . $pdfFilename);
+        // Mettre à jour l'entité Quote
+        return $quote->getPdfContent();
+    }
 }
