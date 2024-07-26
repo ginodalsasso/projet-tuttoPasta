@@ -44,7 +44,7 @@ class UserController extends AbstractController
         $this->htmlSanitizer = $htmlSanitizer;
     }
 
-
+#region REGISTER/LOGIN/LOGOUT
 //_____________________________________________________________REGISTER/LOGIN/LOGOUT_____________________________________________________________
 //____________________________________________________________________________________________________________________________
 //____________________________________________________________________________________________________________________
@@ -100,40 +100,7 @@ class UserController extends AbstractController
             'challenge' => $challenge->generateKey()
         ]);
     }
-
-// ---------------------------------Méthode de vérification d'email--------------------------------- //
-    #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, UserRepository $userRepository, TranslatorInterface $translator): Response
-    {
-
-        $id = $request->query->get('id'); // retrieve the user id from the url
-
-       // Verify the user id exists and is not null
-       if (null === $id) {
-           return $this->redirectToRoute('app_home');
-       }
-
-       $user = $userRepository->find($id);
-
-       // Ensure the user exists in persistence
-       if (null === $user) {
-           return $this->redirectToRoute('app_home');
-       }
-        // validate email confirmation link, sets User::isVerified=true and persists
-        try {
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-
-            return $this->redirectToRoute('app_register');
-        }
-
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Votre mail à été vérifié !');
-
-        return $this->redirectToRoute('app_login');
-    }
-
+#endregion
 
 // ---------------------------------Méthode de connexion--------------------------------- //
     #[Route(path: '/login', name: 'app_login')]
@@ -162,7 +129,7 @@ class UserController extends AbstractController
         throw new \LogicException('Cette méthode peut être vide - elle sera interceptée par la clé de déconnexion de votre pare-feu.');
     }
 
-
+#region CRUD
 //________________________________________________________________CRUD________________________________________________________________
 //____________________________________________________________________________________________________________________________
 //____________________________________________________________________________________________________________________
@@ -308,6 +275,44 @@ class UserController extends AbstractController
     
         return new JsonResponse(['success' => true]);
     }
+#endregion
+
+
+#region EMAIL
+
+// ---------------------------------Méthode de vérification d'email--------------------------------- //
+    #[Route('/verify/email', name: 'app_verify_email')]
+    public function verifyUserEmail(Request $request, UserRepository $userRepository, TranslatorInterface $translator): Response
+    {
+
+        $id = $request->query->get('id'); // retrieve the user id from the url
+
+    // Verify the user id exists and is not null
+    if (null === $id) {
+        return $this->redirectToRoute('app_home');
+    }
+
+    $user = $userRepository->find($id);
+
+    // Ensure the user exists in persistence
+    if (null === $user) {
+        return $this->redirectToRoute('app_home');
+    }
+        // validate email confirmation link, sets User::isVerified=true and persists
+        try {
+            $this->emailVerifier->handleEmailConfirmation($request, $user);
+        } catch (VerifyEmailExceptionInterface $exception) {
+            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
+
+            return $this->redirectToRoute('app_register');
+        }
+
+        // @TODO Change the redirect on success and handle or remove the flash message in your templates
+        $this->addFlash('success', 'Votre mail à été vérifié !');
+
+        return $this->redirectToRoute('app_login');
+    }
+
 
 
      // Gestion de l'envoi de notification d'annulation de RDV
@@ -345,5 +350,5 @@ class UserController extends AbstractController
 
         $mailer->send($email);
     }
-        
+#endregion
 }

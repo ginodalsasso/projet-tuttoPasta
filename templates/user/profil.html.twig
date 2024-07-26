@@ -50,23 +50,24 @@
             <button class="closeModal">X</button>
         </dialog>
 
-        <section id="user_table">
-            {% set now = "now"|date('Y-m-d H:i:s') %}  {# On crée une variable pour la date actuelle avec heure au format 'Y-m-d H:i:s' #}
-            
-            {# On vérifie si l'utilisateur a des rendez-vous #}
-            {% if appointments is not empty %}
-                {% set hasUpcomingAppointments = false %}
-                {% set hasPastAppointments = false %}
+        {% set now = "now"|date('Y-m-d H:i:s') %}  {# On crée une variable pour la date actuelle avec heure au format 'Y-m-d H:i:s' #}
         
-                {% for appointment in appointments %}
-                    {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
-                    {% if appointmentDate >= now %}
-                        {% set hasUpcomingAppointments = true %}
-                    {% else %}
-                        {% set hasPastAppointments = true %}
-                    {% endif %}
-                {% endfor %}
-        
+        {# On vérifie si l'utilisateur a des rendez-vous #}
+        {% if appointments is not empty %}
+            {% set hasUpcomingAppointments = false %}
+            {% set hasPastAppointments = false %}
+            {# On parcourt les rendez-vous pour les classer en rendez-vous à venir et passés #}
+            {% for appointment in appointments %}
+                {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
+                {# /Si la date de début du rendez-vous est supérieure ou égale à la date actuelle #}
+                {% if appointmentDate >= now %}
+                    {% set hasUpcomingAppointments = true %}
+                {% else %}
+                    {% set hasPastAppointments = true %}
+                {% endif %}
+            {% endfor %}
+
+            <section id="user_table">
                 <div class="appointments_container">
                     {% if hasUpcomingAppointments %}
                         <h3>Rendez-vous à venir:</h3>
@@ -120,37 +121,35 @@
                         </table>
                     {% endif %}
                 </div>
-            {% endif %}
-            {% if quotes is not empty %}
-                <h3>Devis:</h3>
-                <table class="appointments_table">
-                    <thead>
-                        <tr>
-                            <th>Référence</th>
-                            <th>Date</th>
-                            <th>Prix</th>
-                            <th>Télécharger</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for quote in quotes %}
-                            {% if quote.status == 1 %}
-                                <tr id="quote-{{ quote.id }}">
-                                    <td>{{ quote.reference }}</td>
-                                    <td>{{ quote.quoteDate|date('d/m/Y') }}</td>
-                                    <td>{{ quote.totalTTC }}</td>
-                                    <td>
-                                        <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" download><i class="fa-solid fa-download"></i></a>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        </section>
-
-
+                {% endif %}
+                {% if quotes is not empty %}
+                    <h3>Devis:</h3>
+                    <table class="appointments_table">
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Date</th>
+                                <th>Prix</th>
+                                <th>Télécharger</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for quote in quotes %}
+                                {% if quote.status == 1 %}
+                                    <tr id="quote-{{ quote.id }}">
+                                        <td>{{ quote.reference }}</td>
+                                        <td>{{ quote.quoteDate|date('d/m/Y') }}</td>
+                                        <td>{{ quote.totalTTC }}</td>
+                                        <td>
+                                            <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" download><i class="fa-solid fa-download"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </section>
     </main>
 {% endblock %}
 

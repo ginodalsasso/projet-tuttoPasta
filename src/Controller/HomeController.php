@@ -34,10 +34,10 @@ class HomeController extends AbstractController
     public function __construct(HtmlSanitizerInterface  $htmlSanitizer) {
         $this->htmlSanitizer = $htmlSanitizer;
     }
+#region APPOINTMENT
 //________________________________________________________________APPOINTMENT______________________________________________________________
 //____________________________________________________________________________________________________________________________
 //____________________________________________________________________________________________________________________
-
     // ---------------------------------Vue RDV et Gestion de RDV--------------------------------- //
     // Gère le processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
@@ -181,9 +181,9 @@ class HomeController extends AbstractController
             'dayoffDates' => $dayoffDates,
         ]);
     }
+#endregion
 
-
-
+#region PDF
 //________________________________________________________________APPOINTMENT PDF_________________________________________________________
 //____________________________________________________________________________________________________________________________
 //____________________________________________________________________________________________________________________
@@ -403,3 +403,4 @@ class HomeController extends AbstractController
         return new JsonResponse(['success' => true]);
     }
 }
+#endregion

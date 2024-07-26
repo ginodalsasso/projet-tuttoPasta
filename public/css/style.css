@@ -3,8 +3,6 @@
 @import url("https://use.typekit.net/tkf7imz.css");
 /* @import url('https://fonts.googleapis.com/css2?family=Fustat:wght@200..800&display=swap'); */
 
-
-
 :root {
     --white-color: #F5F5F5;
     --pink-color: #F088FF;
@@ -412,6 +410,17 @@ h3 {
     border-image-slice: 1;
 }
 
+.form_container label::after,
+.form_display label::after {
+    content: ' *';
+    color: var(--red-color);
+}
+
+#availableServices label::after,
+#available-rdv label::after {
+    content: '';
+}
+
 .error_msg{
     color: var(--red-color);
     font-size: 14px;
@@ -703,7 +712,7 @@ h3 {
 
 #comment_title {
     display: inline-block;
-    margin-bottom: 10px;
+    margin: 50px 0 10px 0;
 }
 
 .comment,
@@ -948,7 +957,9 @@ footer {
         display: block;
         margin-top: 100px;
     }
-
+    .social_share {
+        margin: 0 8%;
+    }
     .article_content {
         width: 100%;
     }

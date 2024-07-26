@@ -27,6 +27,7 @@ class AppointmentType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => "Nom",
+                'required' => true,
                 'attr' => [
                     'autocomplete' => 'off',
                     'class' => 'data'
@@ -45,6 +46,7 @@ class AppointmentType extends AbstractType
             ])
             ->add('firstName', TextType::class, [
                 'label' => "Prénom",
+                'required' => true,
                 'attr' => [
                     'autocomplete' => 'off',
                     'class' => 'data'
@@ -64,6 +66,7 @@ class AppointmentType extends AbstractType
 
             ->add('email', EmailType::class,[
                 'label' => "E-mail",
+                'required' => true,
                 'attr' => [
                     'autocomplete' => 'off',
                     'class' => 'data'
@@ -79,6 +82,7 @@ class AppointmentType extends AbstractType
             ])
             ->add('message', TextareaType::class, [
                 'label' => "Notes supplémentaires",
+                'required' => true,
                 'attr' => [
                     'autocomplete' => 'off',
                     "class" => "data"
@@ -95,6 +99,7 @@ class AppointmentType extends AbstractType
             ])
             ->add('startDate', DateType::class, [
                 'label' => "Rendez-vous",
+                'required' => true,
                 'widget' => 'single_text',
                 'attr' => [
                     'class' => 'data flatpickr'
