@@ -444,5 +444,36 @@ class HomeController extends AbstractController
     
         return new JsonResponse(['success' => true]);
     }
+
+    // ---------------------------------Transformation du devis en etat payé--------------------------------- //
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/admin/quote/{id}/completed', name: 'app_completed_quote', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function completedQuote(EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
+    {
+        // Récupère l'utilisateur actuellement connecté
+        $user = $security->getUser();
+    
+        // Vérifie si l'utilisateur est valide
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+    
+        // Récupère le devis
+        $quote = $entityManager->getRepository(Quote::class)->find($id);
+    
+        // Vérifie si l'utilisateur est autorisé
+        if (!$quote || !($this->isGranted('ROLE_ADMIN'))) {
+            return new JsonResponse(['success' => false, 'message' => 'Rendez-vous non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
+        }
+        // Archive le devis en changeant son état
+        $quote->setState(Quote::STATE_COMPLETED);
+
+        // Persiste les modifications
+        $entityManager->persist($quote);
+        $entityManager->flush();
+
+    
+        return new JsonResponse(['success' => true]);
+    }
 }
 #endregion

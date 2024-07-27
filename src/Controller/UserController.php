@@ -380,6 +380,8 @@ class UserController extends AbstractController
     }
     #endregion
 
+    #region ARCHIVE PDF
+
     private function generateAndArchivePdf(PdfGenerator $pdfGenerator, Quote $quote, string $reference): string
     {
         $html = $this->renderView('admin/quote.html.twig', [
@@ -404,4 +406,6 @@ class UserController extends AbstractController
         // Mettre à jour l'entité Quote
         return $quote->getPdfContent();
     }
+    
+    #endregion
 }

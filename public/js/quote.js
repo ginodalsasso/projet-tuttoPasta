@@ -9,13 +9,23 @@ $(document).ready(function() {
         }
     });
 
-    // Suppression d'un devis
+    // Archivage d'un devis
     $(document).on('click', '.archive_quote', function(e) {
         e.preventDefault();
         var quoteId = $(this).data('id');
         
         if (confirm("Êtes-vous sûr de vouloir archiver ce devis ?")) {
             archiveQuote(quoteId, csrfToken);
+        }
+    });
+
+    // Devis terminé
+    $(document).on('click', '.completed_quote', function(e) {
+        e.preventDefault();
+        var quoteId = $(this).data('id');
+        
+        if (confirm("Êtes-vous sûr de vouloir finaliser ce devis ?")) {
+            completedQuote(quoteId, csrfToken);
         }
     });
 });
@@ -50,6 +60,31 @@ function deleteQuote(quoteId, csrfToken) {
 //___________________________________Archivage devis_______________________________________
 function archiveQuote(quoteId, csrfToken) {
     var url = `/admin/quote/${quoteId}/archive`;
+    
+    $.ajax({
+        url: url,
+        method: 'POST', 
+        headers: {
+            'X-CSRF-TOKEN': csrfToken  // Ajout du token CSRF dans les headers
+        },
+        success: function(data) {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message || "Erreur lors du changement d'état du devis. Veuillez réessayer.");
+                console.log(data);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("Erreur lors du changement d'état du devis :", textStatus, errorThrown);
+            alert("Une erreur est survenue lors du changement d'état du devis. Veuillez vérifier votre connexion et réessayer.");
+        }
+    });
+}
+
+//___________________________________Devis terminé_______________________________________
+function completedQuote(quoteId, csrfToken) {
+    var url = `/admin/quote/${quoteId}/completed`;
     
     $.ajax({
         url: url,

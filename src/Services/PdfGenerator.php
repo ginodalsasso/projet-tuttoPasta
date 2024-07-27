@@ -46,5 +46,4 @@ class PdfGenerator
         $this->domPdf->render();
         return $this->domPdf->output();
     }
-    
 }

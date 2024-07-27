@@ -46,7 +46,7 @@ class Quote
     // Constantes d'état du devis
     public const STATE_PENDING = 'En attente';
     public const STATE_IN_PROGRESS = 'En cours';
-    public const STATE_COMPLETED = 'Terminé';
+    public const STATE_COMPLETED = 'Payé';
     public const STATE_ARCHIVED = 'Archivé';
 
     // ---------------------------------GETTERS AND SETTERS--------------------------------- //
