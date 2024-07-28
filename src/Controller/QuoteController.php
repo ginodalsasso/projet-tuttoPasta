@@ -22,7 +22,7 @@ use App\Trait\QuoteTrait;
 
 
 
-class UserController extends AbstractController
+class QuoteController extends AbstractController
 {
     // Utilisation du trait QuoteTrait
     use QuoteTrait;

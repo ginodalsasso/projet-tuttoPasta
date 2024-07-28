@@ -302,9 +302,10 @@ h3 {
 
 #user_action_buttons {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     margin: 50px 0;    
     flex-wrap: wrap;
+    gap: 50px;
 }
 
 .appointments_container {
@@ -909,6 +910,18 @@ footer {
         width: 100%;
     }
 
+    /* TABLEAUX */
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    tr {
+        margin-bottom: 30px;
+    }
 
 }
 
@@ -978,4 +991,5 @@ footer {
     .article_content {
         width: 100%;
     }
+
 }
