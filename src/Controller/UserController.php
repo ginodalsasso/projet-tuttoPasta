@@ -36,10 +36,14 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use App\Trait\QuoteTrait;
+
 
 
 class UserController extends AbstractController
 {
+    // Utilisation du trait QuoteTrait
+    use QuoteTrait;
 
     private $htmlSanitizer;
 
@@ -380,32 +384,4 @@ class UserController extends AbstractController
     }
     #endregion
 
-    #region ARCHIVE PDF
-
-    private function generateAndArchivePdf(PdfGenerator $pdfGenerator, Quote $quote, string $reference): string
-    {
-        $html = $this->renderView('admin/quote.html.twig', [
-            'quote' => $quote,
-            'appointment' => $quote->getAppointments(),
-        ]);
-        // Générer le contenu PDF
-        $pdfContent = $pdfGenerator->generatePDF($html);
-
-        // Définir le chemin de stockage du PDF
-        $pdfDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/pdf/archive/';
-        // Générer un nom de fichier unique
-        $pdfFilename = $reference . '.pdf';
-        // Chemin complet du fichier PDF
-        $pdfFilepath = $pdfDirectory . $pdfFilename;
-
-        // Sauvegarde le PDF sur le système de fichiers
-        file_put_contents($pdfFilepath, $pdfContent);
-
-        // Stocker le lien du PDF dans l'entité Quote
-        $quote->setPdfContent('/uploads/pdf/' . $pdfFilename);
-        // Mettre à jour l'entité Quote
-        return $quote->getPdfContent();
-    }
-    
-    #endregion
 }

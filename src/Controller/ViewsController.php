@@ -26,13 +26,13 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 class ViewsController extends AbstractController
 {
     // ---------------------------------Vue des Erreurs--------------------------------- //
-    // error 404 = page non trouvée
+    // Vue error 404 = page non trouvée
     #[Route('/error/404', name: 'app_error_404')]
     public function showError404(): Response
     {
         return $this->render('errors/error404.html.twig');
     }
-    // error 500 = erreur serveur
+    // Vue error 500 = erreur serveur
     #[Route('/error/500', name: 'app_error_500')]
     public function showError500(): Response
     {
@@ -41,6 +41,12 @@ class ViewsController extends AbstractController
 
 
     // ---------------------------------Vue Home--------------------------------- //
+    #[Route('/', name: 'index')]
+    public function index(): Response
+    {
+        return $this->redirectToRoute('app_home');
+    }
+    
     #[Route('/home', name: 'app_home')]
     public function homeShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, ServiceRepository $serviceRepository): Response
     {
@@ -57,7 +63,7 @@ class ViewsController extends AbstractController
     }
 
     
-    // ---------------------------------Affichage profil utilisateur--------------------------------- //
+    // ---------------------------------Vue profil utilisateur--------------------------------- //
     #[Route('/profil', name: 'app_profil', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
     public function profil(Security $security, AppointmentRepository $appointmentRepository, QuoteRepository $quoteRepository): Response

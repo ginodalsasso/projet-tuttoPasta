@@ -32,7 +32,7 @@ class ResetPasswordController extends AbstractController
     }
 
     /**
-     * Display & process form to request a password reset.
+     * Affiche le formulaire pour demander un nouveau mot de passe.
      */
     #[Route('', name: 'app_forgot_password_request')]
     public function request(Request $request, MailerInterface $mailer, TranslatorInterface $translator): Response
@@ -54,7 +54,7 @@ class ResetPasswordController extends AbstractController
     }
 
     /**
-     * Confirmation page after a user has requested a password reset.
+     * Page de confirmation de l'envoi de l'email.
      */
     #[Route('/check-email', name: 'app_check_email')]
     public function checkEmail(): Response
@@ -71,11 +71,11 @@ class ResetPasswordController extends AbstractController
     }
 
     /**
-     * Validates and process the reset URL that the user clicked in their email.
+     * Processus de changement de mot de passe.
      */
     #[Route('/reset/{token}', name: 'app_reset_password')]
     public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator, ?string $token = null): Response
-    {
+    {   // Si le token est présent dans l'URL, on le stocke en session et on redirige vers la page de changement de mot de passe
         if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
             // loaded in a browser and potentially leaking the token to 3rd party JavaScript.
@@ -83,16 +83,17 @@ class ResetPasswordController extends AbstractController
 
             return $this->redirectToRoute('app_reset_password');
         }
-
+        // Si le token n'est pas présent dans l'URL, on le récupère de la session
         $token = $this->getTokenFromSession();
 
         if (null === $token) {
             throw $this->createNotFoundException('No reset password token found in the URL or in the session.');
         }
-
+        // On valide le token et on récupère l'utilisateur
         try {
             /** @var User $user */
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
+        // Si le token n'est pas valide, on redirige vers la page de demande de nouveau mot de passe
         } catch (ResetPasswordExceptionInterface $e) {
             $this->addFlash('reset_password_error', sprintf(
                 '%s - %s',
@@ -103,7 +104,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_forgot_password_request');
         }
 
-        // The token is valid; allow the user to change their password.
+        // Lextoken est valide, on affiche le formulaire de changement de mot de passe
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
 
@@ -120,7 +121,7 @@ class ResetPasswordController extends AbstractController
             $user->setPassword($encodedPassword);
             $this->entityManager->flush();
 
-            // The session is cleaned up after the password has been changed.
+            // Le mot de passe a été changé, on nettoie la session et on redirige vers la page d'accueil
             $this->cleanSessionAfterReset();
 
             return $this->redirectToRoute('app_home');
@@ -131,13 +132,14 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
+    // Fonction pour envoyer l'email de demande de nouveau mot de passe
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,
         ]);
 
-        // Do not reveal whether a user account was found or not.
+        // Ne pas révéler si un utilisateur avec cet email existe ou non
         if (!$user) {
             return $this->redirectToRoute('app_check_email');
         }
@@ -158,6 +160,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
 
+        // Envoi de l'email
         $email = (new TemplatedEmail())
             ->from(new Address('admin@tuttoPasta.com', 'Mot de passe oublié'))
             ->to($user->getEmail())
@@ -170,7 +173,7 @@ class ResetPasswordController extends AbstractController
 
         $mailer->send($email);
 
-        // Store the token object in session for retrieval in check-email route.
+        // On stocke le token en session
         $this->setTokenObjectInSession($resetToken);
 
         return $this->redirectToRoute('app_check_email');
