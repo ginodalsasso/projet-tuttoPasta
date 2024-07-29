@@ -55,6 +55,11 @@ body {
     padding: 8%;
 }
 
+.wrapper_home {
+    color: var(--black-color);
+    padding-bottom: 8%;
+}
+
 .wrapper_project {
     color: var(--white-color);
     background-color: var(--black-color);
@@ -158,6 +163,7 @@ a{
 .stickers_pink {
     padding: 8px 10px;
     font-weight: 600;
+    display: inline-block;
 }
 
 .stickers_black,
@@ -261,6 +267,70 @@ h3 {
     flex-direction: column;
     gap: 20px;
 }
+
+
+
+
+
+
+
+
+/*=============== HOME ===============*/
+.h1_content {
+    font-size: 18px;
+    line-height: 2;
+}
+
+#introduction_section {
+    display: flex;
+    gap: 50px;
+    padding-right: 8%;
+    
+}
+
+#introduction_section img {
+    max-width: 50vw;
+}
+
+.introduction_content {
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.introduction_content span,
+.introduction_content p {
+    margin-bottom: 30px;
+}
+
+.introduction_content h2 {
+    margin-bottom: 60px; 
+}
+
+#guide_section {
+    background-color: var(--black-color);
+    color: var(--white-color);
+    padding: 8%;
+}
+
+.guide_content {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 /*=============== REGISTRATION ===============*/
 .agree_terms {

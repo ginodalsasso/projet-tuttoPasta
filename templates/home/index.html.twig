@@ -4,30 +4,38 @@
 
 {% block page_title %}
     {{administrations[0].title}}
-    {{administrations[0].textContent}}
+    <div class="h1_content">
+        {{administrations[0].textContent}}
+    </div>
+        
     <a href="#services_section"><button class="full_button_white">Accéder aux services</button></a>
 {% endblock %}
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
-    <main class="wrapper">
+    <main class="wrapper_home">
         <section id="introduction_section">
-            <span class="stickers_pink">Le studio</span>
             <img src="{{administrations[21].title}}" alt="{{administrations[21].textContent}}">
-            {{administrations[1].title}} {{administrations[1].textContent}} 
-            <a href="{{ path('app_appointment') }}"><button class="full_button_black">Prendre rdv</button></a>
+            <div class="introduction_content">
+                <div><span class="stickers_pink">Le studio</span> </div>
+                <h2>{{administrations[1].title}}</h2> 
+                <p>{{administrations[1].textContent}}</p> 
+                <a href="{{ path('app_appointment') }}"><button class="full_button_black">Prendre rdv</button></a>
+            </div>
         </section>
-
-
-
-
-
-
-
-
 
         <section id="guide_section">
+            <h2>{{administrations[2].title}}</h2>
+            <div class="guide_content">
+                {% for administration in administrations[3:4] %}
+                    <p><i class="fa-sharp fa-solid fa-arrow-right"></i>{{ administration.title }}</p>
+                    
+                {% endfor %}
+            </div>
         </section>
+
+
+
         <section id="expertise_section">
         </section>
         <section id="projects_section">
@@ -35,7 +43,6 @@
         <section id="services_section">
         </section>
 
-        {{dump(administrations)}}
         {% for project in projects %}
             {{project.projectName}} <br>
             {{project.projectContent}}
