@@ -23,6 +23,7 @@ class AdministrationCrudController extends AbstractCrudController
         return [
             TextEditorField::new('title'),
             TextEditorField::new('textContent'),
+            TextField::new('sectionLocate'),
         ];
     }
     

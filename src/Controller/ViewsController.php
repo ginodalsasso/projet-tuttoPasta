@@ -15,6 +15,7 @@ use App\Repository\CategoryRepository;
 use App\Repository\ProjectImgRepository;
 use App\Repository\AppointmentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use App\Repository\AdministrationRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -48,17 +49,18 @@ class ViewsController extends AbstractController
     }
     
     #[Route('/home', name: 'app_home')]
-    public function homeShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, ServiceRepository $serviceRepository): Response
+    public function homeShow(AdministrationRepository $administrationRepository, ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, ServiceRepository $serviceRepository): Response
     {
+        $administrations = $administrationRepository->findAll();
         $projects = $projectRepository->findAll();
         $projectImgs= $projectImgRepository->findAll();
         $services= $serviceRepository->findAll();
 
         return $this->render('home/index.html.twig', [
+            'administrations' => $administrations,
             'projects' => $projects,
             'projectImgs' => $projectImgs,
             'services' => $services,
-
         ]);
     }
 

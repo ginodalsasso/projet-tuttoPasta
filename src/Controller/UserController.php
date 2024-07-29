@@ -156,6 +156,11 @@ class UserController extends AbstractController
 
         // Gestion du formulaire des informations utilisateur
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /**
+             * @var User|null $user
+             */
+
             // Désinfecter les champs du formulaire
             $user->setUsername($this->htmlSanitizer->sanitize($user->getUsername()));
 
@@ -179,6 +184,10 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function updatePassword(Request $request, Security $security, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
+        /**
+         * @var User|null $user
+         */
+
         $user = $security->getUser();
 
         // Formulaire pour le changement de mot de passe
@@ -369,6 +378,9 @@ class UserController extends AbstractController
     // Gestion de l'envoi de notification de suppression de compte
     private function sendAccountDeletionEmail(MailerInterface $mailer, UserInterface $user): void
     {
+        /**
+         * @var User|null $user
+         */
         $emailContent = $this->renderView('emails/account_deletion.html.twig', [
             'username' => $user->getUsername(),
             'email' => $user->getEmail(),
