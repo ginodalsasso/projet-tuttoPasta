@@ -297,7 +297,7 @@ h4 {
 .expertise_section,
 .guide_calltoaction,
 #projects_section h2,
-#projects_section div:first-of-type,
+#projects_section > div:first-of-type,
 .services_content  {
     max-width: 1280px;
     margin-right: auto;
@@ -346,7 +346,8 @@ h4 {
     gap: 30px;
 }
 
-.guide_h2 {
+.guide_h2,
+.services_h2 {
     text-align: center;
     margin-bottom: 100px;
 }
@@ -363,7 +364,8 @@ h4 {
     margin-bottom: 8%;
 }
 
-.expertise_cards {
+.expertise_cards,
+.service {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 50px;
@@ -388,6 +390,12 @@ h4 {
 .btn_center {
     text-align: center;
     margin-top: 50px;
+}
+
+.service_cards {
+    background-color: var(--white-color);
+    color: var(--black-color);
+    padding: 30px;
 }
 
 

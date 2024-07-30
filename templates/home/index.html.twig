@@ -32,9 +32,7 @@
                 {% for administration in administrations|slice(3, 4) %}
                     <div class="badges_guide">
                         <i class="fa-sharp fa-solid fa-arrow-right"></i> 
-                        <h4>
-                            {{ administration.title|raw }}
-                        </h4>
+                        {{ administration.title|raw }}
                     </div>
                 {% endfor %}
             </div>
@@ -91,10 +89,27 @@
 
 
         <section id="services_section">
-            <div class="services_content">
-                <div><span class="stickers_blue">Services</span></div>
-                {{administrations[13].title|raw}}
-            </div>
+            <article class="services_content">
+                <div class="services_h2">                    
+                    <span class="stickers_blue">Services</span>
+                    {{administrations[13].title|raw}}
+                </div>
+                <div class="service">
+                    <div class="services_categories">
+                        <i class="fa-sharp fa-solid fa-arrow-right"></i> {{categories[0].categoryName|raw}} <br>
+                        {{categories[0].categoryContent|raw}}
+                    </div>
+                    {% for service in services|slice(0, 2) %}
+                        <div class="service_cards">
+
+                            {{ service.serviceName|raw }}
+                            <span class="stickers_price">{{ service.servicePrice|raw }}€ ttc</span>
+                            {{ service.serviceContent|raw }}
+                            <a href="{{ path('app_appointment') }}"><button class="full_button_black">Je choisis ce pack</button></a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </article>
         </section>
 
         {% for project in projects %}

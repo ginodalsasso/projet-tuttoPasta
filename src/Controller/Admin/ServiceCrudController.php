@@ -21,14 +21,21 @@ class ServiceCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextEditorField::new('serviceName'),
-            TextEditorField::new('getServiceContent'),
-            NumberField::new('servicePrice'),
-            AssociationField::new('categories')
-            ->setFormTypeOptions([
-                'by_reference' => false,
-                'multiple' => true,
+            TextEditorField::new('serviceName')
+            ->setTrixEditorConfig([
+                'blockAttributes' => [
+                    'default' => ['tagName' => 'p'],
+                    'heading1' => ['tagName' => 'h4'],
+                ],
             ]),
+            TextEditorField::new('serviceContent')
+            ->setTrixEditorConfig([
+                'blockAttributes' => [
+                    'default' => ['tagName' => 'p']
+                ],
+            ]),
+            NumberField::new('servicePrice'),
+            AssociationField::new('category')
         ];
     }
 }

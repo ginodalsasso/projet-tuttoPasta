@@ -49,18 +49,20 @@ class ViewsController extends AbstractController
     }
     
     #[Route('/home', name: 'app_home')]
-    public function homeShow(AdministrationRepository $administrationRepository, ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, ServiceRepository $serviceRepository): Response
+    public function homeShow(AdministrationRepository $administrationRepository, ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, ServiceRepository $serviceRepository, CategoryRepository $categoryRepository): Response
     {
         $administrations = $administrationRepository->findAll();
         $projects = $projectRepository->findAll();
         $projectImgs= $projectImgRepository->findAll();
         $services= $serviceRepository->findAll();
+        $categories= $categoryRepository->findAll();
 
         return $this->render('home/index.html.twig', [
             'administrations' => $administrations,
             'projects' => $projects,
             'projectImgs' => $projectImgs,
             'services' => $services,
+            'categories' => $categories,
         ]);
     }
 

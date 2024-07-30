@@ -6,4 +6,7 @@ $(document).ready(function() {
         $(this).css('color', colors[index % colors.length]);
     });
 
+    $(".stickers_price").each(function() {
+        $(this).css('color', colors[index % colors.length]);
+    });
 });
