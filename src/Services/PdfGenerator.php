@@ -33,6 +33,8 @@ class PdfGenerator
         $this->params = $params;
     }
 
+
+    // ---------------------------------Affichage du PDF--------------------------------- //
     public function showPdfFile($html): Response
     {
         $this->domPdf->loadHtml($html);
@@ -50,6 +52,7 @@ class PdfGenerator
         );
     }
 
+    // ---------------------------------Génération du PDF--------------------------------- //
     public function generatePDF($html): string
     {
         $this->domPdf->loadHtml($html);
@@ -62,9 +65,7 @@ class PdfGenerator
     public function createQuote(Appointment $appointment): Quote
     {
         $services = $appointment->getServices();
-        if ($services->isEmpty()) {
-            return null;
-        }
+
         // Crée un nouveau devis
         $quote = new Quote();
         $reference = 'DEVIS-' . uniqid();
@@ -79,8 +80,15 @@ class PdfGenerator
         // Associe le rendez-vous au devis
         $quote->setAppointments($appointment);
 
-            // Calcul du prix total des services selectionnés
-        $totalPrice = $quote->calculateTotal($services);
+        // Calcul du prix total des services sélectionnés*
+        if (!$services->isEmpty()) {
+            $totalPrice = $quote->calculateTotal($services);
+        } else {
+            $totalPrice = 0;
+        }
+
+        // Calcul du prix total des services selectionnés
+        // $totalPrice = $quote->calculateTotal($services);
         $quote->setTotalTTC($totalPrice);
 
         return $quote;

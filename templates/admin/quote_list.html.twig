@@ -23,15 +23,17 @@
                     {% set sorted_quotes = quotes|sort((a, b) => b.quoteDate <=> a.quoteDate) %}
                     {% for quote in sorted_quotes %}
                         <tr id="quote-{{ quote.id }}">
-                            <td>{{ quote.reference }}</td>
+                            <td>{{ quote.reference }}
+                                <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" title="Aperçu"> {# Lien vers la génération du PDF #}
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                            </td>
                             <td>{{ quote.quoteDate|date('d-m-Y') }}</td>
                             <td>{{ quote.customerName }}</td>
                             <td>{{ quote.customerEmail }}</td>
                             <td>{{ quote.state }}</td>
                             <td id="action_quote_buttons">
-                                 <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" title="Aperçu"> {# Lien vers la génération du PDF #}
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>
+
                                 <a href="{{ path('quote_edit', { 'id': quote.id }) }}" title="Editer"> {# Lien vers l'édition du PDF #}
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>

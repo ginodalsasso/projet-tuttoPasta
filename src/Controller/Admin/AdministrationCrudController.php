@@ -21,8 +21,23 @@ class AdministrationCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextEditorField::new('title'),
-            TextEditorField::new('textContent'),
+            TextEditorField::new('title')
+            ->setTrixEditorConfig([
+                'blockAttributes' => [
+                    'default' => ['tagName' => 'p'],
+                    'heading1' => ['tagName' => 'h2'],
+                    'code' => ['tagName' => 'h3'],
+                    'quote' => ['tagName' => 'h4']
+                ],
+            ])
+            ->setFormTypeOption('attr', ['class' => 'trix-content']),
+            TextEditorField::new('textContent')
+            ->setTrixEditorConfig([
+                'blockAttributes' => [
+                    'default' => ['tagName' => 'p'],
+                ],
+            ])
+            ->setFormTypeOption('attr', ['class' => 'trix-content']),
             TextField::new('sectionLocate'),
         ];
     }

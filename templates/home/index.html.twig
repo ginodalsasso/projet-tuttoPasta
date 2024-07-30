@@ -18,29 +18,83 @@
             <img src="{{administrations[21].title}}" alt="{{administrations[21].textContent}}">
             <div class="introduction_content">
                 <div><span class="stickers_pink">Le studio</span> </div>
-                <h2>{{administrations[1].title}}</h2> 
-                <p>{{administrations[1].textContent}}</p> 
+                <h2>{{administrations[1].title|raw}}</h2> 
+                {{administrations[1].textContent|raw}}
                 <a href="{{ path('app_appointment') }}"><button class="full_button_black">Prendre rdv</button></a>
             </div>
         </section>
 
+
+
         <section id="guide_section">
-            <h2>{{administrations[2].title}}</h2>
+            <h2 class="guide_h2">{{administrations[2].title|raw}}</h2>
             <div class="guide_content">
-                {% for administration in administrations[3:4] %}
-                    <p><i class="fa-sharp fa-solid fa-arrow-right"></i>{{ administration.title }}</p>
-                    
+                {% for administration in administrations|slice(3, 4) %}
+                    <div class="badges_guide">
+                        <i class="fa-sharp fa-solid fa-arrow-right"></i> 
+                        <h4>
+                            {{ administration.title|raw }}
+                        </h4>
+                    </div>
                 {% endfor %}
+            </div>
+            <div class="expertise_section">
+                <h2  class="guide_h2">{{ administrations[7].title|raw }}</h2>
+                <div class="expertise_cards">
+                    {% for administration in administrations|slice(8, 3) %}
+                        <div class="expertise_card">
+                            {{ administration.title|raw }}
+                            {{ administration.textContent|raw }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="guide_calltoaction">
+                <h2>{{ administrations[11].title|raw }}</h2>
+                <a href="{{ path('app_appointment') }}"><button class="full_button_black">Prendre rdv</button></a>
+            </div>
+        </section>
+
+
+        <section id="projects_section">
+            <div><span class="stickers_green">Projets</span></div>
+            <div class="projects_h2">{{administrations[12].title|raw}}</div>
+            <ul class="project_list">
+                <hr>
+                {% for project in projects[:3] %}
+                <li class="animated_li">
+                    <a class="project_container" href="{{ path('app_project', { 'slug': project.slug }) }}">
+                        <div class="project_content">
+                            <p>{{ project.projectDate|date("Y") }}</p>
+                            <h3>{{ project.projectName }}</h3>
+                            {% for category in project.categories %}
+                                <p class="project_content_category">
+                                    <i class="fa-sharp fa-solid fa-arrow-right" style="color: #000000;"></i>
+                                    {{ category.categoryName }}
+                                </p>
+                            {% endfor %}
+                        </div>
+                        {% set firstImage = project.images|first %}
+                        {% if firstImage %}
+                            <img class="projects_list_img" src="{{ asset('img/projects/' ~ firstImage.image) }}" alt="{{ firstImage.alt }}" loading="lazy">
+                        {% endif %}
+                    </a>
+                </li>
+                <hr>
+            {% endfor %}
+            </ul>
+            <div class="btn_center">
+                <a href="{{ path('app_projectList') }}"><button class="full_button_black">Voir plus de projets</button></a>
             </div>
         </section>
 
 
 
-        <section id="expertise_section">
-        </section>
-        <section id="projects_section">
-        </section>
         <section id="services_section">
+            <div class="services_content">
+                <div><span class="stickers_blue">Services</span></div>
+                {{administrations[13].title|raw}}
+            </div>
         </section>
 
         {% for project in projects %}
@@ -62,4 +116,8 @@
         {% endfor %}
     </main>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('/js/home.js')}}"></script>
 {% endblock %}
