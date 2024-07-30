@@ -371,16 +371,15 @@ h4 {
     gap: 50px;
 }
 
-.expertise_card h3{
+.expertise_card h3,
+.services_categories h3,
+.guide_calltoaction h2,
+.service_cards_header  {
     margin-bottom: 1rem;
 }
 
 .badges_guide {
     display: flex;
-}
-
-.guide_calltoaction h2 {
-    margin-bottom: 20px;
 }
 
 .projects_h2 {
@@ -396,6 +395,11 @@ h4 {
     background-color: var(--white-color);
     color: var(--black-color);
     padding: 30px;
+    height: 100%;
+}
+
+.service_cards_header {
+    text-align: center;
 }
 
 
