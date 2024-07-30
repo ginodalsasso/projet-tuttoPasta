@@ -24,9 +24,11 @@ use App\Trait\QuoteTrait;
 
 class QuoteController extends AbstractController
 {
-    // Utilisation du trait QuoteTrait
-    use QuoteTrait;
+    private $pdfGenerator;
 
+    public function __construct(PdfGenerator $pdfGenerator) {
+        $this->pdfGenerator = $pdfGenerator;
+    }
     // ---------------------------------Vue PDF DEVIS--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/{id}', name: 'quote_pdf')]
@@ -199,7 +201,7 @@ class QuoteController extends AbstractController
     }
     
 
-    // ---------------------------------Archivage du devis PDF--------------------------------- //
+    // ---------------------------------Archivage du devis(Etat) PDF--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/{id}/archive', name: 'app_archive_quote', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function archiveQuote(EntityManagerInterface $entityManager, int $id, Security $security, PdfGenerator $pdfGenerator): JsonResponse
@@ -222,7 +224,10 @@ class QuoteController extends AbstractController
         // Archive le devis en changeant son état
         $quote->setState(Quote::STATE_ARCHIVED);
         $reference = $quote->getReference();
-        $this->generateAndArchivePdf($pdfGenerator, $quote, $reference);
+        // Archive le PDF dans le dossier associé
+        $pdfGenerator->generateAndArchivePdf($pdfGenerator, $quote, $reference);
+        // Supprime le fichier PDF associé dans le dossier de stockage
+        $this->deleteQuote($entityManager, $id, $security);
 
         // Persiste les modifications
         $entityManager->persist($quote);

@@ -42,14 +42,15 @@ use App\Trait\QuoteTrait;
 
 class UserController extends AbstractController
 {
-    // Utilisation du trait QuoteTrait
-    use QuoteTrait;
 
     private $htmlSanitizer;
+    private $pdfGenerator;
 
-    public function __construct(HtmlSanitizerInterface $htmlSanitizer, private EmailVerifier $emailVerifier)
+
+    public function __construct(HtmlSanitizerInterface $htmlSanitizer, private EmailVerifier $emailVerifier, PdfGenerator $pdfGenerator)
     {
         $this->htmlSanitizer = $htmlSanitizer;
+        $this->pdfGenerator = $pdfGenerator;
     }
 
     #region REGISTER/LOGIN/LOGOUT
@@ -246,7 +247,7 @@ class UserController extends AbstractController
             foreach ($quotes as $quote) {
                 // Génére et stocke le PDF dans les archives
                 $reference = $quote->getReference();
-                $this->generateAndArchivePdf($pdfGenerator, $quote, $reference);
+                $pdfGenerator->generateAndArchivePdf($pdfGenerator, $quote, $reference);
 
                 // Marque le devis comme archivé
                 $quote->setState(Quote::STATE_ARCHIVED);
