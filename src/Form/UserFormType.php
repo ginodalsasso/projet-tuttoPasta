@@ -37,10 +37,6 @@ class UserFormType extends AbstractType
                     'class' => 'data'
                 ],
             ])
-
-            
-
-
         ;
     }
 

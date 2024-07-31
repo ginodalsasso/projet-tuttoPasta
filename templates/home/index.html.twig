@@ -147,11 +147,20 @@
                     <p>04.  Récapitulatif</p>
 
                     {{ form_start(offerPriceForm) }}
-                        {{ form_row(offerPriceForm.services_identite_visuelle) }}
-                        {{ form_row(offerPriceForm.services_site_internet) }}
-                        {{ form_row(offerPriceForm.services_presta_a_la_carte) }}
-                        <div class="center_button">
-                            <button class="" id="" type="submit">Valider les informations</button>
+                        <div id="identite_service">
+                            {{ form_row(offerPriceForm.services_identite_visuelle) }}
+                            <span id="next_to_site_services">Continuer</span>
+                        </div>
+                        <div id="site_services">
+                            {{ form_row(offerPriceForm.services_site_internet) }}
+                            <span id="next_to_presta_services">Continuer</span>
+                        </div>
+                        <div id="presta_services">
+                            {{ form_row(offerPriceForm.services_presta_a_la_carte) }}
+                            <span id="next_to_recap">Continuer</span>
+                        </div>
+                        <div id="recap_services" class="center_button">
+                            <button class="" id="" type="submit">Obtenir une offre de prix</button>
                         </div>
                     {{ form_end(offerPriceForm) }}
                 </div>

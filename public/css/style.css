@@ -445,6 +445,16 @@ h4 {
     text-align: center;
 }
 
+/* Offre de prix */
+#site_services,
+#presta_services,
+#recap_services {
+    display: none;
+}
+
+
+
+
 .faq_content details,
 .faq_content summary {
     padding: 10px 0;

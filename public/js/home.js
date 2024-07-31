@@ -1,5 +1,6 @@
 
 $(document).ready(function() {
+    //_______________________________GESTION DES COULEURS ALEATOIRES________________________________
     // Variable de couleur pour les H2 des cards articles
     var colors = ['var(--pink-color)', 'var(--red-color)', 'var(--blue-color)', 'var(--green-color)'];
     // Couleur aléatoire pour chaque élément de la classe .badges_guide i
@@ -17,4 +18,29 @@ $(document).ready(function() {
 
         $(this).find('.stickers_price').addClass(stickerClass); // Ajouter la classe de sticker à stickers_price
     });
+
+
+    //_______________________________GESTION DES OFFRES DE PRIX (SERVICES)________________________________
+    var nextStep = $('#next_to_site_services')
+
+    nextStep.on('click', function(){
+        $('#site_services').show()
+        $('#identite_service').hide()
+    })
+
+    var nextStep = $('#next_to_presta_services')
+
+    nextStep.on('click', function(){
+        $('#presta_services').show()
+        $('#site_services').hide()
+    })
+
+    var nextStep = $('#next_to_recap')
+
+    nextStep.on('click', function(){
+        $('#recap_services').show()
+        $('#presta_services').hide()
+    })
+
+
 });
