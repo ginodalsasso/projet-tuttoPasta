@@ -62,6 +62,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'user')]
     private Collection $appointments;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $googleUser = null;
+
     
     // ---------------------------------CONSTRUCT--------------------------------- //
 
@@ -251,6 +254,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $appointment->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isGoogleUser(): ?bool
+    {
+        return $this->googleUser;
+    }
+
+    public function setGoogleUser(?bool $googleUser): static
+    {
+        $this->googleUser = $googleUser;
 
         return $this;
     }

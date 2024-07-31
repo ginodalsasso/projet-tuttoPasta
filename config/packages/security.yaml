@@ -9,6 +9,9 @@ security:
                 class: App\Entity\User
                 property: email
 
+        oauth:
+            id: knpu.oauth2.user_provider
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -16,7 +19,10 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            custom_authenticator: App\Security\GoogleAuthenticator
             user_checker: App\Security\UserChecker
+            entry_point: form_login
+
             form_login:
                 login_path: app_login
                 check_path: app_login
