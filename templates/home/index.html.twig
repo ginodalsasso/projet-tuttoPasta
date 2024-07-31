@@ -15,7 +15,7 @@
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper_home">
         <section id="introduction_section">
-            <img src="{{administrations[21].title}}" alt="{{administrations[21].textContent}}">
+            <img src="{{administrations[18].title}}" alt="{{administrations[18].textContent}}">
             <div class="introduction_content">
                 <div><span class="stickers_pink">Le studio</span> </div>
                 <h2>{{administrations[1].title|raw}}</h2> 
@@ -114,7 +114,7 @@
                             </div>
                         </div>
                     {% endfor %}
-                    
+
                     <div class="services_categories">
                         <h3>
                             <i class="fa-sharp fa-solid fa-arrow-right"></i> {{categories[1].categoryName|raw}} <br>
@@ -139,25 +139,24 @@
                 </div>
             </article>
         </section>
-
-        {% for project in projects %}
-            {{project.projectName}} <br>
-            {{project.projectContent}}
-        {% endfor %}
-
-
-        <h1>Liste des images</h1>
-        {% for projectImg in projectImgs %}
-            {{projectImg.image}}
-        {% endfor %}
-
-        <h1>Liste des services</h1>
-        {% for service in services %}
-            {{service}}
-            {{service.serviceContent}}
-            {{service.servicePrice}}
-        {% endfor %}
-    </main>
+        <section class="faq_section">
+            <article class="faq_content">
+                <div class="faq_h2">                    
+                    <span class="stickers_green">FAQ</span>
+                    {{administrations[19].title|raw}}
+                </div>
+                {% for administration in administrations|slice(20, 5) %}
+                <details>
+                    <summary>
+                        {{ administration.title|raw }} <br>
+                    </summary>
+                    {{ administration.textContent|raw }} <br>
+                </details>
+                <hr>
+                {% endfor %}
+            </article>
+            {{administrations[25].title|raw}}
+        </section>
 
 {% endblock %}
 
