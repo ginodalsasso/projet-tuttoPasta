@@ -39,17 +39,21 @@ class GoogleController extends AbstractController
             $existingUser = $entityManager->getRepository(User::class)->findOneBy(['email' => $googleUser->getEmail()]);
 
             if (!$existingUser) {
+                $email = $googleUser->getEmail();
+                $parts = explode('@', $email);
+                $username = $parts[0];
 
                 $user = new User();
-                $user->setEmail($googleUser->getEmail());
+                $user->setEmail($email);
                 $user->setVerified(true);
                 $user->setPassword(bin2hex(random_bytes(16)));
                 $user->setGoogleUser(true);
                 $user->setRoles(['ROLE_USER']);
-                $user->setUsername($googleUser->getEmail());
+                $user->setUsername($username);
 
                 $entityManager->persist($user);
                 $entityManager->flush();
+
             } else {
                 $user = $existingUser;
             }

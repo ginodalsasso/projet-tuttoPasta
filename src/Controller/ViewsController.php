@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Project;
 use App\Form\CommentType;
+use App\Form\ServiceType;
 use App\Form\UserFormType;
 use App\Form\EditPasswordType;
 use App\Repository\QuoteRepository;
@@ -16,6 +17,7 @@ use App\Repository\ProjectImgRepository;
 use App\Repository\AppointmentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use App\Repository\AdministrationRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -57,15 +59,38 @@ class ViewsController extends AbstractController
         $services= $serviceRepository->findAll();
         $categories= $categoryRepository->findAll();
 
+        // Formulaire pour la génération d'offre de prix
+        $offerPriceForm = $this->createForm(Servicetype::class);
+
         return $this->render('home/index.html.twig', [
             'administrations' => $administrations,
             'projects' => $projects,
             'projectImgs' => $projectImgs,
             'services' => $services,
             'categories' => $categories,
+            'offerPriceForm' => $offerPriceForm->createView(),
         ]);
     }
 
+
+
+    
+    // Formulaire de génération d'offre de prix
+    // #[Route('/service/priceOffer', name: 'app_priceOffer')]
+    // public function priceOfferForm(Request $request): Response
+    // {
+    //     // Créer le formulaire
+    //     $form = $this->createForm(ServiceType::class);
+
+    //     // Traiter le formulaire
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+            
+
+    //         return $this->redirectToRoute('app_home');
+    //     }
+    // }
     
     // ---------------------------------Vue profil utilisateur--------------------------------- //
     #[Route('/profil', name: 'app_profil', methods: ['GET'])]

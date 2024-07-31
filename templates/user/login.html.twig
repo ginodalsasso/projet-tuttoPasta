@@ -46,9 +46,12 @@
                     Se connecter
                 </button>
 
-                <a href="{{path('connect_google')}}">Google</a>
-
                 <a href=" {{ path('app_forgot_password_request') }} ">Mot de passe oublié ?</a>
+                
+                <button type="button" class="login-with-google-btn" >
+                    <a href="{{path('connect_google')}}">Se connecter avec Google</a>
+                </button>
+
             </div>
         </form>
     </main>

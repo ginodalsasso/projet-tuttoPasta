@@ -150,7 +150,6 @@ class UserController extends AbstractController
     public function updateInfo(Request $request, Security $security, EntityManagerInterface $entityManager): Response
     {
         $user = $security->getUser();
-
         // Formulaire pour les informations utilisateur
         $form = $this->createForm(UserFormType::class, $user);
         $form->handleRequest($request);

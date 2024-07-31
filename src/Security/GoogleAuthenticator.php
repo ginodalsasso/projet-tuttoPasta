@@ -51,13 +51,17 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
                 if ($existingUser) {
                     return $existingUser;
                 } else {
+                    $email = $googleUser->getEmail();
+                    $parts = explode('@', $email);
+                    $username = $parts[0];
+
                     $user = new User();
-                    $user->setEmail($googleUser->getEmail());
+                    $user->setEmail($email);
                     $user->setVerified(true);
                     $user->setPassword(bin2hex(random_bytes(16)));
                     $user->setGoogleUser(true);
                     $user->setRoles(['ROLE_USER']);
-                    $user->setUsername($googleUser->getEmail());
+                    $user->setUsername($username);
 
 
                     $this->entityManager->persist($user);

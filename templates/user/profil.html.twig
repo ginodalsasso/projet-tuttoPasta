@@ -26,9 +26,10 @@
             {{ form_start(form, {'action': path('app_profil_update_info')}) }}
                 {{ form_row(form.username) }}
                 <div class="error_msg" id="pseudo_error"></div>
-
-                {{ form_row(form.email) }}
-                <div class="error_msg" id="email_error"></div>
+                {% if app.user.isGoogleUser == false %}
+                    {{ form_row(form.email) }}
+                    <div class="error_msg" id="email_error"></div>
+                {% endif %}
 
                 <div class="center_button">
                     <button class="full_button_black" id="save_edit_data" type="submit">Valider les informations</button>

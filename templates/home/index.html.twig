@@ -104,7 +104,7 @@
                     {% for service in services|slice(0, 2) %}
                         <div class="service_cards">
                             <div class="service_cards_header">
-                                {{ service.serviceName|raw }}
+                                <h4>{{ service.serviceName|raw }}</h4>
                                 <p>à partir de <br></p>
                                 <span class="stickers_price">{{ service.servicePrice|raw }}€ ttc</span>
                             </div>
@@ -124,7 +124,7 @@
                     {% for service in services|slice(2, 2) %}
                         <div class="service_cards">
                             <div class="service_cards_header">
-                                {{ service.serviceName|raw }}
+                                <h4>{{ service.serviceName|raw }}</h4>
                                 <p>à partir de <br></p>
                                 <span class="stickers_price">{{ service.servicePrice|raw }}€ ttc</span>
                             </div>
@@ -134,8 +134,26 @@
                             </div>
                         </div>
                     {% endfor %}
-                    
+                </div>
+                <hr>
+                <div class="services_categories">
+                    <h3>
+                        <i class="fa-sharp fa-solid fa-arrow-right"></i> {{categories[2].categoryName|raw}} <br>
+                    </h3>
+                    {{categories[0].categoryContent|raw}}
+                    <p>01.  Choisis ton pack identité visuelle*</p>
+                    <p>02.  Choisis ton pack site internet*</p>
+                    <p>03.  Choisis tes autres prestations*</p>
+                    <p>04.  Récapitulatif</p>
 
+                    {{ form_start(offerPriceForm) }}
+                        {{ form_row(offerPriceForm.services_identite_visuelle) }}
+                        {{ form_row(offerPriceForm.services_site_internet) }}
+                        {{ form_row(offerPriceForm.services_presta_a_la_carte) }}
+                        <div class="center_button">
+                            <button class="" id="" type="submit">Valider les informations</button>
+                        </div>
+                    {{ form_end(offerPriceForm) }}
                 </div>
             </article>
         </section>
@@ -155,8 +173,13 @@
                 <hr>
                 {% endfor %}
             </article>
-            {{administrations[25].title|raw}}
+            <div class="guide_calltoaction">
+                {{administrations[25].title|raw}}
+                <a href="{{ path('app_appointment') }}"><button class="full_button_black">Je prends contact</button></a>
+            </div>
         </section>
+
+
 
 {% endblock %}
 
