@@ -22,24 +22,45 @@ $(document).ready(function() {
 
     //_______________________________GESTION DES OFFRES DE PRIX (SERVICES)________________________________
     var nextStep = $('#next_to_site_services')
+    var stepBack = $('#back_to_identite_service')
 
     nextStep.on('click', function(){
         $('#site_services').show()
         $('#identite_service').hide()
     })
 
+    stepBack.on('click', function(){
+        $('#identite_service').show()
+        $('#site_services').hide()
+    })
+
     var nextStep = $('#next_to_presta_services')
+    var stepBack = $('#back_to_site_services')
+
 
     nextStep.on('click', function(){
         $('#presta_services').show()
         $('#site_services').hide()
+        console.log($('#service_services_identite_visuelle').val())
+    })
+
+    stepBack.on('click', function(){
+        $('#site_services').show()
+        $('#presta_services').hide()
     })
 
     var nextStep = $('#next_to_recap')
+    var stepBack = $('#back_to_presta_services')
+
 
     nextStep.on('click', function(){
         $('#recap_services').show()
         $('#presta_services').hide()
+    })
+
+    stepBack.on('click', function(){
+        $('#presta_services').show()
+        $('#recap_services').hide()
     })
 
 

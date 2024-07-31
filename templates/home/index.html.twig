@@ -153,13 +153,16 @@
                         </div>
                         <div id="site_services">
                             {{ form_row(offerPriceForm.services_site_internet) }}
+                            <span id="back_to_identite_service">Revenir</span>
                             <span id="next_to_presta_services">Continuer</span>
                         </div>
                         <div id="presta_services">
                             {{ form_row(offerPriceForm.services_presta_a_la_carte) }}
+                            <span id="back_to_site_services">Revenir</span>
                             <span id="next_to_recap">Continuer</span>
                         </div>
                         <div id="recap_services" class="center_button">
+                            <span id="back_to_presta_services">Revenir</span>
                             <button class="" id="" type="submit">Obtenir une offre de prix</button>
                         </div>
                     {{ form_end(offerPriceForm) }}
