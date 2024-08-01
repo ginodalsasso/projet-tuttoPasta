@@ -1,67 +1,111 @@
-
-$(document).ready(function() {
+$(document).ready(function () {
     //_______________________________GESTION DES COULEURS ALEATOIRES________________________________
     // Variable de couleur pour les H2 des cards articles
-    var colors = ['var(--pink-color)', 'var(--red-color)', 'var(--blue-color)', 'var(--green-color)'];
+    var colors = [
+        "var(--pink-color)",
+        "var(--red-color)",
+        "var(--blue-color)",
+        "var(--green-color)",
+    ];
     // Couleur aléatoire pour chaque élément de la classe .badges_guide i
-    $(".badges_guide i").each(function(index) {
-        $(this).css('color', colors[index % colors.length]);
+    $(".badges_guide i").each(function (index) {
+        $(this).css("color", colors[index % colors.length]);
     });
 
-    var stickerClasses = ['stickers_pink', 'stickers_red', 'stickers_blue', 'stickers_green'];
+    var stickerClasses = [
+        "stickers_pink",
+        "stickers_red",
+        "stickers_blue",
+        "stickers_green",
+    ];
     // Couleur aléatoire pour chaque élément de la classe service_cards_header
-    $(".service_cards_header").each(function(index) {
+    $(".service_cards_header").each(function (index) {
         var color = colors[index % colors.length];
         var stickerClass = stickerClasses[index % stickerClasses.length];
-        
-        $(this).css('color', color); // Change la couleur du H2
 
-        $(this).find('.stickers_price').addClass(stickerClass); // Ajouter la classe de sticker à stickers_price
+        $(this).css("color", color); // Change la couleur du H2
+
+        $(this).find(".stickers_price").addClass(stickerClass); // Ajouter la classe de sticker à stickers_price
     });
 
-
     //_______________________________GESTION DES OFFRES DE PRIX (SERVICES)________________________________
-    var nextStep = $('#next_to_site_services')
-    var stepBack = $('#back_to_identite_service')
+    var stepMappings = [
+        {
+            next: "#next_to_site_services",
+            back: "#back_to_identite_service",
+            currentStep: "#identite_service",
+            nextStep: "#site_services",
+            currentStepId: "#step1",
+            nextStepId: "#step2"
+        },
+        {
+            next: "#next_to_presta_services",
+            back: "#back_to_site_services",
+            currentStep: "#site_services",
+            nextStep: "#presta_a_la_carte",
+            currentStepId: "#step2",
+            nextStepId: "#step3"
+        }
+    ];
 
-    nextStep.on('click', function(){
-        $('#site_services').show()
-        $('#identite_service').hide()
-    })
+    // Initial state
+    $("#step1").css({ 
+        "background-color": "white", 
+        "color": "black",
+        "width": "fit-content",
+    });
 
-    stepBack.on('click', function(){
-        $('#identite_service').show()
-        $('#site_services').hide()
-    })
+    stepMappings.forEach(function(mapping) {
+        $(mapping.next).on("click", function () {
+            $(mapping.currentStep).hide();
+            $(mapping.nextStep).show();
+            $(mapping.currentStepId).removeAttr("style");
+            $(mapping.nextStepId).css({
+                "background-color": "white",
+                "color": "black",
+                "width": "fit-content",
+            });
+        });
 
-    var nextStep = $('#next_to_presta_services')
-    var stepBack = $('#back_to_site_services')
+        $(mapping.back).on("click", function () {
+            $(mapping.nextStep).hide();
+            $(mapping.currentStep).show();
+            $(mapping.nextStepId).removeAttr("style");
+            $(mapping.currentStepId).css({
+                "background-color": "white",
+                "color": "black",
+                "width": "fit-content",
+            });
+        });
+    });
 
+    // $('#identite_visuelle input[type="checkbox"]').on('change', function() {
+    //     $(this).next('label').toggleClass(this.checked);
+    // });
 
-    nextStep.on('click', function(){
-        $('#presta_services').show()
-        $('#site_services').hide()
-        console.log($('#service_services_identite_visuelle').val())
-    })
+    // $('#identite_visuelle label').on('click', function(e) {
+    //     e.preventDefault();
+    //     var $checkbox = $(this).prev('input[type="checkbox"]');
+    //     $checkbox.prop('checked', !$checkbox.prop('checked')).trigger('change');
+    // });
 
-    stepBack.on('click', function(){
-        $('#site_services').show()
-        $('#presta_services').hide()
-    })
+    // Fonction pour gérer le changement d'état des checkboxes
+    function handleCheckboxChange() {
+        $(this).next('label').toggleClass(this.checked);
+    }
 
-    var nextStep = $('#next_to_recap')
-    var stepBack = $('#back_to_presta_services')
+    // Fonction pour gérer le clic sur les labels
+    function handleLabelClick(e) {
+        e.preventDefault();
+        var $checkbox = $(this).prev('input[type="checkbox"]');
+        $checkbox.prop('checked', !$checkbox.prop('checked')).trigger('change');
+    }
 
+    // Appliquer les gestionnaires d'événements à toutes les sections
+    $('#identite_visuelle, #services_site_internet, #presta_a_la_carte').each(function() {
+        $(this).find('input[type="checkbox"]').on('change', handleCheckboxChange);
+        $(this).find('label').on('click', handleLabelClick);
+    });
 
-    nextStep.on('click', function(){
-        $('#recap_services').show()
-        $('#presta_services').hide()
-    })
-
-    stepBack.on('click', function(){
-        $('#presta_services').show()
-        $('#recap_services').hide()
-    })
-
-
+    
 });

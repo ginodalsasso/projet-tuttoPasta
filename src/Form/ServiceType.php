@@ -17,7 +17,6 @@ class ServiceType extends AbstractType
         $builder
             ->add('services_identite_visuelle', EntityType::class, [
                 'class' => Service::class,
-                'choice_label' => 'serviceName',
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
@@ -30,7 +29,6 @@ class ServiceType extends AbstractType
             ])
             ->add('services_site_internet', EntityType::class, [
                 'class' => Service::class,
-                'choice_label' => 'serviceName',
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
@@ -43,7 +41,6 @@ class ServiceType extends AbstractType
             ])
             ->add('services_presta_a_la_carte', EntityType::class, [
                 'class' => Service::class,
-                'choice_label' => 'serviceName',
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,

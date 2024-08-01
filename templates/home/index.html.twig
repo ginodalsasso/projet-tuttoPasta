@@ -25,7 +25,7 @@
         </section>
 
 
-
+        {# --------------------------------- Section guide client ----------------------------------#}
         <section id="guide_section">
             <h2 class="guide_h2">{{administrations[2].title|raw}}</h2>
             <div class="guide_content">
@@ -53,7 +53,7 @@
             </div>
         </section>
 
-
+        {# --------------------------------- Section projects ----------------------------------#}
         <section id="projects_section">
             <div><span class="stickers_green">Projets</span></div>
             <div class="projects_h2">{{administrations[12].title|raw}}</div>
@@ -87,7 +87,7 @@
         </section>
 
 
-
+        {# --------------------------------- Section Services ----------------------------------#}
         <section id="services_section">
             <article class="services_content">
                 <div class="services_h2">                    
@@ -135,40 +135,60 @@
                         </div>
                     {% endfor %}
                 </div>
-                <hr>
+                <hr class="services_separator">
+
+                {# --------------------------------- Section offre de prix ----------------------------------#}
                 <div class="services_categories">
                     <h3>
                         <i class="fa-sharp fa-solid fa-arrow-right"></i> {{categories[2].categoryName|raw}} <br>
                     </h3>
-                    {{categories[0].categoryContent|raw}}
-                    <p>01.  Choisis ton pack identité visuelle*</p>
-                    <p>02.  Choisis ton pack site internet*</p>
-                    <p>03.  Choisis tes autres prestations*</p>
-                    <p>04.  Récapitulatif</p>
+                    <p>{{categories[2].categoryContent|raw}}</p>
+                    <div class="services_steps">
+                        <p id="step1">01. Choisis ton pack identité visuelle*</p>
+                        <p id="step2">02. Choisis ton pack site internet*</p>
+                        <p id="step3">03. Choisis tes prestations supplémentaires*</p>
+                    </div>
 
                     {{ form_start(offerPriceForm) }}
                         <div id="identite_service">
-                            {{ form_row(offerPriceForm.services_identite_visuelle) }}
-                            <span id="next_to_site_services">Continuer</span>
+                            <div class="service_form_categoryContent">
+                                <div id="identite_visuelle">
+                                    {{ form_row(offerPriceForm.services_identite_visuelle, {'label': false}) }}
+                                    <div class="btn_offerPrice">
+                                        <span class="full_button_blue" id="next_to_site_services">Continuer</span>
+                                    </div>
+                                </div>
+                                {{categories[1].categoryContent|raw}}
+                            </div>
                         </div>
+
                         <div id="site_services">
-                            {{ form_row(offerPriceForm.services_site_internet) }}
-                            <span id="back_to_identite_service">Revenir</span>
-                            <span id="next_to_presta_services">Continuer</span>
+                            <div class="service_form_categoryContent">
+                                <div id="site_internet">
+                                    {{ form_row(offerPriceForm.services_site_internet, {'label': false}) }}
+                                    <div class="btn_offerPrice">
+                                        <span class="full_button_black" id="back_to_identite_service">Revenir</span>
+                                        <span class="full_button_blue" id="next_to_presta_services">Continuer</span>
+                                    </div>
+                                </div>
+                                {{categories[0].categoryContent|raw}}
+                            </div>
                         </div>
-                        <div id="presta_services">
-                            {{ form_row(offerPriceForm.services_presta_a_la_carte) }}
-                            <span id="back_to_site_services">Revenir</span>
-                            <span id="next_to_recap">Continuer</span>
-                        </div>
-                        <div id="recap_services" class="center_button">
-                            <span id="back_to_presta_services">Revenir</span>
-                            <button class="" id="" type="submit">Obtenir une offre de prix</button>
+
+                        <div id="presta_a_la_carte">
+                            {{ form_row(offerPriceForm.services_presta_a_la_carte, {'label': false}) }}
+                            <div class="btn_offerPrice">
+                                <span class="full_button_black" id="back_to_site_services">Revenir</span>
+                                <button class="full_button_blue" type="submit">Obtenir une offre de prix</button>
+                            </div>
                         </div>
                     {{ form_end(offerPriceForm) }}
                 </div>
             </article>
         </section>
+
+
+        {# --------------------------------- Section FAQ ----------------------------------#}
         <section class="faq_section">
             <article class="faq_content">
                 <div class="faq_h2">                    
@@ -190,7 +210,6 @@
                 <a href="{{ path('app_appointment') }}"><button class="full_button_black">Je prends contact</button></a>
             </div>
         </section>
-
 
 
 {% endblock %}

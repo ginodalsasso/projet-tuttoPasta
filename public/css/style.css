@@ -123,8 +123,11 @@ a{
 
 /*=============== BUTTONS ===============*/
 .full_button_black,
+.full_button_black_cta,
 .full_button_red,
-.full_button_white  {
+.full_button_white,
+.full_button_white_cta,
+.full_button_blue  {
     padding: 20px 30px;
     font-size: 16px;
     font-weight: 600;
@@ -133,14 +136,19 @@ a{
     cursor: pointer;
 }
 
-.full_button_black,
-.full_button_white {
+.full_button_black_cta,
+.full_button_white_cta {
     border: 3px solid;
     border-image: linear-gradient(45deg, var(--pink-color), var(--red-color), var(--blue-color), var(--green-color));
     border-image-slice: 1;
 }
 
 .full_button_black {
+    border: 1px solid var(--white-color);
+}
+
+.full_button_black,
+.full_button_black_cta {
     color: var(--white-color);
     background-color: var(--black-color);
 }
@@ -150,7 +158,13 @@ a{
     background-color: var(--red-color);
 }
 
-.full_button_white {
+.full_button_blue {
+    color: var(--white-color);
+    background-color: var(--blue-color);
+}
+
+.full_button_white,
+.full_button_white_cta {
     color: var(--black-color);
     background-color: var(--white-color);
 }
@@ -305,6 +319,10 @@ h4 {
     vertical-align: middle;
 }
 
+p {
+    line-height: 1.2;
+}
+
 /*=============== ERRORS ===============*/
 #error_content {
     display: flex;
@@ -312,17 +330,6 @@ h4 {
     flex-direction: column;
     gap: 20px;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*=============== HOME ===============*/
@@ -416,7 +423,10 @@ h4 {
 .expertise_card h3,
 .services_categories h3,
 .guide_calltoaction h2,
-.service_cards_header  {
+.service_cards_header,
+#service_services_identite_visuelle,
+#service_services_site_internet,
+#service_services_presta_a_la_carte  {
     margin-bottom: 1rem;
 }
 
@@ -439,17 +449,78 @@ h4 {
     color: var(--black-color);
     padding: 30px;
     height: 100%;
+
 }
 
 .service_cards_header {
     text-align: center;
 }
 
+.services_separator {
+    margin: 50px 0;
+}
+
 /* Offre de prix */
 #site_services,
-#presta_services,
-#recap_services {
+#presta_a_la_carte {
     display: none;
+}
+
+.services_steps {
+    margin: 30px 0;
+}
+
+.service_form_categoryContent {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+#identite_service p:last-child,
+#site_services p:last-child {
+    background-color: var(--white-color);
+    color: var(--black-color);
+    padding: 1rem;
+    width: 50%;
+    margin-top: -80px;
+}
+
+.btn_offerPrice {
+    display: flex;
+    gap: 10px;
+    margin-top: 100px;
+}
+
+/* Style pour les labels des cases à cocher */
+#identite_visuelle label,
+#site_internet label,
+#presta_a_la_carte label {
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid var(--white-color);
+    cursor: pointer;
+    transition: background-color 0.3s, border 0.3s;
+
+    &:hover {
+        background-color: var(--white-color);
+        color: var(--black-color);
+    }
+}
+
+/* Style pour les cases à cocher cochées */
+#identite_visuelle input[type="checkbox"]:checked + label,
+#site_internet input[type="checkbox"]:checked + label,
+#presta_a_la_carte input[type="checkbox"]:checked + label {
+    background-color: var(--white-color);
+    color: var(--black-color);
+}
+
+/* Cacher les cases à cocher réelles */
+#identite_visuelle input[type="checkbox"], 
+#site_internet input[type="checkbox"],
+#presta_a_la_carte input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
 }
 
 
@@ -464,22 +535,6 @@ h4 {
 .faq_content summary p {
     display: inline-block;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*=============== REGISTRATION ===============*/
 .agree_terms {
