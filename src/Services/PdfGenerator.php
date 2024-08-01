@@ -152,8 +152,12 @@ class PdfGenerator
     // ---------------------------------Génération de l'offre de prix PDF--------------------------------- //
     public function generateOfferPricePdf(array $selectedServices): Response
     {
+        $imagePath = $this->params->get('kernel.project_dir') . '/public/img/logo_black.svg';
+        $imageData = base64_encode(file_get_contents($imagePath));
+
         $html = $this->twig->render('admin/offerPrice.html.twig', [
             'services' => $selectedServices,
+            'logo' => $imageData,
         ]);
         // Génére le contenu PDF
         $this->domPdf->loadHtml($html);

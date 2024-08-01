@@ -4,18 +4,23 @@
     <meta charset="UTF-8">
     <title>Offre de prix</title>
     <style>
+
+        :root {
+            --white-color: #F5F5F5;
+            --black-color: #0F0F0F;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
         }
-        .quote {
-            background-color: #ffffff;
-            border: 1px solid #dddddd;
-            padding: 20px;
-            max-width: 800px;
-            margin: auto;
+
+        .header h2,
+        .header p {
+            text-align: right;
         }
+
         .footer {
             text-align: center;
             margin-bottom: 20px;
@@ -23,10 +28,7 @@
         .header p, .footer p {
             margin: 5px 0;
         }
-        .content h2 {
-            border-bottom: 2px solid #000000;
-            padding-bottom: 5px;
-        }
+
         .content p {
             margin: 5px 0;
         }
@@ -36,15 +38,15 @@
             margin-top: 20px;
         }
         table, th, td {
-            border: 1px solid #000000;
+            border: 1px solid var(--black-color);
         }
         th, td {
             padding: 10px;
             text-align: left;
         }
         th {
-            background-color: #000000;
-            color: #ffffff;
+            background-color: var(--black-color);
+            color: var(--white-color);
         }
         tfoot th, tfoot td {
             font-size: 1.2em;
@@ -52,7 +54,11 @@
     </style>
 </head>
 <body>
-    <h1>Offre de prix</h1>
+    <div class="header">
+        <img src="data:image/svg+xml;base64,{{ logo }}" alt="Logo">
+        <p>{{ "now"|date("d/m/Y") }}</p>
+        <h2>Offre de prix</h2>
+    </div>
     <table>
         <thead>
             <tr>
@@ -79,5 +85,8 @@
             </tr>
         </tfoot>
     </table>
+    <div class="footer">
+        <p>&copy; {{ "now"|date("Y") }} Studio TuttoPasta</p>
+    </div>
 </body>
 </html>

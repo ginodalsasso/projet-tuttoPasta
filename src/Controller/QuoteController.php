@@ -36,6 +36,9 @@ class QuoteController extends AbstractController
     {
         $quote = $entityManager->getRepository(Quote::class)->find($id);
 
+        $imagePath = $this->getParameter('kernel.project_dir') . '/public/img/logo_black.svg';
+        $imageData = base64_encode(file_get_contents($imagePath));
+
         if (!$quote) {
             throw $this->createNotFoundException('Ce devis n\'existe pas');
         }
@@ -43,6 +46,7 @@ class QuoteController extends AbstractController
         $html = $this->renderView('admin/quote.html.twig', [
             'quote' => $quote,
             'appointment' => $quote->getAppointments(),
+            'logo' => $imageData,
         ]);
         // Générer le contenu PDF
         return $pdfGenerator->showPdfFile($html);
