@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Offre de prix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .quote {
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .footer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header p, .footer p {
+            margin: 5px 0;
+        }
+        .content h2 {
+            border-bottom: 2px solid #000000;
+            padding-bottom: 5px;
+        }
+        .content p {
+            margin: 5px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #000000;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        tfoot th, tfoot td {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Offre de prix</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Service</th>
+                <th>Prix</th>
+                <th>Catégorie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set totalPrice = 0 %}
+            {% for service in services %}
+                <tr>
+                    <td>{{ service.serviceName }}</td>
+                    <td>{{ service.servicePrice|number_format(2, ',', ' ') }} €</td>
+                    <td>{{ service.category.categoryName }}</td>
+                </tr>
+                {% set totalPrice = totalPrice + service.servicePrice %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="2">Total</th>
+                <td>{{ totalPrice|number_format(2, ',', ' ') }} €</td>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

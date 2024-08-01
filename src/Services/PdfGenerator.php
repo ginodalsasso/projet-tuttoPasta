@@ -147,4 +147,28 @@ class PdfGenerator
         // Mettre à jour l'entité Quote
         return $quote->getPdfContent();
     }
+
+
+    // ---------------------------------Génération de l'offre de prix PDF--------------------------------- //
+    public function generateOfferPricePdf(array $selectedServices): Response
+    {
+        $html = $this->twig->render('admin/offerPrice.html.twig', [
+            'services' => $selectedServices,
+        ]);
+        // Génére le contenu PDF
+        $this->domPdf->loadHtml($html);
+        // Rendu du PDF
+        $this->domPdf->render();
+        // Renvoie le PDF en réponse HTTP
+        $pdfContent = $this->domPdf->output();
+        
+        return new Response(
+            $pdfContent,
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="devis_services.pdf"'
+            ]
+        );
+    }
 }

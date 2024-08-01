@@ -8,6 +8,7 @@ use App\Form\CommentType;
 use App\Form\ServiceType;
 use App\Form\UserFormType;
 use App\Form\EditPasswordType;
+use App\Services\PdfGenerator;
 use App\Repository\QuoteRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\ProjectRepository;
@@ -49,18 +50,28 @@ class ViewsController extends AbstractController
     {
         return $this->redirectToRoute('app_home');
     }
-    
+
     #[Route('/home', name: 'app_home')]
-    public function homeShow(AdministrationRepository $administrationRepository, ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, ServiceRepository $serviceRepository, CategoryRepository $categoryRepository): Response
-    {
+    public function homeShow(
+        Request $request,
+        AdministrationRepository $administrationRepository,
+        ProjectRepository $projectRepository,
+        ProjectImgRepository $projectImgRepository,
+        ServiceRepository $serviceRepository,
+        CategoryRepository $categoryRepository,
+        PdfGenerator $pdfGenerator
+    ): Response {
         $administrations = $administrationRepository->findAll();
         $projects = $projectRepository->findAll();
-        $projectImgs= $projectImgRepository->findAll();
-        $services= $serviceRepository->findAll();
-        $categories= $categoryRepository->findAll();
+        $projectImgs = $projectImgRepository->findAll();
+        $services = $serviceRepository->findAll();
+        $categories = $categoryRepository->findAll();
 
         // Formulaire pour la génération d'offre de prix
-        $offerPriceForm = $this->createForm(Servicetype::class);
+        $offerPriceForm = $this->createForm(ServiceType::class, null, [
+            'action' => $this->generateUrl('app_generate_offerPrice'), // URL de l'action du formulaire
+            'method' => 'POST',
+        ]);
 
         return $this->render('home/index.html.twig', [
             'administrations' => $administrations,
@@ -72,26 +83,50 @@ class ViewsController extends AbstractController
         ]);
     }
 
+    // ---------------------------------Vue de génération d'offre de prix--------------------------------- //
+    #[Route('/offerPrice', name: 'app_generate_offerPrice', methods: ['POST'])]
+    public function generateOfferPrice(Request $request, PdfGenerator $pdfGenerator): Response
+    {
+        $offerPriceForm = $this->createForm(ServiceType::class);
+        $offerPriceForm->handleRequest($request);
 
-
-    
-    // Formulaire de génération d'offre de prix
-    // #[Route('/service/priceOffer', name: 'app_priceOffer')]
-    // public function priceOfferForm(Request $request): Response
-    // {
-    //     // Créer le formulaire
-    //     $form = $this->createForm(ServiceType::class);
-
-    //     // Traiter le formulaire
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
+        if ($offerPriceForm->isSubmitted() && $offerPriceForm->isValid()) {
+            $formData = $offerPriceForm->getData();
             
+            $selectedServices = [];
+            // Récupére les services sélectionnés
+            foreach (['services_identite_visuelle', 'services_site_internet', 'services_presta_a_la_carte'] as $category) {
+                // Vérifie si la catégorie existe dans le formulaire
+                if (isset($formData[$category])) {
+                    foreach ($formData[$category] as $service) {
+                        // Ajoute les services sélectionnés dans le tableau
+                        $selectedServices[] = [
+                            'serviceName' => $service->getServiceName(),
+                            'servicePrice' => $service->getServicePrice(),
+                            'category' => [
+                                'categoryName' => $service->getCategory()->getCategoryName()
+                            ]
+                        ];
+                    }
+                }
+            }
+            
+            if (empty($selectedServices)) {
+                $this->addFlash('error', 'Aucun service n\'a été sélectionné.');
+                return $this->redirectToRoute('app_home');
+            }
+            
+            // Génére le PDF
+            $pdfResponse = $pdfGenerator->generateOfferPricePdf($selectedServices);
+            
+            return $pdfResponse;
+        }
 
-    //         return $this->redirectToRoute('app_home');
-    //     }
-    // }
-    
+        // En cas d'erreur de formulaire, redirige vers la page d'accueil
+        return $this->redirectToRoute('app_home');
+    }
+
+
     // ---------------------------------Vue profil utilisateur--------------------------------- //
     #[Route('/profil', name: 'app_profil', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
@@ -127,12 +162,12 @@ class ViewsController extends AbstractController
     public function listProjectsShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, CategoryRepository $categoryRepository): Response
     {
         $projects = $projectRepository->findAll();
-        $projectImgs= $projectImgRepository->findAll();
-        $categories= $categoryRepository->findAll();
+        $projectImgs = $projectImgRepository->findAll();
+        $categories = $categoryRepository->findAll();
 
         // Vérifie si les projets et les images de projets existent
         if (!$projects || !$projectImgs || !$categories) {
-            throw new NotFoundHttpException('Page non trouvée');        
+            throw new NotFoundHttpException('Page non trouvée');
         }
 
         return $this->render('projects/project_list.html.twig', [
@@ -141,12 +176,12 @@ class ViewsController extends AbstractController
             'categories' => $categories,
         ]);
     }
-    
+
 
     // ---------------------------------Vue détail projets--------------------------------- //
     #[Route('/projects/{slug}', name: 'app_project', requirements: ['slug' => '[a-z0-9\-]*'])]
     public function projectShow(?Project $project, string $slug): Response
-    { 
+    {
         if (!$project) {
             throw new NotFoundHttpException('Aucun projet trouvé');
             return $this->redirectToRoute('app_home');
@@ -154,7 +189,7 @@ class ViewsController extends AbstractController
 
         // Vérifie si le slug de l'objet project correspond au slug de l'URL
         if ($project->getSlug() !== $slug) {
-            throw new NotFoundHttpException('Page non trouvée');   
+            throw new NotFoundHttpException('Page non trouvée');
             return $this->redirectToRoute('app_home');
         }
 
@@ -180,7 +215,7 @@ class ViewsController extends AbstractController
             'articles' => $articles,
         ]);
     }
-    
+
     // ---------------------------------Vue détail article--------------------------------- //
     #[Route('blog/{slug}', name: 'app_article', requirements: ['slug' => '[a-z0-9\-]*'])]
     public function articleShow(string $slug, ArticleRepository $articleRepository): Response
