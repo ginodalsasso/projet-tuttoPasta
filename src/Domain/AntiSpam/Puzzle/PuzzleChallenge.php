@@ -17,10 +17,12 @@ class PuzzleChallenge implements ChallengeInterface
     private const SESSION_KEY = 'puzzles';
     private const PRECISION = 2;
 
+
     // Constructeur pour injecter l'objet RequestStack en lecture seule
     public function __construct(private readonly RequestStack $requestStack)
     {
     }
+
 
     // Génère une clé unique pour un nouveau puzzle
     public function generateKey(): string
@@ -40,6 +42,7 @@ class PuzzleChallenge implements ChallengeInterface
         // Retourne la clé générée
         return $now;
     }
+
 
     // Vérifie si la réponse fournie pour une clé donnée est correcte
     public function verify(string $key, string $anwser): bool
@@ -62,6 +65,7 @@ class PuzzleChallenge implements ChallengeInterface
         return abs($expected[0] - $got[0]) <= self::PRECISION && abs($expected[1] - $got[1]) <= self::PRECISION;
     }
 
+
     /**
      * Récupère la solution pour une clé donnée
      * @return int[]|null
@@ -80,12 +84,14 @@ class PuzzleChallenge implements ChallengeInterface
         return null;
     }
 
+
     // Récupère la session actuelle à partir de la pile de requêtes
     private function getSession(): SessionInterface
     {
         return $this->requestStack->getMainRequest()->getSession();
     }
 
+    
     /**
      * Convertit une chaîne de caractères en position x et y
      * @return int[]

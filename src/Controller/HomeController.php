@@ -18,7 +18,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
-use App\Trait\QuoteTrait;
 
 class HomeController extends AbstractController
 {
@@ -29,12 +28,9 @@ class HomeController extends AbstractController
         $this->htmlSanitizer = $htmlSanitizer;
         $this->pdfGenerator = $pdfGenerator;
     }
-#region APPOINTMENT
+
 //________________________________________________________________APPOINTMENT______________________________________________________________
-//____________________________________________________________________________________________________________________________
-//____________________________________________________________________________________________________________________
-    // ---------------------------------Vue RDV et Gestion de RDV--------------------------------- //
-    // Gère le processus de création d'un rendez-vous
+    // Vue et gestion du processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
     public function addAppointment(Request $request, Security $security, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, MailerInterface $mailer, PdfGenerator $pdfGenerator): Response
     {
@@ -160,7 +156,7 @@ class HomeController extends AbstractController
 
 
     // Récupère toutes les dates de congé
-     #[Route('/get_dayoff_dates', name:'get_dayoff_dates', methods:['POST'])]
+    #[Route('/get_dayoff_dates', name:'get_dayoff_dates', methods:['POST'])]
     public function getDayOffDates(DayOffRepository $dayOffRepository): JsonResponse
     {
         // Récupère tous les jours de congé depuis le repository

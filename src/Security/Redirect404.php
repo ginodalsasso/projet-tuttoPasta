@@ -17,9 +17,11 @@ class Redirect404
         $this->router = $router;
     }
 
+
     // Méthode appelée lorsqu'une exception se produit
     public function onKernelException(ExceptionEvent $event)
-    {   // Récupération de l'exception
+    {   
+        // Récupération de l'exception
         $exception = $event->getThrowable();
         // Si l'exception n'est pas de type NotFoundHttpException, on ne fait rien
         if ($exception instanceof NotFoundHttpException) {

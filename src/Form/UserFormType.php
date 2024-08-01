@@ -30,6 +30,7 @@ class UserFormType extends AbstractType
                 ]);
             };
 
+            
             $builder
             ->add('username', TextType::class,[
                 'label' => "Pseudo",

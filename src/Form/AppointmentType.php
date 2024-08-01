@@ -25,6 +25,7 @@ class AppointmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+
             ->add('name', TextType::class, [
                 'label' => "Nom",
                 'required' => true,
@@ -44,6 +45,8 @@ class AppointmentType extends AbstractType
                     ]),
                 ],
             ])
+
+
             ->add('firstName', TextType::class, [
                 'label' => "Prénom",
                 'required' => true,
@@ -64,6 +67,7 @@ class AppointmentType extends AbstractType
                 ],
             ])
 
+
             ->add('email', EmailType::class,[
                 'label' => "E-mail",
                 'required' => true,
@@ -80,6 +84,8 @@ class AppointmentType extends AbstractType
                     ]),
                 ],
             ])
+
+
             ->add('message', TextareaType::class, [
                 'label' => "Notes supplémentaires",
                 'required' => true,
@@ -97,6 +103,8 @@ class AppointmentType extends AbstractType
                     ]),
                 ],
             ])
+
+
             ->add('startDate', DateType::class, [
                 'label' => "Rendez-vous",
                 'required' => true,
@@ -110,8 +118,9 @@ class AppointmentType extends AbstractType
                         'message' => 'Veuillez séléctionner une date dans le présent !',
                     ]),
                 ],
-
             ])
+
+
             ->add('services', EntityType::class, [
                 'class' => Service::class,
                 'choice_label' => 'serviceName', 
@@ -123,10 +132,12 @@ class AppointmentType extends AbstractType
                 },
             ])
 
+
             // ->add('captcha', CaptchaType::class, [
             //     'mapped' => false,
             //     'route' => 'captcha'
             // ])
+
 
             ->add('save', SubmitType::class, [
                 'label' => 'Envoyer',
@@ -139,7 +150,7 @@ class AppointmentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Appointment::class,
+            'data_class' => Appointment::class, // Permet de lier le formulaire à l'entité Appointment
         ]);
     }
 }

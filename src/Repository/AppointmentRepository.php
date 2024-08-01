@@ -17,6 +17,7 @@ class AppointmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Appointment::class);
     }
 
+
     public function findAllRDV($startDate)
     {
         // Initialisation des temps de début et de fin de la journée de travail
@@ -38,6 +39,7 @@ class AppointmentRepository extends ServiceEntityRepository
 
         // Génération de tous les créneaux horaires possibles pour la journée
         $bookedSlots = [];
+        // Parcours des rendez-vous pour récupérer les créneaux déjà réservés
         foreach($booking as $booked) {
             $bookedSlots[] = $booked["startDate"]->format('Y-m-d H:i:s');
         }

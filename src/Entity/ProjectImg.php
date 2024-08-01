@@ -16,6 +16,7 @@ class ProjectImg
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 255)]
     #[NotBlank(message: "L'image ne peut pas être vide.")]
     #[File(
@@ -24,11 +25,14 @@ class ProjectImg
     )]
     private ?string $image = null;
 
+
     #[ORM\Column(length: 255)]
     private ?string $alt = null;
 
+
     #[ORM\ManyToOne(inversedBy: 'images')]
     private ?Project $project = null;
+    
     
     // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 

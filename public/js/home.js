@@ -7,10 +7,12 @@ $(document).ready(function () {
         "var(--blue-color)",
         "var(--green-color)",
     ];
+    
     // Couleur aléatoire pour chaque élément de la classe .badges_guide i
     $(".badges_guide i").each(function (index) {
         $(this).css("color", colors[index % colors.length]);
     });
+
 
     var stickerClasses = [
         "stickers_pink",
@@ -18,6 +20,7 @@ $(document).ready(function () {
         "stickers_blue",
         "stickers_green",
     ];
+
     // Couleur aléatoire pour chaque élément de la classe service_cards_header
     $(".service_cards_header").each(function (index) {
         var color = colors[index % colors.length];
@@ -28,7 +31,9 @@ $(document).ready(function () {
         $(this).find(".stickers_price").addClass(stickerClass); // Ajouter la classe de sticker à stickers_price
     });
 
+
     //_______________________________GESTION DES OFFRES DE PRIX (SERVICES)________________________________
+    // Variable pour les offres de prix
     var stepMappings = [
         {
             next: "#next_to_site_services",
@@ -48,24 +53,29 @@ $(document).ready(function () {
         }
     ];
 
+    // Initialisation des étapes des offres de prix
     $("#step1").css({ 
         "background-color": "white", 
         "color": "black",
         "width": "fit-content",
     });
 
+
+    // Gestion des clics sur les boutons Suivant
     stepMappings.forEach(function(mapping) {
         $(mapping.next).on("click", function () {
-            $(mapping.currentStep).hide();
-            $(mapping.nextStep).show();
-            $(mapping.currentStepId).removeAttr("style");
-            $(mapping.nextStepId).css({
+            $(mapping.currentStep).hide(); // Masquer l'étape actuelle
+            $(mapping.nextStep).show(); // Afficher l'étape suivante
+            $(mapping.currentStepId).removeAttr("style");  // Supprimer les styles de l'étape actuelle
+            $(mapping.nextStepId).css({ // Ajouter les styles à l'étape suivante
                 "background-color": "white",
                 "color": "black",
                 "width": "fit-content",
             });
         });
 
+
+        // Gestion du clic sur le bouton Précédent
         $(mapping.back).on("click", function () {
             $(mapping.nextStep).hide();
             $(mapping.currentStep).show();
@@ -78,10 +88,13 @@ $(document).ready(function () {
         });
     });
 
+    //_______________________________GESTION DES CHECKBOXES ET LABELS SUR LE FORMULAIRE D'OFFRES________________________________
     // Fonction pour gérer le changement d'état des checkboxes
     function handleCheckboxChange() {
+        // Ajouter ou supprimer la classe checked à l'élément suivant
         $(this).next('label').toggleClass(this.checked);
     }
+
 
     // Fonction pour gérer le clic sur les labels
     function handleLabelClick(e) {
@@ -90,16 +103,17 @@ $(document).ready(function () {
         $checkbox.prop('checked', !$checkbox.prop('checked')).trigger('change');
     }
 
-    // Appliquer les gestionnaires d'événements à toutes les sections
+
+    // Gestion des checkboxes et des labels
     $('#identite_visuelle, #services_site_internet, #presta_a_la_carte').each(function() {
-        $(this).find('input[type="checkbox"]').on('change', handleCheckboxChange);
-        $(this).find('label').on('click', handleLabelClick);
+        $(this).find('input[type="checkbox"]').on('change', handleCheckboxChange); // Gestion des changements de checkbox
+        $(this).find('label').on('click', handleLabelClick); // Gestion des clics sur les labels
     });
 
 
     //_______________________________FAQ Icones________________________________
-
     $("#faq summary").click(function(){
+        // Change l'icone de la balise <summary> lorsqu'on clique dessus
         var icon = $(this).find("i");
         if(icon.hasClass("fa-arrow-down")) {
             icon.removeClass("fa-arrow-down").addClass("fa-arrow-right");

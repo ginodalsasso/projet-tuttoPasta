@@ -18,18 +18,23 @@ class Service
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 255)]
     private ?string $serviceName = null;
 
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $serviceContent = null;
+
 
     #[ORM\Column(nullable: true)]
     #[PositiveOrZero(message: "Le prix du service ne peut pas être négatif.")]
     private ?float $servicePrice = null;
 
+
     #[ORM\ManyToOne(inversedBy: 'services')]
     private ?Category $category = null;
+
 
     /**
      * @var Collection<int, Appointment>
@@ -37,6 +42,7 @@ class Service
     #[ORM\ManyToMany(targetEntity: Appointment::class, mappedBy: 'services')]
     private Collection $appointments;
 
+    
     // ---------------------------------CONSCTRUCT--------------------------------- //
 
     public function __construct()

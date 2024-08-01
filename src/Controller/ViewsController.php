@@ -36,6 +36,8 @@ class ViewsController extends AbstractController
     {
         return $this->render('errors/error404.html.twig');
     }
+
+
     // Vue error 500 = erreur serveur
     #[Route('/error/500', name: 'app_error_500')]
     public function showError500(): Response
@@ -51,15 +53,14 @@ class ViewsController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+
     #[Route('/home', name: 'app_home')]
     public function homeShow(
-        Request $request,
         AdministrationRepository $administrationRepository,
         ProjectRepository $projectRepository,
         ProjectImgRepository $projectImgRepository,
         ServiceRepository $serviceRepository,
         CategoryRepository $categoryRepository,
-        PdfGenerator $pdfGenerator
     ): Response {
         $administrations = $administrationRepository->findAll();
         $projects = $projectRepository->findAll();
@@ -83,6 +84,7 @@ class ViewsController extends AbstractController
         ]);
     }
 
+
     // ---------------------------------Vue de génération d'offre de prix--------------------------------- //
     #[Route('/offerPrice', name: 'app_generate_offerPrice', methods: ['POST'])]
     public function generateOfferPrice(Request $request, PdfGenerator $pdfGenerator): Response
@@ -92,7 +94,7 @@ class ViewsController extends AbstractController
 
         if ($offerPriceForm->isSubmitted() && $offerPriceForm->isValid()) {
             $formData = $offerPriceForm->getData();
-            
+
             $selectedServices = [];
             // Récupére les services sélectionnés
             foreach (['services_identite_visuelle', 'services_site_internet', 'services_presta_a_la_carte'] as $category) {
@@ -110,19 +112,18 @@ class ViewsController extends AbstractController
                     }
                 }
             }
-            
+            // Vérifie si aucun service n'a été sélectionné
             if (empty($selectedServices)) {
                 $this->addFlash('error', 'Aucun service n\'a été sélectionné.');
                 return $this->redirectToRoute('app_home');
             }
-            
+
             // Génére le PDF
             $pdfResponse = $pdfGenerator->generateOfferPricePdf($selectedServices);
-            
+
             return $pdfResponse;
         }
 
-        // En cas d'erreur de formulaire, redirige vers la page d'accueil
         return $this->redirectToRoute('app_home');
     }
 
@@ -160,7 +161,7 @@ class ViewsController extends AbstractController
     // ---------------------------------Vue liste projets--------------------------------- //
     #[Route('/projects', name: 'app_projectList')]
     public function listProjectsShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, CategoryRepository $categoryRepository): Response
-    {
+    {  
         $projects = $projectRepository->findAll();
         $projectImgs = $projectImgRepository->findAll();
         $categories = $categoryRepository->findAll();
@@ -216,6 +217,7 @@ class ViewsController extends AbstractController
         ]);
     }
 
+
     // ---------------------------------Vue détail article--------------------------------- //
     #[Route('blog/{slug}', name: 'app_article', requirements: ['slug' => '[a-z0-9\-]*'])]
     public function articleShow(string $slug, ArticleRepository $articleRepository): Response
@@ -223,11 +225,12 @@ class ViewsController extends AbstractController
         $article = $articleRepository->findOneBy(['slug' => $slug]);
         $articles = $articleRepository->findAll();
 
-
+        // Vérifie si l'article existe
         if (!$article) {
             throw new NotFoundHttpException('Aucun article trouvé');;
             return $this->redirectToRoute('app_blog');
         }
+        // Vérifie si le slug de l'objet article correspond au slug de l'URL
         if ($article->getSlug() !== $slug) {
             throw new NotFoundHttpException('Aucun article trouvé');;
             return $this->redirectToRoute('app_blog');

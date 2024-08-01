@@ -34,6 +34,8 @@ class EditPasswordType extends AbstractType
                     ]),
                 ],
             ])
+
+            
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'options' => [

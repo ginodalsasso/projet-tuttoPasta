@@ -2,13 +2,11 @@
 
 namespace App\Controller;
 
-use Exception;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,15 +22,16 @@ class GoogleController extends AbstractController
             ->redirect();
     }
 
+    
     #[Route('/connect/google/check', name: 'connect_google_check')]
     public function connectCheckAction(
         Request $request,
         ClientRegistry $clientRegistry,
         EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher,
-        // ContainerInterface $container
     ) {
         try {
+            // On récupère les informations de l'utilisateur
             $client = $clientRegistry->getClient('google');
             $googleUser = $client->fetchUser();
 
@@ -57,19 +56,15 @@ class GoogleController extends AbstractController
             } else {
                 $user = $existingUser;
             }
-
-            $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-            // $container->get('security.token_storage')->setToken($token);
-
+            
+            $token = new UsernamePasswordToken($user, 'main', $user->getRoles()); // 'main' est le nom du firewall
+            // On déclenche l'événement de connexion
             $event = new InteractiveLoginEvent($request, $token);
-            $eventDispatcher->dispatch($event);
-
-            // if ($container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            // On déclenche l'événement
+            $eventDispatcher->dispatch($event); 
+            
             $_SESSION['user'] = $existingUser;
             return $this->redirectToRoute('app_home');
-            // } else {
-            //     throw new \Exception('Échec de lauthentification après la connexion Google');
-            // }
 
         } catch (\Exception $e) {
             return $this->redirectToRoute('app_login', ['error' => $e->getMessage()]);

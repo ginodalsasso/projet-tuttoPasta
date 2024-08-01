@@ -96,6 +96,7 @@ class BlogController extends AbstractController
         return new JsonResponse(['success' => false, 'errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
     
+    
     // ---------------------------------Suppression d'un commentaire article--------------------------------- //
     #[IsGranted('ROLE_USER')]
     #[Route('/blog/{slug}/comment/{id}/delete', name: 'app_article_deleteComment', methods: ['DELETE'], requirements: ['slug' => '[a-z0-9\-]+', 'id' => '\d+'])]

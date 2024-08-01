@@ -29,11 +29,15 @@ class RegistrationFormType extends AbstractType
                 ],
 
             ])
+
+
             ->add('email', EmailType::class,[
                 'attr' => [
                     'class' => 'data'
                 ],
             ])
+
+
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => 'Accepter les termes et conditions',
                 'mapped' => false,
@@ -46,6 +50,8 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+
+
             ->add('plainPassword', RepeatedType::class, [
                 'mapped' => false,
                 'type' => PasswordType::class,
@@ -72,6 +78,8 @@ class RegistrationFormType extends AbstractType
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmez votre mot de passe']
             ])
+
+            
             ->add('captcha', CaptchaType::class, [
                 'mapped' => false,
                 'route' => 'captcha'

@@ -21,29 +21,36 @@ class ServiceType extends AbstractType
                 'expanded' => true,
                 'required' => false,
                 'query_builder' => function (ServiceRepository $sr) {
+                    // On récupère le service de la catégorie "Identité visuelle"
                     return $sr->createQueryBuilder('s')
                         ->join('s.category', 'c')
                         ->where('c.categoryName = :categoryName')
                         ->setParameter('categoryName', 'Identité visuelle');
                 },
             ])
+
+
             ->add('services_site_internet', EntityType::class, [
                 'class' => Service::class,
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
                 'query_builder' => function (ServiceRepository $sr) {
+                    // On récupère le service de la catégorie "Site internet"
                     return $sr->createQueryBuilder('s')
                         ->join('s.category', 'c')
                         ->where('c.categoryName = :categoryName')
                         ->setParameter('categoryName', 'Site internet');
                 },
             ])
+
+            
             ->add('services_presta_a_la_carte', EntityType::class, [
                 'class' => Service::class,
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
+                // On récupère le service de la catégorie "Presta à la carte"
                 'query_builder' => function (ServiceRepository $sr) {
                     return $sr->createQueryBuilder('s')
                         ->join('s.category', 'c')

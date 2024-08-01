@@ -19,6 +19,7 @@ class EmailVerifier
     ) {
     }
 
+    // On envoie un email de confirmation à l'utilisateur
     public function sendEmailConfirmation(string $verifyEmailRouteName, User $user, TemplatedEmail $email): void
     {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
@@ -38,9 +39,11 @@ class EmailVerifier
         $this->mailer->send($email);
     }
 
+
     /**
      * @throws VerifyEmailExceptionInterface
      */
+    // On vérifie le token de confirmation de l'email
     public function handleEmailConfirmation(Request $request, User $user): void
     {
         $this->verifyEmailHelper->validateEmailConfirmationFromRequest($request, (string) $user->getId(), $user->getEmail());

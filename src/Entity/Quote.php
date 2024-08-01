@@ -16,32 +16,42 @@ class Quote
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 255)]
     private ?string $reference = null;
+
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $quoteDate = null;
 
+
     #[ORM\Column(nullable: true)]
     private ?float $totalTTC = null;
+
 
     #[ORM\OneToOne(inversedBy: 'quote', cascade: ['persist', 'remove'])]
     private ?Appointment $appointments = null;
 
+
     #[ORM\Column(length: 255)]
     private ?string $customerName = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $customerEmail = null;
 
+
     #[ORM\Column(length: 255)]
     private ?string $customerFirstName = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $pdfContent = null;
 
+
     #[ORM\Column]
     private ?bool $status = null;
+
 
     // Constantes d'état du devis
     public const STATE_PENDING = 'En attente';
@@ -49,6 +59,7 @@ class Quote
     public const STATE_COMPLETED = 'Payé';
     public const STATE_ARCHIVED = 'Archivé';
 
+    
     // ---------------------------------GETTERS AND SETTERS--------------------------------- //
 
     public function getId(): ?int

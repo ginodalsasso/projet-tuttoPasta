@@ -16,8 +16,10 @@ class Comment
     #[ORM\Column]
     private ?int $id = null;
     
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $username = null;
+
 
     #[ORM\Column(type: Types::TEXT)]
     //use Assert pour les contraintes formulaire
@@ -29,12 +31,15 @@ class Comment
         maxMessage: 'Le commentaire doit contenir au maximum 5000 caractères !')]
     private ?string $commentContent = null;
 
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $commentDate = null;
+
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?Article $article = null;
 
+    
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?User $user = null;
 

@@ -57,7 +57,6 @@ body {
 
 .wrapper_home {
     color: var(--black-color);
-    padding-bottom: 8%;
 }
 
 .wrapper_project {
@@ -65,6 +64,8 @@ body {
     background-color: var(--black-color);
     padding-bottom: 8%;
 }
+
+
 /*=============== MAIN WIDTH ===============*/
 
 #header_content,
@@ -73,7 +74,14 @@ body {
 .project_container,
 .footer_collab,
 .footer_social,
-#footer_nav {
+#footer_nav,
+#introduction_section,
+.guide_content,
+.expertise_section,
+.guide_calltoaction,
+#projects_section > div:first-of-type,
+.services_content,
+.faq_section {
     max-width: 1280px;
     margin-left: auto;
     margin-right: auto;
@@ -338,20 +346,6 @@ p {
     line-height: 2;
 }
 
-#introduction_section,
-.guide_content,
-.expertise_section,
-.guide_calltoaction,
-#projects_section h2,
-#projects_section > div:first-of-type,
-.services_content,
-.faq_section  {
-    max-width: 1280px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-
 #introduction_section {
     display: flex;
     gap: 50px;
@@ -396,7 +390,8 @@ p {
 
 .guide_h2,
 .services_h2,
-.faq_h2 {
+.faq_h2,
+.projects_h2 {
     text-align: center;
     margin-bottom: 100px;
 }
@@ -436,7 +431,6 @@ p {
     width: 50%;
 }
 
-.projects_h2,
 .faq_content {
     margin-bottom: 50px;
 }
@@ -1144,10 +1138,13 @@ footer {
     margin-top: 25px;
     margin-bottom: 200px; 
 }
+
 .footer_social li {
     list-style: none;
     margin: 5px 0;
 }
+
+
 .footer_social li p {
     text-align: right;
 }
@@ -1171,6 +1168,10 @@ footer {
 }
 
 
+
+/*_____________________________ECRANS 800px_____________________________ */
+/*_____________________________ECRANS 800px_____________________________ */
+/*_____________________________ECRANS 800px_____________________________ */
 @media (max-width: 800px) {
 
     /* HOME */
@@ -1193,10 +1194,6 @@ footer {
 
     #introduction_section {
         padding: unset;
-    }
-    
-    #projects_section span {
-        margin-left: 8%;
     }
 
     .faq_section,
@@ -1295,9 +1292,9 @@ footer {
     }
 
 }
-
-
-
+/*_____________________________ECRANS 1280px_____________________________ */
+/*_____________________________ECRANS 1280px_____________________________ */
+/*_____________________________ECRANS 1280px_____________________________ */
 @media (max-width: 1280px) {
 
     .burger-menu {

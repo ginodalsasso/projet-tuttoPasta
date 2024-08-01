@@ -55,8 +55,10 @@
 
         {# --------------------------------- Section projects ----------------------------------#}
         <section id="projects_section">
-            <div><span class="stickers_green">Projets</span></div>
-            <div class="projects_h2">{{administrations[12].title|raw}}</div>
+            <div class="projects_h2">
+                <span class="stickers_green">Projets</span>
+                {{administrations[12].title|raw}}
+            </div>
             <ul class="project_list">
                 <hr>
                 {% for project in projects[:3] %}
@@ -101,6 +103,7 @@
                         </h3>
                         {{categories[0].categoryContent|raw}}
                     </div>
+                    {# les 2 services de la catégorie identité visuelle #}
                     {% for service in services|slice(0, 2) %}
                         <div class="service_cards">
                             <div class="service_cards_header">
@@ -121,6 +124,7 @@
                         </h3>
                         {{categories[1].categoryContent|raw}}
                     </div>
+                    {# les 2 autres services de la catégorie site internet #}
                     {% for service in services|slice(2, 2) %}
                         <div class="service_cards">
                             <div class="service_cards_header">

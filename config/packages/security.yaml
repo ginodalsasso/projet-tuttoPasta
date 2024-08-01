@@ -4,11 +4,12 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
+        # définit le fournisseur d'utilisateurs
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
-
+        # définit les utilisateurs OAuth
         oauth:
             id: knpu.oauth2.user_provider
 
@@ -31,10 +32,10 @@ security:
                 use-forward: false
                 enable_csrf: true
 
-            # configure the maximum login attempts
+            # maximum 3 tentatives de connexion par minute
             login_throttling:
-                max_attempts: 3          # per minute ...
-                interval: '15 minutes' # ... or in a custom period
+                max_attempts: 3          # par minute ...
+                interval: '15 minutes' # intervalle de temps
 
             logout:
                 path: app_logout

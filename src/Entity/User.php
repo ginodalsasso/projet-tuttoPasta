@@ -7,9 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -26,8 +23,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 180)]
     private ?string $email = null;
+
 
     /**
      * @var list<string> The user roles
@@ -35,17 +34,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type:'json')]
     private array $roles = [];
 
+
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
 
+
     #[ORM\Column]
     private bool $isVerified = false;
 
+
     #[ORM\Column(length: 50)]
     private ?string $username = null;
+
 
     /**
      * @var Collection<int, Comment>
@@ -53,14 +56,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'user')]
     private Collection $comments;
 
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $accountDate = null;
+
 
     /**
      * @var Collection<int, Appointment>
      */
     #[ORM\OneToMany(targetEntity: Appointment::class, mappedBy: 'user')]
     private Collection $appointments;
+
 
     #[ORM\Column(nullable: true)]
     private ?bool $googleUser = null;
@@ -221,12 +227,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-    
-
-    public function __toString()
-    {
-        return $this -> username;
-    }
 
     /**
      * @return Collection<int, Appointment>
@@ -268,5 +268,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->googleUser = $googleUser;
 
         return $this;
+    }
+        
+
+    public function __toString()
+    {
+        return $this -> username;
     }
 }

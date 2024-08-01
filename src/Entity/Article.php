@@ -17,17 +17,22 @@ class Article
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 255)]
     private ?string $articleTitle = null;
+
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $articleContent = null;
 
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $articleDate = null;
 
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $articleImage = null;
+
 
     /**
      * @var Collection<int, Category>
@@ -35,14 +40,17 @@ class Article
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'articles')]
     private Collection $categories;
 
+
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
+
 
     /**
      * @var Collection<int, comments>
      */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'article')]
     private Collection $comments;
+
 
     /**
      * @var Collection<int, Tag>
@@ -191,12 +199,7 @@ class Article
 
         return $this;
     }
-
-    public function __toString()
-    {
-        return $this -> articleTitle;
-    }
-
+    
     /**
      * @return Collection<int, tag>
      */
@@ -204,20 +207,25 @@ class Article
     {
         return $this->tags;
     }
-
+    
     public function addTag(Tag $tag): static
     {
         if (!$this->tags->contains($tag)) {
             $this->tags->add($tag);
         }
-
+        
         return $this;
     }
-
+    
     public function removeTag(Tag $tag): static
     {
         $this->tags->removeElement($tag);
-
+        
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this -> articleTitle;
     }
 }

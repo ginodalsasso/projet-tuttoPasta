@@ -17,11 +17,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class Appointment
 {
+
     // ---------------------------------ATTRIBUTS--------------------------------- //
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: "Le prénom ne peut pas être vide.")]
@@ -33,6 +35,7 @@ class Appointment
     )]
     private ?string $firstName = null;
 
+
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank(message: "Le nom ne peut pas être vide.")]
     #[Assert\Length(
@@ -43,10 +46,12 @@ class Appointment
     )]
     private ?string $name = null;
 
+
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: "L'e-mail ne peut pas être vide.")]
     #[Assert\Email(message: "L'e-mail '{{ value }}' n'est pas un e-mail valide.")]
     private ?string $email = null;
+
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: "Le message ne peut pas être vide.")]
@@ -55,6 +60,7 @@ class Appointment
         minMessage: "Le message doit contenir au moins {{ limit }} caractères."
     )]
     private ?string $message = null;
+
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     //Callback permet de créer une contrainte personalisée
@@ -75,11 +81,14 @@ class Appointment
     )]
     private ?\DateTimeInterface $startDate = null;
 
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $endDate = null;
 
+
     #[ORM\Column(nullable: true)]
     private ?array $status = null;
+
 
     /**
      * @var Collection<int, Service>
@@ -87,11 +96,14 @@ class Appointment
     #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'appointments', cascade: ["persist"])]
     private Collection $services;
 
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+
     #[ORM\ManyToOne(inversedBy: 'appointments')]
     private ?User $user = null;
+
 
     #[ORM\OneToOne(mappedBy: 'appointments', cascade: ['persist', 'remove'])]
     private ?Quote $quote = null;
@@ -273,12 +285,12 @@ class Appointment
 
     public function setQuote(?Quote $quote): static
     {
-        // unset the owning side of the relation if necessary
+        // Définit l'entité Quote associée à ce rendez-vous
         if ($quote === null && $this->quote !== null) {
             $this->quote->setAppointments(null);
         }
 
-        // set the owning side of the relation if necessary
+        // Définit l'entité Quote associée à ce rendez-vous
         if ($quote !== null && $quote->getAppointments() !== $this) {
             $quote->setAppointments($this);
         }

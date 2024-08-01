@@ -14,6 +14,7 @@ class PuzzleGenerator implements ChallengeGenerator
     {
     }
 
+    
     // Génère une réponse HTTP contenant une image de puzzle
     public function generate(string $key): Response
     {

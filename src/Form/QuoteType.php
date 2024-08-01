@@ -22,15 +22,23 @@ class QuoteType extends AbstractType
             ->add('reference', TextType::class, [
                 'label' => 'Référence',
             ])
+
+
             ->add('customerName', TextType::class, [
                 'label' => 'Nom du client',
             ])
+
+
             ->add('customerFirstName', TextType::class, [
                 'label' => 'Prénom du client',
             ])
+
+
             ->add('customerEmail', EmailType::class, [
                 'label' => 'Email du client',
             ])
+
+
             ->add('services', EntityType::class, [
                 'class' => Service::class,
                 'choice_label' => 'serviceName',
@@ -43,6 +51,8 @@ class QuoteType extends AbstractType
                 },
                 'label' => 'Services',
             ])
+
+
             ->add('newService', TextType::class, [
                 'mapped' => false,
                 'required' => false,
@@ -52,6 +62,8 @@ class QuoteType extends AbstractType
                     'id' => 'newService',
                 ],
             ])
+
+            
             ->add('newServicePrice', NumberType::class, [
                 'mapped' => false,
                 'required' => false,
@@ -63,6 +75,8 @@ class QuoteType extends AbstractType
                     'min' => '0', // Empêche l'utilisateur de saisir un nombre négatif
                 ],
             ])
+
+            
             ->add('newServiceCategory', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'categoryName',

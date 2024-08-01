@@ -16,6 +16,7 @@ class PdfGenerator
     private $twig;
     private $params;
 
+    // Définition des dépendances
     public function __construct(Environment $twig, ParameterBagInterface $params){
 
         $this->domPdf = new Dompdf();

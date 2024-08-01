@@ -18,14 +18,18 @@ class Project
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\Column(length: 255)]
     private ?string $projectName = null;
+
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $projectContent = null;
 
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $projectDate = null;
+
 
     /**
      * @var Collection<int, ProjectImg>
@@ -33,15 +37,18 @@ class Project
     #[ORM\OneToMany(targetEntity: ProjectImg::class, mappedBy: 'project')]
     private Collection $images;
 
+
     /**
      * @var Collection<int, Category>
      */
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'projects')]
     private Collection $categories;
 
+
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $projectTitle = null;
 

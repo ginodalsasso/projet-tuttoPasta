@@ -18,7 +18,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
-use App\Trait\QuoteTrait;
 
 
 
@@ -29,6 +28,8 @@ class QuoteController extends AbstractController
     public function __construct(PdfGenerator $pdfGenerator) {
         $this->pdfGenerator = $pdfGenerator;
     }
+
+
     // ---------------------------------Vue PDF DEVIS--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/{id}', name: 'quote_pdf')]
@@ -52,6 +53,7 @@ class QuoteController extends AbstractController
         return $pdfGenerator->showPdfFile($html);
     }
 
+    
     // ---------------------------------Vue LISTE DES DEVIS--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quotes', name: 'app_quotes')]

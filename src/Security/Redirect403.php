@@ -11,13 +11,18 @@ class Redirect403
 {
     private $router;
 
+
+
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }
+
+
     // Méthode appelée lorsqu'une exception se produit
     public function onKernelException(ExceptionEvent $event)
-    {   // Récupération de l'exception
+    {  
+         // Récupération de l'exception
         $exception = $event->getThrowable();
         // Si l'exception n'est pas de type AccessDeniedHttpException, on ne fait rien
         if (!$exception instanceof AccessDeniedHttpException) {
