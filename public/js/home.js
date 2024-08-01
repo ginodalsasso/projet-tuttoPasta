@@ -48,7 +48,6 @@ $(document).ready(function () {
         }
     ];
 
-    // Initial state
     $("#step1").css({ 
         "background-color": "white", 
         "color": "black",
@@ -79,16 +78,6 @@ $(document).ready(function () {
         });
     });
 
-    // $('#identite_visuelle input[type="checkbox"]').on('change', function() {
-    //     $(this).next('label').toggleClass(this.checked);
-    // });
-
-    // $('#identite_visuelle label').on('click', function(e) {
-    //     e.preventDefault();
-    //     var $checkbox = $(this).prev('input[type="checkbox"]');
-    //     $checkbox.prop('checked', !$checkbox.prop('checked')).trigger('change');
-    // });
-
     // Fonction pour gérer le changement d'état des checkboxes
     function handleCheckboxChange() {
         $(this).next('label').toggleClass(this.checked);
@@ -107,5 +96,16 @@ $(document).ready(function () {
         $(this).find('label').on('click', handleLabelClick);
     });
 
+
+    //_______________________________FAQ Icones________________________________
+
+    $("#faq summary").click(function(){
+        var icon = $(this).find("i");
+        if(icon.hasClass("fa-arrow-down")) {
+            icon.removeClass("fa-arrow-down").addClass("fa-arrow-right");
+        } else {
+            icon.removeClass("fa-arrow-up").addClass("fa-arrow-down");
+        }
+    });
     
 });

@@ -388,6 +388,7 @@ p {
 
 .guide_content {
     display: grid;
+    justify-items: center;
     grid-template-rows: repeat(2, 1fr);
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
@@ -432,6 +433,7 @@ p {
 
 .badges_guide {
     display: flex;
+    width: 50%;
 }
 
 .projects_h2,
@@ -439,21 +441,30 @@ p {
     margin-bottom: 50px;
 }
 
-.btn_center {
-    text-align: center;
-    margin-top: 50px;
-}
-
 .service_cards {
     background-color: var(--white-color);
     color: var(--black-color);
     padding: 30px;
     height: 100%;
-
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .service_cards_header {
     text-align: center;
+}
+
+.btn_center_services_cards {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+}
+
+.btn_center_projects {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
 }
 
 .services_separator {
@@ -523,9 +534,6 @@ p {
     opacity: 0;
 }
 
-
-
-
 .faq_content details,
 .faq_content summary {
     padding: 10px 0;
@@ -534,6 +542,15 @@ p {
 
 .faq_content summary p {
     display: inline-block;
+}
+
+#faq summary {
+    display: flex;
+    gap: 10px;
+}
+
+summary {
+    list-style-type: none;
 }
 
 /*=============== REGISTRATION ===============*/
@@ -1153,20 +1170,83 @@ footer {
     font-size: 14px;
 }
 
+
 @media (max-width: 800px) {
+
+    /* HOME */
+    #identite_service p:last-child,
+    #site_services p:last-child {
+        display: none;
+    }
+
+    #introduction_section img,
+    .introduction_content,
+    .badges_guide {
+        width: 100%;
+        max-width: none;
+    }
+
+    .introduction_content,
+    .footer_social {
+        margin-bottom: 50px;
+    }
+
+    #introduction_section {
+        padding: unset;
+    }
+    
+    #projects_section span {
+        margin-left: 8%;
+    }
+
+    .faq_section,
+    #introduction_section,
+    .projects_h2,
+    .footer_collab,
+    .footer_social {
+        padding: 0 8%;
+
+    }
+
+    .badges_guide,
+    .expertise_card,
+    .services_categories {
+        padding: 20px 0;
+    }
+
+    .btn_offerPrice {
+        flex-wrap: wrap-reverse;
+        justify-content: center;
+        margin-top: 50px;
+    }
+
+    #introduction_section,
+    .service,
+    .footer_collab,
+    .footer_social {
+        display: flex;
+        flex-direction: column;
+        gap : 30px;
+    }
+
+    .service_form_categoryContent,
+    .expertise_cards,
+    .guide_content,
+
     .project_container,
     .project_header,
-    .project_gallery {
+    .project_gallery,
+    .article_list {
         display: block;
+    }
+
+    .footer_social li p {
+        text-align: left;
     }
 
     .project_container img {
         width: 100%;
         margin-top: 20px;
-    }
-
-    .article_list {
-        display: block;
     }
 
     .project_details,
@@ -1181,6 +1261,24 @@ footer {
 
     .project_details h2 {
         width: 100%;
+    }
+
+    .background-bottom img:first-of-type{
+        display: none;
+    }
+
+    .btn_center_projects {
+        margin-top: 20px;
+    }
+
+    .background-bottom img:last-of-type{
+        position: absolute;
+        right: -200px;
+        top: -10px;
+    }
+
+    .footer_rgpd {
+        width: 50%;
     }
 
     /* TABLEAUX */
@@ -1200,7 +1298,7 @@ footer {
 
 
 
-@media (max-width: 1200px) {
+@media (max-width: 1280px) {
 
     .burger-menu {
         display: block;
@@ -1215,6 +1313,23 @@ footer {
         font-size: 40px;
         display: none;
     }
+
+    .faq_section,
+    #introduction_section,
+    .projects_h2,
+    .footer_collab,
+    .footer_social {
+        padding: 0 8%;
+    }
+
+    .footer_collab {
+        padding-top: 100px;
+    }
+
+    #projects_section span {
+        margin-left: 8%;
+    }
+
 
     #appointment_btn_nav {
         display: none;

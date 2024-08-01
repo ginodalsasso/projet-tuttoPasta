@@ -81,7 +81,7 @@
                 <hr>
             {% endfor %}
             </ul>
-            <div class="btn_center">
+            <div class="btn_center_projects">
                 <a href="{{ path('app_projectList') }}"><button class="full_button_black">Voir plus de projets</button></a>
             </div>
         </section>
@@ -109,7 +109,7 @@
                                 <span class="stickers_price">{{ service.servicePrice|raw }}€ ttc</span>
                             </div>
                             {{ service.serviceContent|raw }}
-                            <div class="btn_center">
+                            <div class="btn_center_services_cards">
                                 <a href="{{ path('app_appointment') }}"><button class="full_button_black">Je choisis ce pack</button></a>
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                                 <span class="stickers_price">{{ service.servicePrice|raw }}€ ttc</span>
                             </div>
                             {{ service.serviceContent|raw }}
-                            <div class="btn_center">
+                            <div class="btn_center_services_cards">
                                 <a href="{{ path('app_appointment') }}"><button class="full_button_black">Je choisis ce pack</button></a>
                             </div>
                         </div>
@@ -196,9 +196,9 @@
                     {{administrations[19].title|raw}}
                 </div>
                 {% for administration in administrations|slice(20, 5) %}
-                <details>
+                <details id="faq">
                     <summary>
-                        {{ administration.title|raw }} <br>
+                        <i class="fa-solid fa-arrow-right"></i> {{ administration.title|raw }}<br>
                     </summary>
                     {{ administration.textContent|raw }} <br>
                 </details>
