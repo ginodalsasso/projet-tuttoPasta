@@ -99,9 +99,15 @@ class PdfGenerator
     // ---------------------------------Génération et stockage du PDF--------------------------------- //
     public function generateAndStorePdf(PdfGenerator $pdfGenerator, Quote $quote, string $reference): string
     {
+        $imagePath = $this->params->get('kernel.project_dir') . '/public/img/logo_black.svg';
+        $imageData = base64_encode(file_get_contents($imagePath));
+
         $html = $this->twig->render('admin/quote.html.twig', [
             'quote' => $quote,
             'appointment' => $quote->getAppointments(),
+            'logo' => $imageData,
+
+
         ]);
         // Générer le contenu PDF
         $pdfContent = $pdfGenerator->generatePDF($html);
@@ -126,9 +132,14 @@ class PdfGenerator
     // ---------------------------------Archivage et stockage du PDF--------------------------------- //
     public function generateAndArchivePdf(PdfGenerator $pdfGenerator, Quote $quote, string $reference): string
     {
+        $imagePath = $this->params->get('kernel.project_dir') . '/public/img/logo_black.svg';
+        $imageData = base64_encode(file_get_contents($imagePath));
+
         $html = $this->twig->render('admin/quote.html.twig', [
             'quote' => $quote,
             'appointment' => $quote->getAppointments(),
+            'logo' => $imageData,
+
         ]);
         // Générer le contenu PDF
         $pdfContent = $pdfGenerator->generatePDF($html);

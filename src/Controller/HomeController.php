@@ -7,6 +7,8 @@ use App\Form\AppointmentType;
 use App\Services\PdfGenerator;
 use Symfony\Component\Mime\Address;
 use App\Repository\DayOffRepository;
+use App\Repository\ServiceRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -16,8 +18,8 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
@@ -32,8 +34,20 @@ class HomeController extends AbstractController
 //________________________________________________________________APPOINTMENT______________________________________________________________
     // Vue et gestion du processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
-    public function addAppointment(Request $request, Security $security, EntityManagerInterface $entityManager, DayOffRepository $dayOffRepository, MailerInterface $mailer, PdfGenerator $pdfGenerator): Response
+    public function addAppointment(
+        Request $request, 
+        Security $security, 
+        EntityManagerInterface $entityManager, 
+        CategoryRepository $categoryRepository, 
+        ServiceRepository $serviceRepository, 
+        DayOffRepository $dayOffRepository, 
+        MailerInterface $mailer, 
+        PdfGenerator $pdfGenerator
+        ): Response
     {
+        $services = $serviceRepository->findAll();
+        $categories = $categoryRepository->findAll();
+
         $appointment = new Appointment();
         $form = $this->createForm(AppointmentType::class, $appointment);
 
@@ -98,8 +112,6 @@ class HomeController extends AbstractController
                     $entityManager->persist($appointment);
                     $entityManager->persist($quote);
                     $entityManager->flush();
-                    
-
 
                     $this->sendConfirmationEmail($mailer, $emailAddress, $startDate);
 
@@ -116,7 +128,9 @@ class HomeController extends AbstractController
 
         return $this->render('home/appointment.html.twig', [
             'form' => $form->createView(),
-            'title' => 'Prise de rendez-vous'
+            'title' => 'Prise de rendez-vous',
+            'services' => $services,
+            'categories' => $categories,
         ]);
     }
 

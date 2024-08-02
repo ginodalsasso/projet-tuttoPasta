@@ -38,6 +38,7 @@ $(document).ready(function () {
 
         $(this).find(".stickers_price").addClass(stickerClass); // Ajoute la classe de sticker
         $(this).find(".service_button").addClass(buttonClass); // Ajoute la classe de button
+    });
 
 
 

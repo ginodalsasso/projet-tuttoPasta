@@ -46,7 +46,8 @@ body {
 
 
 .wrapper,
-.wrapper_project_list
+.wrapper_project_list,
+.wrapper_appointment
 {
     color: var(--black-color);
     background-color: var(--white-color);
@@ -159,12 +160,29 @@ a{
 
 .full_button_black {
     border: 1px solid var(--white-color);
+
+        &:hover {
+            border: 1px solid var(--black-color);
+        }
+}
+
+.full_button_white {
+    border: 1px solid var(--black-color);
+
+        &:hover {
+            border: 1px solid var(--white-color);
+        }
 }
 
 .full_button_black,
 .full_button_black_cta {
     color: var(--white-color);
     background-color: var(--black-color);
+
+        &:hover {
+            color: var(--black-color);
+            background-color: var(--white-color);
+        }
 }
 
 .full_button_red {
@@ -191,6 +209,11 @@ a{
 .full_button_white_cta {
     color: var(--black-color);
     background-color: var(--white-color);
+
+        &:hover {
+            color: var(--white-color);
+            background-color: var(--black-color);
+        }
 }
 
 .stickers_white,
@@ -761,7 +784,7 @@ summary {
     align-items: center;
     flex-direction:column;
     gap: 20px;
-    margin: 100px;
+    margin: 100px 100px 50px 100px;
 }
 
 .form_container label{
@@ -839,6 +862,24 @@ summary {
     flex-wrap: wrap;
     width: 50vw;
     max-width: 800px;
+}
+
+#discover_services {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+#discover_services a {
+    color: var(--black-color);
+
+    &:hover {
+        color: var(--blue-color);
+    }
+}
+
+.services_content h2 {
+    text-align: center;
+    margin-bottom: 50px;
 }
 
 /*=============== LISTE PROJETS ===============*/
@@ -1009,6 +1050,11 @@ summary {
     align-items: center;
     gap: 10px;
 }
+
+.social_share a:hover {
+    transform: scale(1.2);
+}
+
 
 .article_content {
     width: 50vw;
@@ -1327,7 +1373,7 @@ footer {
     }
 
     /* TABLEAUX */
-    table, thead, tbody, th, td, tr {
+    /* table, thead, tbody, th, td, tr {
         display: block;
     }
     thead tr {
@@ -1337,7 +1383,41 @@ footer {
     }
     tr {
         margin-bottom: 30px;
-    }
+    } */
+      
+      table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+      }
+      
+      table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+      }
+      
+      table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right !important;
+      }
+
+    table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+      }
+
+      table td:last-child {
+        border-bottom: 0;
+      }
 
 }
 /*_____________________________ECRANS 1280px_____________________________ */

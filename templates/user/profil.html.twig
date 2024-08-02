@@ -75,7 +75,7 @@
                         <table class="appointments_table">
                             <thead>
                                 <tr>
-                                    <th>Date de début</th>
+                                    <th scope="col">Date de début</th>
                                     <th>Date de fin</th>
                                     <th>Annulation</th>
                                 </tr>
@@ -85,9 +85,9 @@
                                     {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
                                     {% if appointmentDate >= now %}
                                         <tr id="appointment-{{ appointment.id }}">
-                                            <td>{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
-                                            <td>{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
-                                            <td>
+                                            <td data-label="Date de début">{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
+                                            <td data-label="Date de fin">{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
+                                            <td data-label="Annulation">
                                                 <a href="#" class="cancel_appointment" data-id="{{ appointment.id }}">
                                                     <i class="fa-solid fa-x"></i>
                                                 </a>
@@ -113,8 +113,8 @@
                                     {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
                                     {% if appointmentDate < now %}
                                         <tr id="appointment-{{ appointment.id }}">
-                                            <td>{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
-                                            <td>{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
+                                            <td data-label="Date de début">{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
+                                            <td data-label="Date de fin">{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
                                         </tr>
                                     {% endif %}
                                 {% endfor %}
@@ -138,10 +138,10 @@
                             {% for quote in quotes %}
                                 {% if quote.status == 1 %}
                                     <tr id="quote-{{ quote.id }}">
-                                        <td>{{ quote.reference }}</td>
-                                        <td>{{ quote.quoteDate|date('d/m/Y') }}</td>
-                                        <td>{{ quote.totalTTC }}</td>
-                                        <td>
+                                        <td data-label="Référence">{{ quote.reference }}</td>
+                                        <td data-label="Date">{{ quote.quoteDate|date('d/m/Y') }}</td>
+                                        <td data-label="Prix">{{ quote.totalTTC }}</td>
+                                        <td data-label="Télécharger">
                                             <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" download><i class="fa-solid fa-download"></i></a>
                                         </td>
                                     </tr>

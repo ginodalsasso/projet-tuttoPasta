@@ -66,6 +66,40 @@ $(document).ready(function () {
             $("#appointment_form").submit();
         }
     });
+
+    // gestion des couleurs aléatoire pour les services
+    var colors = [
+        "var(--pink-color)",
+        "var(--red-color)",
+        "var(--blue-color)",
+        "var(--green-color)",
+    ];
+
+    var stickerClasses = [
+        "stickers_pink",
+        "stickers_red",
+        "stickers_blue",
+        "stickers_green",
+    ];
+
+    var buttonClasses = [
+        "full_button_pink",
+        "full_button_red",
+        "full_button_blue",
+        "full_button_green",
+    ];
+
+    // Couleur aléatoire pour chaque élément de la classe service_cards_header
+    $(".service_cards").each(function (index) {
+        var color = colors[index % colors.length];
+        var stickerClass = stickerClasses[index % stickerClasses.length];
+        var buttonClass = buttonClasses[index % buttonClasses.length];
+
+        $(this).find(".service_cards_header").css("color", color); // Change la couleur du H2
+
+        $(this).find(".stickers_price").addClass(stickerClass); // Ajoute la classe de sticker
+        $(this).find(".service_button").addClass(buttonClass); // Ajoute la classe de button
+    });
 });
 
 //___________________________________FLATPICKR ET DAYOFFS_______________________________________
