@@ -65,7 +65,9 @@ class CaptchaType extends AbstractType
             // Génération de l'URL pour le captcha avec la clé de challenge
             'src' => $this->urlGenerator->generate($options['route'], ['challenge' => $key])
         ];
+        // Ajout de la clé de challenge dans les variables de la vue
         $view->vars['challenge'] = $key;
+        // Appel de la méthode parente
         parent::buildView($view, $form, $options);
     }
 

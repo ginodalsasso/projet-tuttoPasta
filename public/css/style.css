@@ -11,7 +11,7 @@
     --black-color: #0F0F0F;
 
     --h1-fontsize: 60px;
-    --h2-fontsize: 40px;
+    --h2-fontsize: 45px;
     --h3-fontsize: 30px;
     --h4-fontsize: 20px;
 
@@ -41,6 +41,7 @@ body {
     color: var(--white-color);
     font-size: var(--font-size);
     font-family: var(--font-family);
+    user-select: none;
 }
 
 
@@ -72,6 +73,8 @@ body {
 .wrapper,
 #project_container,
 .project_container,
+.services_h2,
+.faq_h2,
 .footer_collab,
 .footer_social,
 #footer_nav,
@@ -81,7 +84,8 @@ body {
 .guide_calltoaction,
 #projects_section > div:first-of-type,
 .services_content,
-.faq_section {
+.faq_section,
+.social_shares {
     max-width: 1280px;
     margin-left: auto;
     margin-right: auto;
@@ -133,6 +137,8 @@ a{
 .full_button_black,
 .full_button_black_cta,
 .full_button_red,
+.full_button_green,
+.full_button_pink,
 .full_button_white,
 .full_button_white_cta,
 .full_button_blue  {
@@ -169,6 +175,16 @@ a{
 .full_button_blue {
     color: var(--white-color);
     background-color: var(--blue-color);
+}
+
+.full_button_green {
+    color: var(--white-color);
+    background-color: var(--green-color);
+}
+
+.full_button_pink {
+    color: var(--white-color);
+    background-color: var(--pink-color);
 }
 
 .full_button_white,
@@ -394,6 +410,12 @@ p {
 .projects_h2 {
     text-align: center;
     margin-bottom: 100px;
+}
+
+.services_h2,
+.faq_h2,
+.projects_h2 {
+    width: 70%;
 }
 
 .expertise_section {
@@ -754,7 +776,8 @@ summary {
 .form_container select, 
 .form_container textarea,
 #quote_services {
-    width: 600px;
+    width: 50vw;
+    max-width: 800px;
     padding: 10px;
     font-size: 16px;
     margin-bottom: 1px;
@@ -814,7 +837,8 @@ summary {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    width: 600px;
+    width: 50vw;
+    max-width: 800px;
 }
 
 /*=============== LISTE PROJETS ===============*/
@@ -990,7 +1014,6 @@ summary {
     width: 50vw;
     margin-right: auto;
     margin-left: auto;
-    line-height: 1.5;;
 }
 
 .article_description {
@@ -1096,7 +1119,8 @@ footer {
 
 .background-bottom {
     background-color: var(--white-color);
-    height: 400px;
+    height: 100%;
+    padding: 8% 0;
     overflow: hidden;
     position: relative;
     display: flex;
@@ -1106,7 +1130,7 @@ footer {
 
 .background-bottom h2 {
     text-align: center;
-    font-size: var(--h1-fontsize);
+    font-size: clamp(var(--h1-fontsize-mobile), 8vw, var(--h1-fontsize));
     font-weight: normal;
     color: var(--black-color);
     position: relative;
@@ -1180,25 +1204,36 @@ footer {
         display: none;
     }
 
+    .h1_content {
+        margin-bottom: 20px;
+    }
+
     #introduction_section img,
     .introduction_content,
-    .badges_guide {
+    .badges_guide,
+    .services_h2, 
+    .faq_h2, 
+    .projects_h2 {
         width: 100%;
         max-width: none;
     }
 
     .introduction_content,
-    .footer_social {
+    .footer_social,
+    .guide_h2, 
+    .services_h2, 
+    .faq_h2, 
+    .projects_h2 {
         margin-bottom: 50px;
     }
 
-    #introduction_section {
+    #introduction_section,
+    .wrapper {
         padding: unset;
     }
 
     .faq_section,
     #introduction_section,
-    .projects_h2,
     .footer_collab,
     .footer_social {
         padding: 0 8%;
@@ -1268,10 +1303,23 @@ footer {
         margin-top: 20px;
     }
 
+    .form_container input[type=text],
+    .form_container input[type=password],
+    .form_container input[type=email], 
+    .form_container input[type=date], 
+    .form_container select, 
+    .form_container textarea,
+    #quote_services,
+    #appointment_services,
+    .form-group,
+    #available-rdv {
+        width: 70vw;
+    }
+
     .background-bottom img:last-of-type{
         position: absolute;
         right: -200px;
-        top: -10px;
+        top: -70px;
     }
 
     .footer_rgpd {
@@ -1314,6 +1362,7 @@ footer {
     .faq_section,
     #introduction_section,
     .projects_h2,
+    .background-bottom h2,
     .footer_collab,
     .footer_social {
         padding: 0 8%;
@@ -1322,11 +1371,6 @@ footer {
     .footer_collab {
         padding-top: 100px;
     }
-
-    #projects_section span {
-        margin-left: 8%;
-    }
-
 
     #appointment_btn_nav {
         display: none;
@@ -1370,9 +1414,11 @@ footer {
         display: block;
         margin-top: 100px;
     }
-    .social_share {
-        margin: 0 8%;
+
+    #social_share_projects {
+        margin-left: 8%;
     }
+
     .article_content {
         width: 100%;
     }

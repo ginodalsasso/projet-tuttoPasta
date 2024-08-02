@@ -20,7 +20,7 @@
                 <div><span class="stickers_pink">Le studio</span> </div>
                 <h2>{{administrations[1].title|raw}}</h2> 
                 {{administrations[1].textContent|raw}}
-                <a href="{{ path('app_appointment') }}"><button class="full_button_black">Prendre rdv</button></a>
+                <a href="{{ path('app_appointment') }}"><button class="full_button_black_cta">Prendre rdv</button></a>
             </div>
         </section>
 
@@ -49,7 +49,7 @@
             </div>
             <div class="guide_calltoaction">
                 <h2>{{ administrations[11].title|raw }}</h2>
-                <a href="{{ path('app_appointment') }}"><button class="full_button_black">Prendre rdv</button></a>
+                <a href="{{ path('app_appointment') }}"><button class="full_button_white_cta">Prendre rdv</button></a>
             </div>
         </section>
 
@@ -113,7 +113,7 @@
                             </div>
                             {{ service.serviceContent|raw }}
                             <div class="btn_center_services_cards">
-                                <a href="{{ path('app_appointment') }}"><button class="full_button_black">Je choisis ce pack</button></a>
+                                <a href="{{ path('app_appointment') }}"><button class="service_button">Je choisis ce pack</button></a>
                             </div>
                         </div>
                     {% endfor %}
@@ -134,7 +134,7 @@
                             </div>
                             {{ service.serviceContent|raw }}
                             <div class="btn_center_services_cards">
-                                <a href="{{ path('app_appointment') }}"><button class="full_button_black">Je choisis ce pack</button></a>
+                                <a href="{{ path('app_appointment') }}"><button class="service_button">Je choisis ce pack</button></a>
                             </div>
                         </div>
                     {% endfor %}
@@ -211,7 +211,7 @@
             </article>
             <div class="guide_calltoaction">
                 {{administrations[25].title|raw}}
-                <a href="{{ path('app_appointment') }}"><button class="full_button_black">Je prends contact</button></a>
+                <a href="{{ path('app_appointment') }}"><button class="full_button_black_cta">Je prends contact</button></a>
             </div>
         </section>
 

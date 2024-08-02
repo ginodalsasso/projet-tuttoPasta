@@ -21,15 +21,24 @@ $(document).ready(function () {
         "stickers_green",
     ];
 
+    var buttonClasses = [
+        "full_button_pink",
+        "full_button_red",
+        "full_button_blue",
+        "full_button_green",
+    ];
+
     // Couleur aléatoire pour chaque élément de la classe service_cards_header
-    $(".service_cards_header").each(function (index) {
+    $(".service_cards").each(function (index) {
         var color = colors[index % colors.length];
         var stickerClass = stickerClasses[index % stickerClasses.length];
+        var buttonClass = buttonClasses[index % buttonClasses.length];
 
-        $(this).css("color", color); // Change la couleur du H2
+        $(this).find(".service_cards_header").css("color", color); // Change la couleur du H2
 
-        $(this).find(".stickers_price").addClass(stickerClass); // Ajouter la classe de sticker à stickers_price
-    });
+        $(this).find(".stickers_price").addClass(stickerClass); // Ajoute la classe de sticker
+        $(this).find(".service_button").addClass(buttonClass); // Ajoute la classe de button
+
 
 
     //_______________________________GESTION DES OFFRES DE PRIX (SERVICES)________________________________
