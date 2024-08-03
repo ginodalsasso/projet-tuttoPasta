@@ -15,6 +15,7 @@ use App\Repository\UserRepository;
 use App\Repository\QuoteRepository;
 use Symfony\Component\Mime\Address;
 use App\Repository\CommentRepository;
+use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
 use App\Domain\AntiSpam\ChallengeInterface;
@@ -220,7 +221,16 @@ class UserController extends AbstractController
     // --------------------------------- Suppression d'un compte utilisateur--------------------------------- //
     #[Route('/delete_account', name: 'app_delete_account')]
     #[IsGranted('ROLE_USER')]
-    public function deleteAccount( EntityManagerInterface $entityManager, TokenStorageInterface $tokenStorage, CommentRepository $commentRepository, AppointmentRepository $appointmentRepository, MailerInterface $mailer, QuoteRepository $quoteRepository, PdfGenerator $pdfGenerator): RedirectResponse {
+    public function deleteAccount( 
+        EntityManagerInterface $entityManager, 
+        TokenStorageInterface $tokenStorage, 
+        CommentRepository $commentRepository, 
+        ContactRepository $contactRepository, 
+        AppointmentRepository $appointmentRepository, 
+        MailerInterface $mailer, 
+        QuoteRepository $quoteRepository, 
+        PdfGenerator $pdfGenerator
+        ): RedirectResponse {
         // Récupère l'utilisateur actuellement connecté
         $user = $this->getUser();
 
@@ -235,6 +245,13 @@ class UserController extends AbstractController
             $comment->setUser(null);
             $comment->setUsername('Utilisateur supprimé');
             $entityManager->persist($comment);
+        }
+        
+        // Récupére et rends l'user associé au contact null
+        $contacts = $contactRepository->findBy(['user' => $user]);
+        foreach ($contacts as $contact) {
+            $contact->setUser(null);
+            $entityManager->persist($contact);
         }
 
         // Récupére et rends l'user associé au RDV null 

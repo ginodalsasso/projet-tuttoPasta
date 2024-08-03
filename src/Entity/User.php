@@ -71,6 +71,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $googleUser = null;
 
+    /**
+     * @var Collection<int, Contact>
+     */
+    #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'user')]
+    private Collection $contacts;
+
     
     // ---------------------------------CONSTRUCT--------------------------------- //
 
@@ -82,6 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $timezone = new \DateTimeZone('Europe/Paris');
         $this->accountDate = new \DateTime('now', $timezone);
         $this->appointments = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
 
     // ---------------------------------GETTERS AND SETTERS--------------------------------- //
@@ -274,5 +281,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString()
     {
         return $this -> username;
+    }
+
+    /**
+     * @return Collection<int, Contact>
+     */
+    public function getContacts(): Collection
+    {
+        return $this->contacts;
+    }
+
+    public function addContact(Contact $contact): static
+    {
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts->add($contact);
+            $contact->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContact(Contact $contact): static
+    {
+        if ($this->contacts->removeElement($contact)) {
+            // set the owning side to null (unless already changed)
+            if ($contact->getUser() === $this) {
+                $contact->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
